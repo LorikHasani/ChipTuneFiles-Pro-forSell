@@ -1,0 +1,303 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// NOTE: SQL Server does not support native enums.
+// Valid values are enforced at the application level.
+//
+// UserRole: "CLIENT" | "ADMIN" | "SUPERADMIN"
+// JobType: "ECU" | "TCU"
+// JobStatus: "PENDING" | "IN_PROGRESS" | "WAITING_FOR_INFO" | "COMPLETED" | "REVISION_REQUESTED" | "REJECTED"
+// FileType: "ORIGINAL" | "MODIFIED"
+// TransactionType: "CREDIT_PURCHASE" | "JOB_PAYMENT" | "REFUND" | "ADMIN_ADJUSTMENT"
+// SelectionType: "SINGLE" | "MULTIPLE"
+// TicketStatus: "OPEN" | "IN_PROGRESS" | "CLOSED"
+// AnnouncementType: "INFO" | "WARNING" | "SUCCESS"
+// ============================================
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  passwordHash        String    @map("password_hash")
+  role                String    @default("CLIENT")
+  contactName         String?   @map("contact_name")
+  companyName         String?   @map("company_name")
+  phone               String?
+  country             String?
+  creditBalance       Decimal   @default(0) @map("credit_balance") @db.Decimal(10, 2)
+  stripeCustomerId    String?   @map("stripe_customer_id")
+  emailNotifications  Boolean   @default(true) @map("email_notifications")
+  isActive            Boolean   @default(true) @map("is_active")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  clientJobs          Job[]     @relation("ClientJobs")
+  assignedJobs        Job[]     @relation("AssignedJobs")
+  files               File[]
+  sentMessages        JobMessage[]
+  transactions        Transaction[]    @relation("UserTransactions")
+  processedTransactions Transaction[]  @relation("ProcessedTransactions")
+  notifications       Notification[]
+  tickets             Ticket[]
+  ticketMessages      TicketMessage[]
+  announcements       Announcement[]
+
+  @@map("users")
+}
+
+model Job {
+  id                String    @id @default(uuid())
+  referenceNumber   String    @unique @map("reference_number")
+  clientId          String    @map("client_id")
+  assignedAdminId   String?   @map("assigned_admin_id")
+
+  // Vehicle info
+  brand             String?
+  model             String?
+  year              Int?
+  engineType        String?   @map("engine_type")
+  powerHp           Int?      @map("power_hp")
+  ecuType           String?   @map("ecu_type")
+  gearboxType       String?   @map("gearbox_type")
+  vin               String?
+  mileage           Int?
+  fuelType          String?   @map("fuel_type")
+
+  // Job info
+  jobType           String    @default("ECU") @map("job_type")
+  status            String    @default("PENDING")
+  totalPrice        Decimal   @default(0) @map("total_price") @db.Decimal(10, 2)
+  creditsUsed       Decimal   @default(0) @map("credits_used") @db.Decimal(10, 2)
+  clientNotes       String?   @map("client_notes") @db.NVarChar(Max)
+  adminNotes        String?   @map("admin_notes") @db.NVarChar(Max)
+  priority          Int       @default(0)
+  revisionCount     Int       @default(0) @map("revision_count")
+  readingTool       String?   @map("reading_tool")
+  toolType          String?   @map("tool_type")
+  isOriginal        Boolean   @default(true) @map("is_original")
+  carNotes          String?   @map("car_notes") @db.NVarChar(Max)
+
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  client            User      @relation("ClientJobs", fields: [clientId], references: [id], onUpdate: NoAction)
+  assignedAdmin     User?     @relation("AssignedJobs", fields: [assignedAdminId], references: [id], onUpdate: NoAction)
+  services          JobService[]
+  files             File[]
+  messages          JobMessage[]
+  transactions      Transaction[]
+
+  @@index([clientId])
+  @@index([assignedAdminId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("jobs")
+}
+
+model JobService {
+  id          String  @id @default(uuid())
+  jobId       String  @map("job_id")
+  serviceId   String  @map("service_id")
+  serviceName String  @map("service_name")
+  price       Decimal @db.Decimal(10, 2)
+
+  // Relations
+  job         Job     @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  service     Service @relation(fields: [serviceId], references: [id], onUpdate: NoAction)
+
+  @@index([jobId])
+  @@map("job_services")
+}
+
+model ServiceCategory {
+  id            String    @id @default(uuid())
+  name          String
+  description   String?   @db.NVarChar(Max)
+  sortOrder     Int       @default(0) @map("sort_order")
+  isActive      Boolean   @default(true) @map("is_active")
+  selectionType String    @default("MULTIPLE") @map("selection_type")
+  jobType       String    @default("ECU") @map("job_type")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  services      Service[]
+
+  @@map("service_categories")
+}
+
+model Service {
+  id              String          @id @default(uuid())
+  categoryId      String          @map("category_id")
+  code            String          @unique
+  name            String
+  description     String?         @db.NVarChar(Max)
+  basePrice       Decimal         @default(0) @map("base_price") @db.Decimal(10, 2)
+  estimatedHours  Decimal?        @map("estimated_hours") @db.Decimal(4, 1)
+  icon            String?
+  sortOrder       Int             @default(0) @map("sort_order")
+  isActive        Boolean         @default(true) @map("is_active")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  category        ServiceCategory @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
+  jobServices     JobService[]
+
+  @@index([categoryId])
+  @@map("services")
+}
+
+model File {
+  id            String    @id @default(uuid())
+  jobId         String    @map("job_id")
+  fileType      String    @map("file_type")
+  originalName  String    @map("original_name")
+  storagePath   String    @map("storage_path")
+  fileSize      Int       @map("file_size")
+  uploadedBy    String    @map("uploaded_by")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  job           Job       @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  uploader      User      @relation(fields: [uploadedBy], references: [id], onUpdate: NoAction)
+
+  @@index([jobId])
+  @@map("files")
+}
+
+model JobMessage {
+  id          String    @id @default(uuid())
+  jobId       String    @map("job_id")
+  senderId    String    @map("sender_id")
+  message     String    @db.NVarChar(Max)
+  isInternal  Boolean   @default(false) @map("is_internal")
+  isRead      Boolean   @default(false) @map("is_read")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sender      User      @relation(fields: [senderId], references: [id], onUpdate: NoAction)
+
+  @@index([jobId])
+  @@map("job_messages")
+}
+
+model Transaction {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  jobId         String?   @map("job_id")
+  processedBy   String?   @map("processed_by")
+  type          String
+  amount        Decimal   @db.Decimal(10, 2)
+  balanceBefore Decimal   @map("balance_before") @db.Decimal(10, 2)
+  balanceAfter  Decimal   @map("balance_after") @db.Decimal(10, 2)
+  description   String?   @db.NVarChar(Max)
+  stripeSessionId String? @map("stripe_session_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user          User      @relation("UserTransactions", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  job           Job?      @relation(fields: [jobId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  processor     User?     @relation("ProcessedTransactions", fields: [processedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([userId])
+  @@index([jobId])
+  @@map("transactions")
+}
+
+model CreditPackage {
+  id            String    @id @default(uuid())
+  name          String
+  credits       Decimal   @db.Decimal(10, 2)
+  price         Decimal   @db.Decimal(10, 2)
+  bonusCredits  Decimal   @default(0) @map("bonus_credits") @db.Decimal(10, 2)
+  isActive      Boolean   @default(true) @map("is_active")
+  sortOrder     Int       @default(0) @map("sort_order")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("credit_packages")
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  title     String
+  message   String    @db.NVarChar(Max)
+  linkType  String?   @map("link_type")
+  linkId    String?   @map("link_id")
+  isRead    Boolean   @default(false) @map("is_read")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+  @@map("notifications")
+}
+
+model Ticket {
+  id        String    @id @default(uuid())
+  clientId  String    @map("client_id")
+  subject   String
+  status    String    @default("OPEN")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  client    User            @relation(fields: [clientId], references: [id], onUpdate: NoAction)
+  messages  TicketMessage[]
+
+  @@index([clientId])
+  @@map("tickets")
+}
+
+model TicketMessage {
+  id        String    @id @default(uuid())
+  ticketId  String    @map("ticket_id")
+  senderId  String    @map("sender_id")
+  message   String    @db.NVarChar(Max)
+  isRead    Boolean   @default(false) @map("is_read")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  ticket    Ticket    @relation(fields: [ticketId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sender    User      @relation(fields: [senderId], references: [id], onUpdate: NoAction)
+
+  @@index([ticketId])
+  @@map("ticket_messages")
+}
+
+model Announcement {
+  id        String    @id @default(uuid())
+  title     String
+  message   String    @db.NVarChar(Max)
+  type      String    @default("INFO")
+  isActive  Boolean   @default(true) @map("is_active")
+  imageUrl  String?   @map("image_url")
+  createdBy String    @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  creator   User      @relation(fields: [createdBy], references: [id], onUpdate: NoAction)
+
+  @@map("announcements")
+}
+
+model Setting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String @db.NVarChar(Max)
+
+  @@map("settings")
+}
