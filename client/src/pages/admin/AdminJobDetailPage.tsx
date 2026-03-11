@@ -59,7 +59,7 @@ export default function AdminJobDetailPage() {
     if (!modFile) return;
     setUploading(true);
     try {
-      await uploadFile(id!, modFile);
+      await uploadFile(id!, modFile, 'MODIFIED');
       toast.success('Modified file uploaded');
       setModFile(null);
       refetch();

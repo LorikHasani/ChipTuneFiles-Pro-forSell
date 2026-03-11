@@ -38,6 +38,21 @@ router.get(
 );
 
 // ---------------------------------------------------------------------------
+// GET /unread-count - Get unread notification count for the current user
+// ---------------------------------------------------------------------------
+router.get(
+  '/unread-count',
+  authenticate,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const user = req.user!;
+    const count = await prisma.notification.count({
+      where: { userId: user.id, isRead: false },
+    });
+    res.json({ count });
+  })
+);
+
+// ---------------------------------------------------------------------------
 // PUT /read-all - Mark all notifications as read
 // NOTE: This route must come BEFORE /:id/read to avoid param conflicts
 // ---------------------------------------------------------------------------
