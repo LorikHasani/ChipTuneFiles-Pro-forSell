@@ -5,12 +5,12 @@ export function cn(...classes: (string | boolean | undefined | null)[]): string 
   return classes.filter(Boolean).join(' ');
 }
 
-export function formatCurrency(amount: number, symbol = '\u20AC'): string {
-  return `${symbol}${amount.toFixed(2)}`;
+export function formatCurrency(amount: number | string, symbol = '\u20AC'): string {
+  return `${symbol}${Number(amount).toFixed(2)}`;
 }
 
-export function formatCredits(amount: number): string {
-  return `${amount.toFixed(0)} credits`;
+export function formatCredits(amount: number | string): string {
+  return `${Number(amount).toFixed(0)} credits`;
 }
 
 export function formatDate(date: string | Date): string {

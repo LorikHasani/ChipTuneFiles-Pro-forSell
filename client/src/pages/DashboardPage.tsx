@@ -56,7 +56,7 @@ export default function DashboardPage() {
   const stats = [
     {
       label: 'Credit Balance',
-      value: user?.creditBalance?.toFixed(0) ?? '0',
+      value: user?.creditBalance != null ? Number(user.creditBalance).toFixed(0) : '0',
       icon: Wallet,
       color: 'text-primary-600 bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400',
     },

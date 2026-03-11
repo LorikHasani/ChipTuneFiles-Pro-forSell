@@ -79,7 +79,7 @@ export default function AdminStatsPage() {
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
               <span className="text-gray-500">Total Credits in System</span>
-              <span className="font-bold">{stats.totalCreditsIssued?.toFixed(0) || '0'}</span>
+              <span className="font-bold">{stats.totalCreditsIssued != null ? Number(stats.totalCreditsIssued).toFixed(0) : '0'}</span>
             </div>
             <div className="flex justify-between py-2">
               <span className="text-gray-500">Avg Revenue per User</span>
