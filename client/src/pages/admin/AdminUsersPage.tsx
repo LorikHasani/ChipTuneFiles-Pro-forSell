@@ -104,7 +104,7 @@ export default function AdminUsersPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Adjusting credits for <strong>{creditModal.name}</strong>
             </p>
-            <p className="text-sm">Current balance: <strong>{creditModal.balance.toFixed(0)}</strong> credits</p>
+            <p className="text-sm">Current balance: <strong>{Number(creditModal.balance).toFixed(0)}</strong> credits</p>
             <div>
               <label className="label">Amount (+ to add, - to deduct)</label>
               <input className="input" type="number" value={creditAmount} onChange={e => setCreditAmount(e.target.value)}

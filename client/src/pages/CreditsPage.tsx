@@ -82,7 +82,7 @@ export default function CreditsPage() {
           <CreditCard size={24} />
           <span className="text-primary-100">Current Balance</span>
         </div>
-        <p className="text-4xl font-bold">{user?.creditBalance?.toFixed(0) || '0'} <span className="text-lg font-normal text-primary-200">credits</span></p>
+        <p className="text-4xl font-bold">{user?.creditBalance != null ? Number(user.creditBalance).toFixed(0) : '0'} <span className="text-lg font-normal text-primary-200">credits</span></p>
       </div>
 
       {/* Credit Packages */}
@@ -148,9 +148,9 @@ export default function CreditsPage() {
                 <div className="text-right">
                   <p className={cn('font-semibold text-sm',
                     tx.type === 'JOB_PAYMENT' ? 'text-red-600' : 'text-green-600')}>
-                    {tx.type === 'JOB_PAYMENT' ? '-' : '+'}{Math.abs(tx.amount).toFixed(0)}
+                    {tx.type === 'JOB_PAYMENT' ? '-' : '+'}{Math.abs(Number(tx.amount)).toFixed(0)}
                   </p>
-                  <p className="text-xs text-gray-500">Balance: {tx.balanceAfter?.toFixed(0)}</p>
+                  <p className="text-xs text-gray-500">Balance: {tx.balanceAfter != null ? Number(tx.balanceAfter).toFixed(0) : '0'}</p>
                 </div>
               </div>
             ))}

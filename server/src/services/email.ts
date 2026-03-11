@@ -134,7 +134,7 @@ export async function sendCreditConfirmation(
       </tr>
       <tr style="border-bottom: 1px solid #e5e7eb;">
         <td style="color: #6b7280; padding-right: 24px;">Amount Paid</td>
-        <td style="font-weight: 600;">&euro;${pricePaid.toFixed(2)}</td>
+        <td style="font-weight: 600;">&euro;${Number(pricePaid).toFixed(2)}</td>
       </tr>
       <tr>
         <td style="color: #6b7280; padding-right: 24px;">New Balance</td>

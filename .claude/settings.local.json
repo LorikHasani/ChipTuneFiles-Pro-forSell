@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Test-NetConnection -ComputerName KIKEZ-PC -Port 1433 -WarningAction SilentlyContinue | Select-Object -Property TcpTestSucceeded\")",
+      "Bash(cp \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\.claude\\\\worktrees\\\\thirsty-dirac\\\\client\\\\src\\\\lib\\\\utils.ts\" \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\client\\\\src\\\\lib\\\\utils.ts\")",
+      "Bash(cp \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\.claude\\\\worktrees\\\\thirsty-dirac\\\\client\\\\src\\\\pages\\\\DashboardPage.tsx\" \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\client\\\\src\\\\pages\\\\DashboardPage.tsx\")",
+      "Bash(cp \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\.claude\\\\worktrees\\\\thirsty-dirac\\\\client\\\\src\\\\pages\\\\CreditsPage.tsx\" \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\client\\\\src\\\\pages\\\\CreditsPage.tsx\")",
+      "Bash(cp \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\.claude\\\\worktrees\\\\thirsty-dirac\\\\client\\\\src\\\\pages\\\\PricesPage.tsx\" \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\client\\\\src\\\\pages\\\\PricesPage.tsx\")",
+      "Bash(cp \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\.claude\\\\worktrees\\\\thirsty-dirac\\\\client\\\\src\\\\pages\\\\admin\\\\AdminStatsPage.tsx\" \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\client\\\\src\\\\pages\\\\admin\\\\AdminStatsPage.tsx\")",
+      "Bash(cp \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\.claude\\\\worktrees\\\\thirsty-dirac\\\\client\\\\src\\\\pages\\\\admin\\\\AdminUsersPage.tsx\" \"C:\\\\Users\\\\Admin\\\\Desktop\\\\ChipTuneFiles-Pro\\\\client\\\\src\\\\pages\\\\admin\\\\AdminUsersPage.tsx\")"
+    ]
+  }
+}
