@@ -42,7 +42,7 @@ const createJobSchema = z.object({
   isOriginal: z.boolean().default(true),
   carNotes: z.string().max(5000).trim().optional().nullable(),
   serviceIds: z
-    .array(z.string().uuid('Each service ID must be a valid UUID'))
+    .array(z.string().min(1, 'Service ID cannot be empty'))
     .min(1, 'At least one service must be selected'),
 });
 
