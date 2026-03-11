@@ -76,23 +76,30 @@ export default function NewJobPage() {
 
     setSubmitting(true);
     try {
+      // Safely parse numeric fields — avoid sending NaN
+      const parseIntSafe = (v: string): number | undefined => {
+        if (!v || !v.trim()) return undefined;
+        const n = parseInt(v, 10);
+        return isNaN(n) ? undefined : n;
+      };
+
       const job = await createJob({
         jobType,
-        brand: vehicle.brand || undefined,
-        model: vehicle.model || undefined,
-        year: vehicle.year ? parseInt(vehicle.year) : undefined,
-        engineType: vehicle.engineType || undefined,
-        powerHp: vehicle.powerHp ? parseInt(vehicle.powerHp) : undefined,
-        ecuType: vehicle.ecuType || undefined,
-        gearboxType: vehicle.gearboxType || undefined,
-        vin: vehicle.vin || undefined,
-        mileage: vehicle.mileage ? parseInt(vehicle.mileage) : undefined,
-        fuelType: vehicle.fuelType || undefined,
-        readingTool: vehicle.readingTool || undefined,
-        toolType: vehicle.toolType || undefined,
+        brand: vehicle.brand.trim() || undefined,
+        model: vehicle.model.trim() || undefined,
+        year: parseIntSafe(vehicle.year),
+        engineType: vehicle.engineType.trim() || undefined,
+        powerHp: parseIntSafe(vehicle.powerHp),
+        ecuType: vehicle.ecuType.trim() || undefined,
+        gearboxType: vehicle.gearboxType.trim() || undefined,
+        vin: vehicle.vin.trim() || undefined,
+        mileage: parseIntSafe(vehicle.mileage),
+        fuelType: vehicle.fuelType.trim() || undefined,
+        readingTool: vehicle.readingTool.trim() || undefined,
+        toolType: vehicle.toolType.trim() || undefined,
         isOriginal: vehicle.isOriginal,
-        carNotes: vehicle.carNotes || undefined,
-        clientNotes: vehicle.clientNotes || undefined,
+        carNotes: vehicle.carNotes.trim() || undefined,
+        clientNotes: vehicle.clientNotes.trim() || undefined,
         serviceIds: allSelectedServiceIds,
       });
 
@@ -101,7 +108,15 @@ export default function NewJobPage() {
       toast.success('Job created successfully!');
       navigate(`/jobs/${job.id}`);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'Failed to create job');
+      const details = err.response?.data?.details;
+      let msg = err.response?.data?.error || 'Failed to create job';
+      if (details) {
+        const fields = Object.entries(details)
+          .map(([k, v]) => `${k}: ${(v as string[]).join(', ')}`)
+          .join('; ');
+        if (fields) msg += ` — ${fields}`;
+      }
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
