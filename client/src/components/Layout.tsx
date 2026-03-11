@@ -3,23 +3,23 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Briefcase,
-  PlusCircle,
-  Coins,
+  Upload,
+  Wallet,
   Tag,
   LifeBuoy,
-  Calculator,
-  Shield,
   Users,
   Wrench,
   Package,
-  Megaphone,
-  Settings,
+  Mail,
+  Send,
+  BarChart3,
   Bell,
   Menu,
   X,
   LogOut,
   User,
-  ChevronLeft,
+  Clock,
+  Settings,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { useBrandingStore } from '../stores/brandingStore';
@@ -35,22 +35,50 @@ interface NavItem {
 
 const clientNavItems: NavItem[] = [
   { label: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { label: 'Jobs', path: '/jobs', icon: Briefcase },
-  { label: 'New Job', path: '/jobs/new', icon: PlusCircle },
-  { label: 'Credits', path: '/credits', icon: Coins },
+  { label: 'Upload File', path: '/jobs/new', icon: Upload },
+  { label: 'My Jobs', path: '/jobs', icon: Briefcase },
   { label: 'Prices', path: '/prices', icon: Tag },
+  { label: 'Balance', path: '/credits', icon: Wallet },
+  { label: 'Profile', path: '/profile', icon: User },
   { label: 'Tickets', path: '/tickets', icon: LifeBuoy },
-  { label: 'Calculator', path: '/calculator', icon: Calculator },
 ];
 
+const WORKING_HOURS = [
+  { day: 'Mon', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Tue', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Wed', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Thu', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Fri', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Sat', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Sun', hours: 'Closed' },
+];
+
+function getCurrentDayIndex(): number {
+  const d = new Date().getDay();
+  // JS: 0=Sun,1=Mon..6=Sat → we want 0=Mon..6=Sun
+  return d === 0 ? 6 : d - 1;
+}
+
+function isPortalOpen(): boolean {
+  const now = new Date();
+  const day = now.getDay();
+  if (day === 0) return false; // Sunday
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const totalMin = hour * 60 + minute;
+  return totalMin >= 540 && totalMin < 1320; // 9:00 AM - 10:00 PM
+}
+
 const adminNavItems: NavItem[] = [
-  { label: 'Admin Dashboard', path: '/admin', icon: Shield },
-  { label: 'Manage Jobs', path: '/admin/jobs', icon: Briefcase },
-  { label: 'Users', path: '/admin/users', icon: Users },
-  { label: 'Services', path: '/admin/services', icon: Wrench },
+  { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { label: 'All Jobs', path: '/admin/jobs', icon: Briefcase },
+  { label: 'Services', path: '/admin/services', icon: Tag },
   { label: 'Packages', path: '/admin/packages', icon: Package },
+  { label: 'Users', path: '/admin/users', icon: Users },
   { label: 'Tickets', path: '/admin/tickets', icon: LifeBuoy },
-  { label: 'Announcements', path: '/admin/announcements', icon: Megaphone },
+  { label: 'Emails', path: '/admin/emails', icon: Mail },
+  { label: 'News', path: '/admin/announcements', icon: Send },
+  { label: 'Statistics', path: '/admin/stats', icon: BarChart3 },
   { label: 'Settings', path: '/admin/settings', icon: Settings },
 ];
 
@@ -93,15 +121,15 @@ export default function Layout() {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - always dark */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto',
+          'fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-gray-900 border-r border-gray-800 transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         {/* Brand */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-800 flex-shrink-0">
           <NavLink to="/" onClick={closeSidebar} className="flex items-center gap-3 min-w-0">
             {branding.logo_url ? (
               <img
@@ -114,13 +142,13 @@ export default function Layout() {
                 {branding.brand_name.charAt(0)}
               </div>
             )}
-            <span className="text-lg font-bold text-gray-900 dark:text-white truncate">
+            <span className="text-lg font-bold text-white truncate">
               {branding.brand_name}
             </span>
           </NavLink>
           <button
             onClick={closeSidebar}
-            className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 lg:hidden transition-colors"
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-gray-300 hover:bg-gray-700 lg:hidden transition-colors"
             aria-label="Close sidebar"
           >
             <X className="h-5 w-5" />
@@ -129,52 +157,47 @@ export default function Layout() {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-          {/* Client navigation */}
-          <div className="mb-2">
-            <span className="px-3 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-              Menu
-            </span>
-          </div>
-          {clientNavItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/'}
-              onClick={closeSidebar}
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700/50'
-                )
-              }
-            >
-              <item.icon className="h-5 w-5 flex-shrink-0" />
-              {item.label}
-            </NavLink>
-          ))}
-
-          {/* Admin navigation */}
-          {isAdmin && (
+          {isAdmin ? (
+            /* Admin-only navigation */
+            adminNavItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === '/admin'}
+                onClick={closeSidebar}
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    isActive
+                      ? 'bg-red-600 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                  )
+                }
+              >
+                <item.icon className="h-5 w-5 flex-shrink-0" />
+                {item.label}
+              </NavLink>
+            ))
+          ) : (
+            /* Client navigation */
             <>
-              <div className="mt-6 mb-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <span className="px-3 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                  Administration
+              <div className="mb-2">
+                <span className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Menu
                 </span>
               </div>
-              {adminNavItems.map((item) => (
+              {clientNavItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  end={item.path === '/admin'}
+                  end={item.path === '/'}
                   onClick={closeSidebar}
                   className={({ isActive }) =>
                     cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
                       isActive
-                        ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700/50'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-gray-400 hover:text-white hover:bg-gray-800'
                     )
                   }
                 >
@@ -186,32 +209,51 @@ export default function Layout() {
           )}
         </nav>
 
-        {/* User section at bottom */}
-        <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-3 space-y-2">
-          <DarkModeToggle className="w-full justify-start px-3 py-2.5 rounded-lg" />
+        {/* Working Hours - clients only */}
+        {!isAdmin && <div className="flex-shrink-0 border-t border-gray-800 px-4 py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Clock className="h-4 w-4 text-gray-500" />
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Working Hours</span>
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className={cn('w-2 h-2 rounded-full', isPortalOpen() ? 'bg-green-500' : 'bg-red-500')} />
+            <span className={cn('text-xs font-medium', isPortalOpen() ? 'text-green-500' : 'text-red-500')}>
+              {isPortalOpen() ? 'Portal Open' : 'Portal Closed'}
+            </span>
+          </div>
+          <div className="space-y-0.5">
+            {WORKING_HOURS.map((wh, i) => (
+              <div key={wh.day} className={cn(
+                'flex justify-between text-xs px-1 py-0.5 rounded',
+                i === getCurrentDayIndex()
+                  ? 'bg-primary-900/40 text-white font-semibold'
+                  : 'text-gray-500'
+              )}>
+                <span>{wh.day}</span>
+                <span className={wh.hours === 'Closed' ? 'text-red-500' : ''}>{wh.hours}</span>
+              </div>
+            ))}
+          </div>
+        </div>}
 
-          <NavLink
-            to="/profile"
-            onClick={closeSidebar}
-            className={({ isActive }) =>
-              cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors w-full',
-                isActive
-                  ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700/50'
-              )
-            }
-          >
-            <User className="h-5 w-5 flex-shrink-0" />
-            <span className="truncate">{user?.contactName || user?.email || 'Profile'}</span>
-          </NavLink>
+        {/* User section at bottom */}
+        <div className="flex-shrink-0 border-t border-gray-800 p-3 space-y-2">
+          <div className="flex items-center gap-3 px-3 py-2">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-sm font-semibold flex-shrink-0">
+              {(user?.contactName || user?.email || '?').charAt(0).toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-white truncate">{user?.contactName || 'User'}</p>
+              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+            </div>
+          </div>
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full text-gray-400 hover:text-red-400 hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="h-5 w-5 flex-shrink-0" />
-            Logout
+            Sign Out
           </button>
         </div>
       </aside>
@@ -231,6 +273,20 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Credit balance pill - clients only */}
+            {!isAdmin && (
+              <NavLink
+                to="/credits"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors"
+              >
+                <Wallet className="h-4 w-4" />
+                &euro;{Number(user?.creditBalance ?? 0).toFixed(2)}
+              </NavLink>
+            )}
+
+            {/* Dark mode toggle */}
+            <DarkModeToggle />
+
             {/* Notification bell */}
             <button
               onClick={() => {
@@ -247,21 +303,6 @@ export default function Layout() {
                 </span>
               )}
             </button>
-
-            {/* User avatar in header */}
-            <div className="hidden sm:flex items-center gap-2 ml-2 pl-3 border-l border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-sm font-semibold">
-                {(user?.contactName || user?.email || '?').charAt(0).toUpperCase()}
-              </div>
-              <div className="text-sm">
-                <p className="font-medium text-gray-900 dark:text-white leading-tight">
-                  {user?.contactName || 'User'}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
-                  {user?.creditBalance ?? 0} credits
-                </p>
-              </div>
-            </div>
           </div>
         </header>
 
