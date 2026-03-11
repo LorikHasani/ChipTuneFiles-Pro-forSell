@@ -11,9 +11,10 @@ export default function DarkModeToggle({ className }: DarkModeToggleProps) {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('theme');
       if (stored) return stored === 'dark';
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      // Default to dark mode
+      return true;
     }
-    return false;
+    return true;
   });
 
   useEffect(() => {
