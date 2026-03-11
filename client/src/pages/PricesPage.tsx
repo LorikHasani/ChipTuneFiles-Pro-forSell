@@ -1,9 +1,10 @@
 import { Settings2, Info } from 'lucide-react';
 import { useServices } from '../hooks/useApi';
 import { formatCurrency, cn } from '../lib/utils';
+import { getLucideIcon } from '../lib/iconMap';
 import Spinner from '../components/Spinner';
 import PageHeader from '../components/PageHeader';
-import type { ServiceCategory } from '../types';
+import type { ServiceCategory, Service } from '../types';
 
 export default function PricesPage() {
   const { categories, loading } = useServices();
@@ -28,15 +29,12 @@ export default function PricesPage() {
         <p className="text-gray-500 text-center py-12">No services available.</p>
       ) : (
         Object.entries(grouped).map(([groupName, cats]) => {
-          // If there are multiple categories with the same name (ECU + TCU), show sub-headers
           const hasSubGroups = cats.length > 1;
-          // Count total services across sub-groups
           const totalServices = cats.reduce((sum, c) => sum + (c.services?.length || 0), 0);
           const isMultiple = cats[0].selectionType === 'MULTIPLE';
 
           return (
             <div key={groupName}>
-              {/* Category header */}
               <div className="flex items-center gap-2 mb-4">
                 {isMultiple ? (
                   <span className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
@@ -52,7 +50,6 @@ export default function PricesPage() {
               </div>
 
               {hasSubGroups ? (
-                // Render each sub-group (ECU / GEARBOX / TCU) with its own sub-header
                 cats.map(cat => (
                   <div key={cat.id} className="mb-6">
                     <div className="flex items-center gap-2 mb-3">
@@ -65,7 +62,6 @@ export default function PricesPage() {
                   </div>
                 ))
               ) : (
-                // Single group, no sub-headers needed
                 <ServiceGrid services={cats[0].services || []} isMultiple={isMultiple} />
               )}
             </div>
@@ -76,7 +72,18 @@ export default function PricesPage() {
   );
 }
 
-function ServiceGrid({ services, isMultiple }: { services: { id: string; name: string; basePrice: number; description?: string | null; icon?: string | null }[]; isMultiple: boolean }) {
+function ServiceIcon({ icon }: { icon: string | null | undefined }) {
+  if (!icon) return <Settings2 size={24} className="text-gray-400 dark:text-gray-500" />;
+
+  // Try as Lucide icon name first
+  const LucideComp = getLucideIcon(icon);
+  if (LucideComp) return <LucideComp size={24} className="text-gray-400 dark:text-gray-500" />;
+
+  // Otherwise treat as emoji
+  return <span className="text-2xl">{icon}</span>;
+}
+
+function ServiceGrid({ services, isMultiple }: { services: Service[]; isMultiple: boolean }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {services.map(svc => (
@@ -91,17 +98,11 @@ function ServiceGrid({ services, isMultiple }: { services: { id: string; name: s
             </div>
           )}
           <div className="mb-2">
-            {svc.icon ? (
-              <span className="text-2xl">{svc.icon}</span>
-            ) : (
-              <Settings2 size={24} className="text-gray-400 dark:text-gray-500" />
-            )}
+            <ServiceIcon icon={svc.icon} />
           </div>
           <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">{svc.name}</h4>
           <span className={cn('text-sm font-bold',
-            isMultiple
-              ? 'text-green-500'
-              : 'text-primary-400')}>
+            isMultiple ? 'text-green-500' : 'text-primary-400')}>
             {isMultiple ? '+' : ''}{formatCurrency(svc.basePrice)}
           </span>
         </div>

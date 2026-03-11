@@ -164,8 +164,8 @@ export default function AdminServicesPage() {
               <div><label className="label">Sort Order</label><input className="input" type="number"
                 value={svcModal.sortOrder ?? 0} onChange={e => setSvcModal(s => s ? { ...s, sortOrder: parseInt(e.target.value) || 0 } : s)} /></div>
             </div>
-            <div><label className="label">Icon (emoji)</label><input className="input" value={svcModal.icon || ''}
-              onChange={e => setSvcModal(s => s ? { ...s, icon: e.target.value } : s)} placeholder="e.g. ⚡" /></div>
+            <div><label className="label">Icon (Lucide name or emoji)</label><input className="input" value={svcModal.icon || ''}
+              onChange={e => setSvcModal(s => s ? { ...s, icon: e.target.value } : s)} placeholder="e.g. Zap, Flame, Rocket, or ⚡" /></div>
             <div className="flex justify-end gap-3">
               <button onClick={() => setSvcModal(null)} className="btn-secondary">Cancel</button>
               <button onClick={handleSaveSvc} disabled={saving} className="btn-primary">

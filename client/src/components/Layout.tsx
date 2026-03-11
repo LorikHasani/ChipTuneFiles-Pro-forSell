@@ -3,8 +3,8 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Briefcase,
-  PlusCircle,
-  Coins,
+  Upload,
+  Wallet,
   Tag,
   LifeBuoy,
   Calculator,
@@ -19,7 +19,7 @@ import {
   X,
   LogOut,
   User,
-  ChevronLeft,
+  Clock,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { useBrandingStore } from '../stores/brandingStore';
@@ -35,13 +35,39 @@ interface NavItem {
 
 const clientNavItems: NavItem[] = [
   { label: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { label: 'Jobs', path: '/jobs', icon: Briefcase },
-  { label: 'New Job', path: '/jobs/new', icon: PlusCircle },
-  { label: 'Credits', path: '/credits', icon: Coins },
+  { label: 'Upload File', path: '/jobs/new', icon: Upload },
+  { label: 'My Jobs', path: '/jobs', icon: Briefcase },
   { label: 'Prices', path: '/prices', icon: Tag },
+  { label: 'Balance', path: '/credits', icon: Wallet },
+  { label: 'Profile', path: '/profile', icon: User },
   { label: 'Tickets', path: '/tickets', icon: LifeBuoy },
-  { label: 'Calculator', path: '/calculator', icon: Calculator },
 ];
+
+const WORKING_HOURS = [
+  { day: 'Mon', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Tue', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Wed', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Thu', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Fri', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Sat', hours: '9:00 AM - 10:00 PM' },
+  { day: 'Sun', hours: 'Closed' },
+];
+
+function getCurrentDayIndex(): number {
+  const d = new Date().getDay();
+  // JS: 0=Sun,1=Mon..6=Sat → we want 0=Mon..6=Sun
+  return d === 0 ? 6 : d - 1;
+}
+
+function isPortalOpen(): boolean {
+  const now = new Date();
+  const day = now.getDay();
+  if (day === 0) return false; // Sunday
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const totalMin = hour * 60 + minute;
+  return totalMin >= 540 && totalMin < 1320; // 9:00 AM - 10:00 PM
+}
 
 const adminNavItems: NavItem[] = [
   { label: 'Admin Dashboard', path: '/admin', icon: Shield },
@@ -186,32 +212,51 @@ export default function Layout() {
           )}
         </nav>
 
+        {/* Working Hours */}
+        <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 px-4 py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Clock className="h-4 w-4 text-gray-400" />
+            <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Working Hours</span>
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className={cn('w-2 h-2 rounded-full', isPortalOpen() ? 'bg-green-500' : 'bg-red-500')} />
+            <span className={cn('text-xs font-medium', isPortalOpen() ? 'text-green-500' : 'text-red-500')}>
+              {isPortalOpen() ? 'Portal Open' : 'Portal Closed'}
+            </span>
+          </div>
+          <div className="space-y-0.5">
+            {WORKING_HOURS.map((wh, i) => (
+              <div key={wh.day} className={cn(
+                'flex justify-between text-xs px-1 py-0.5 rounded',
+                i === getCurrentDayIndex()
+                  ? 'bg-primary-900/30 text-white font-semibold'
+                  : 'text-gray-500 dark:text-gray-400'
+              )}>
+                <span>{wh.day}</span>
+                <span className={wh.hours === 'Closed' ? 'text-red-500' : ''}>{wh.hours}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* User section at bottom */}
         <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-3 space-y-2">
-          <DarkModeToggle className="w-full justify-start px-3 py-2.5 rounded-lg" />
-
-          <NavLink
-            to="/profile"
-            onClick={closeSidebar}
-            className={({ isActive }) =>
-              cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors w-full',
-                isActive
-                  ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700/50'
-              )
-            }
-          >
-            <User className="h-5 w-5 flex-shrink-0" />
-            <span className="truncate">{user?.contactName || user?.email || 'Profile'}</span>
-          </NavLink>
+          <div className="flex items-center gap-3 px-3 py-2">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-sm font-semibold flex-shrink-0">
+              {(user?.contactName || user?.email || '?').charAt(0).toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user?.contactName || 'User'}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
+            </div>
+          </div>
 
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="h-5 w-5 flex-shrink-0" />
-            Logout
+            Sign Out
           </button>
         </div>
       </aside>
@@ -231,6 +276,18 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Credit balance pill */}
+            <NavLink
+              to="/credits"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors"
+            >
+              <Wallet className="h-4 w-4" />
+              &euro;{Number(user?.creditBalance ?? 0).toFixed(2)}
+            </NavLink>
+
+            {/* Dark mode toggle */}
+            <DarkModeToggle />
+
             {/* Notification bell */}
             <button
               onClick={() => {
@@ -247,21 +304,6 @@ export default function Layout() {
                 </span>
               )}
             </button>
-
-            {/* User avatar in header */}
-            <div className="hidden sm:flex items-center gap-2 ml-2 pl-3 border-l border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-sm font-semibold">
-                {(user?.contactName || user?.email || '?').charAt(0).toUpperCase()}
-              </div>
-              <div className="text-sm">
-                <p className="font-medium text-gray-900 dark:text-white leading-tight">
-                  {user?.contactName || 'User'}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
-                  {user?.creditBalance ?? 0} credits
-                </p>
-              </div>
-            </div>
           </div>
         </header>
 
