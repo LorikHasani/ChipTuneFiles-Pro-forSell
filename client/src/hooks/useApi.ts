@@ -657,3 +657,17 @@ export async function updateCreditPackage(
   const response = await api.put(`/admin/packages/${id}`, data);
   return unwrap(response.data);
 }
+
+// ============================================
+// Email Mutation Functions (Admin)
+// ============================================
+
+export async function sendBulkEmail(data: {
+  recipientIds: string[];
+  subject: string;
+  message: string;
+  colorTheme: 'blue' | 'red';
+}): Promise<{ total: number; success: number; failed: number }> {
+  const response = await api.post('/admin/emails/send', data);
+  return unwrap(response.data);
+}

@@ -36,6 +36,7 @@ const AdminTicketDetailPage = lazy(() => import('./pages/admin/AdminTicketDetail
 const AdminAnnouncementsPage = lazy(() => import('./pages/admin/AdminAnnouncementsPage'));
 const AdminSettingsPage = lazy(() => import('./pages/admin/AdminSettingsPage'));
 const AdminStatsPage = lazy(() => import('./pages/admin/AdminStatsPage'));
+const AdminEmailsPage = lazy(() => import('./pages/admin/AdminEmailsPage'));
 
 function LoadingFallback() {
   return (
@@ -103,6 +104,7 @@ export default function App() {
           <Route path="admin/tickets" element={<ProtectedRoute requireAdmin><AdminTicketsPage /></ProtectedRoute>} />
           <Route path="admin/tickets/:id" element={<ProtectedRoute requireAdmin><AdminTicketDetailPage /></ProtectedRoute>} />
           <Route path="admin/announcements" element={<ProtectedRoute requireAdmin><AdminAnnouncementsPage /></ProtectedRoute>} />
+          <Route path="admin/emails" element={<ProtectedRoute requireAdmin><AdminEmailsPage /></ProtectedRoute>} />
           <Route path="admin/settings" element={<ProtectedRoute requireAdmin><AdminSettingsPage /></ProtectedRoute>} />
           <Route path="admin/stats" element={<ProtectedRoute requireAdmin><AdminStatsPage /></ProtectedRoute>} />
         </Route>

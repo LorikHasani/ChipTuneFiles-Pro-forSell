@@ -4,6 +4,7 @@ import { authenticate, AuthRequest } from '../middleware/auth';
 import { requireAdmin, requireSuperAdmin } from '../middleware/admin';
 import { asyncHandler, parsePagination, paginatedResponse, toNumber } from '../utils/helpers';
 import { Prisma } from '@prisma/client';
+import { sendEmail } from '../services/email';
 
 const router = Router();
 
@@ -669,6 +670,74 @@ router.delete(
     await prisma.announcement.delete({ where: { id } });
 
     res.json({ message: 'Announcement deleted.' });
+  })
+);
+
+// ============================================================================
+// EMAILS
+// ============================================================================
+
+// ---------------------------------------------------------------------------
+// POST /emails/send - Send bulk email to selected users
+// ---------------------------------------------------------------------------
+router.post(
+  '/emails/send',
+  authenticate,
+  requireAdmin,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const { recipientIds, subject, message, colorTheme } = req.body;
+
+    if (!recipientIds || !Array.isArray(recipientIds) || recipientIds.length === 0) {
+      res.status(400).json({ error: 'At least one recipient is required.' });
+      return;
+    }
+    if (!subject || typeof subject !== 'string' || subject.trim().length === 0) {
+      res.status(400).json({ error: 'Subject is required.' });
+      return;
+    }
+    if (!message || typeof message !== 'string' || message.trim().length === 0) {
+      res.status(400).json({ error: 'Message is required.' });
+      return;
+    }
+
+    const users = await prisma.user.findMany({
+      where: { id: { in: recipientIds }, isActive: true },
+      select: { id: true, email: true, contactName: true },
+    });
+
+    if (users.length === 0) {
+      res.status(400).json({ error: 'No valid recipients found.' });
+      return;
+    }
+
+    const themeColor = colorTheme === 'red' ? '#dc2626' : '#3b82f6';
+
+    // Build HTML from the message (convert newlines to <br>)
+    const htmlMessage = message.trim().replace(/\n/g, '<br>');
+    const emailHtml = `
+      <div style="border-top: 4px solid ${themeColor}; padding-top: 16px;">
+        ${htmlMessage}
+      </div>
+    `;
+
+    let successCount = 0;
+    let failCount = 0;
+
+    const results = await Promise.allSettled(
+      users.map(async (user) => {
+        const ok = await sendEmail(user.email, subject.trim(), emailHtml);
+        if (ok) successCount++;
+        else failCount++;
+      })
+    );
+
+    res.json({
+      data: {
+        total: users.length,
+        success: successCount,
+        failed: failCount,
+      },
+    });
   })
 );
 

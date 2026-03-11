@@ -19,6 +19,7 @@ import {
   LogOut,
   User,
   Clock,
+  Settings,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { useBrandingStore } from '../stores/brandingStore';
@@ -75,9 +76,10 @@ const adminNavItems: NavItem[] = [
   { label: 'Packages', path: '/admin/packages', icon: Package },
   { label: 'Users', path: '/admin/users', icon: Users },
   { label: 'Tickets', path: '/admin/tickets', icon: LifeBuoy },
-  { label: 'Emails', path: '/admin/settings', icon: Mail },
+  { label: 'Emails', path: '/admin/emails', icon: Mail },
   { label: 'News', path: '/admin/announcements', icon: Send },
   { label: 'Statistics', path: '/admin/stats', icon: BarChart3 },
+  { label: 'Settings', path: '/admin/settings', icon: Settings },
 ];
 
 export default function Layout() {
