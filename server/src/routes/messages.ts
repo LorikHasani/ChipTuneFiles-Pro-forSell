@@ -117,41 +117,44 @@ router.post(
 );
 
 // ---------------------------------------------------------------------------
-// PUT /job/:messageId/read - Mark a job message as read
+// PUT /job/:jobId/read - Mark ALL unread messages for a job as read (batch)
 // ---------------------------------------------------------------------------
 router.put(
-  '/job/:messageId/read',
+  '/job/:jobId/read',
   authenticate,
   asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { messageId } = req.params;
+    const { jobId } = req.params;
     const user = req.user!;
+    const isAdmin = user.role === 'ADMIN' || user.role === 'SUPERADMIN';
 
-    const message = await prisma.jobMessage.findUnique({
-      where: { id: messageId },
-      include: {
-        job: { select: { clientId: true } },
-      },
+    // Verify job exists and user has access
+    const job = await prisma.job.findUnique({
+      where: { id: jobId },
+      select: { id: true, clientId: true },
     });
 
-    if (!message) {
-      res.status(404).json({ error: 'Message not found.' });
+    if (!job) {
+      res.status(404).json({ error: 'Job not found.' });
       return;
     }
 
-    const isAdmin = user.role === 'ADMIN' || user.role === 'SUPERADMIN';
-
-    // Only the job owner or an admin can mark messages as read
-    if (!isAdmin && message.job.clientId !== user.id) {
+    if (!isAdmin && job.clientId !== user.id) {
       res.status(403).json({ error: 'Access denied.' });
       return;
     }
 
-    const updated = await prisma.jobMessage.update({
-      where: { id: messageId },
+    // Mark all unread messages in this job as read (only messages from others)
+    const result = await prisma.jobMessage.updateMany({
+      where: {
+        jobId,
+        isRead: false,
+        senderId: { not: user.id },
+        ...(isAdmin ? {} : { isInternal: false }),
+      },
       data: { isRead: true },
     });
 
-    res.json({ data: updated });
+    res.json({ data: { updatedCount: result.count } });
   })
 );
 
