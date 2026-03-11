@@ -49,20 +49,30 @@ export default function JobDetailPage() {
   const [revisionReason, setRevisionReason] = useState('');
   const [submittingRevision, setSubmittingRevision] = useState(false);
 
+  // Track message count to only scroll on NEW messages
+  const prevMsgCount = useRef(0);
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (messages && messages.length > prevMsgCount.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    prevMsgCount.current = messages?.length || 0;
+  }, [messages?.length]);
 
+  // Mark messages as read once on load
   useEffect(() => {
     if (id && messages && messages.length > 0) {
       markJobMessagesRead(id).catch(() => {});
     }
-  }, [id, messages]);
+  }, [id, messages?.length]);
 
+  // Silent polling: refetch job (for file updates) and messages every 15s
   useEffect(() => {
-    const interval = setInterval(refetchMessages, 10000);
+    const interval = setInterval(() => {
+      refetchJob();
+      refetchMessages();
+    }, 15000);
     return () => clearInterval(interval);
-  }, [refetchMessages]);
+  }, [refetchJob, refetchMessages]);
 
   const handleSendMessage = async (e: FormEvent) => {
     e.preventDefault();
