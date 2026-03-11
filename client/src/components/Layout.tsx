@@ -7,13 +7,12 @@ import {
   Wallet,
   Tag,
   LifeBuoy,
-  Calculator,
-  Shield,
   Users,
   Wrench,
   Package,
-  Megaphone,
-  Settings,
+  Mail,
+  Send,
+  BarChart3,
   Bell,
   Menu,
   X,
@@ -70,14 +69,15 @@ function isPortalOpen(): boolean {
 }
 
 const adminNavItems: NavItem[] = [
-  { label: 'Admin Dashboard', path: '/admin', icon: Shield },
-  { label: 'Manage Jobs', path: '/admin/jobs', icon: Briefcase },
-  { label: 'Users', path: '/admin/users', icon: Users },
-  { label: 'Services', path: '/admin/services', icon: Wrench },
+  { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { label: 'All Jobs', path: '/admin/jobs', icon: Briefcase },
+  { label: 'Services', path: '/admin/services', icon: Tag },
   { label: 'Packages', path: '/admin/packages', icon: Package },
+  { label: 'Users', path: '/admin/users', icon: Users },
   { label: 'Tickets', path: '/admin/tickets', icon: LifeBuoy },
-  { label: 'Announcements', path: '/admin/announcements', icon: Megaphone },
-  { label: 'Settings', path: '/admin/settings', icon: Settings },
+  { label: 'Emails', path: '/admin/settings', icon: Mail },
+  { label: 'News', path: '/admin/announcements', icon: Send },
+  { label: 'Statistics', path: '/admin/stats', icon: BarChart3 },
 ];
 
 export default function Layout() {
@@ -155,45 +155,40 @@ export default function Layout() {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-          {/* Client navigation */}
-          <div className="mb-2">
-            <span className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Menu
-            </span>
-          </div>
-          {clientNavItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/'}
-              onClick={closeSidebar}
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-primary-600 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
-                )
-              }
-            >
-              <item.icon className="h-5 w-5 flex-shrink-0" />
-              {item.label}
-            </NavLink>
-          ))}
-
-          {/* Admin navigation */}
-          {isAdmin && (
+          {isAdmin ? (
+            /* Admin-only navigation */
+            adminNavItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === '/admin'}
+                onClick={closeSidebar}
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    isActive
+                      ? 'bg-red-600 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                  )
+                }
+              >
+                <item.icon className="h-5 w-5 flex-shrink-0" />
+                {item.label}
+              </NavLink>
+            ))
+          ) : (
+            /* Client navigation */
             <>
-              <div className="mt-6 mb-2 pt-4 border-t border-gray-800">
+              <div className="mb-2">
                 <span className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Administration
+                  Menu
                 </span>
               </div>
-              {adminNavItems.map((item) => (
+              {clientNavItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  end={item.path === '/admin'}
+                  end={item.path === '/'}
                   onClick={closeSidebar}
                   className={({ isActive }) =>
                     cn(
@@ -212,8 +207,8 @@ export default function Layout() {
           )}
         </nav>
 
-        {/* Working Hours */}
-        <div className="flex-shrink-0 border-t border-gray-800 px-4 py-3">
+        {/* Working Hours - clients only */}
+        {!isAdmin && <div className="flex-shrink-0 border-t border-gray-800 px-4 py-3">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="h-4 w-4 text-gray-500" />
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Working Hours</span>
@@ -237,7 +232,7 @@ export default function Layout() {
               </div>
             ))}
           </div>
-        </div>
+        </div>}
 
         {/* User section at bottom */}
         <div className="flex-shrink-0 border-t border-gray-800 p-3 space-y-2">
@@ -276,14 +271,16 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Credit balance pill */}
-            <NavLink
-              to="/credits"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors"
-            >
-              <Wallet className="h-4 w-4" />
-              &euro;{Number(user?.creditBalance ?? 0).toFixed(2)}
-            </NavLink>
+            {/* Credit balance pill - clients only */}
+            {!isAdmin && (
+              <NavLink
+                to="/credits"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors"
+              >
+                <Wallet className="h-4 w-4" />
+                &euro;{Number(user?.creditBalance ?? 0).toFixed(2)}
+              </NavLink>
+            )}
 
             {/* Dark mode toggle */}
             <DarkModeToggle />
