@@ -44,7 +44,7 @@ export default function NewJobPage() {
     const catServices = selectedServices[cat.id] || [];
     return sum + (cat.services || [])
       .filter(s => catServices.includes(s.id))
-      .reduce((s, svc) => s + svc.basePrice, 0);
+      .reduce((s, svc) => s + Number(svc.basePrice), 0);
   }, 0);
 
   const allSelectedServiceIds = Object.values(selectedServices).flat();
@@ -69,7 +69,7 @@ export default function NewJobPage() {
       toast.error('Please select a file and at least one service');
       return;
     }
-    if (totalPrice > (user?.creditBalance || 0)) {
+    if (totalPrice > Number(user?.creditBalance || 0)) {
       toast.error('Insufficient credits');
       return;
     }
@@ -250,7 +250,7 @@ export default function NewJobPage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 dark:text-gray-400">Your Balance:</span>
-                <span className={cn('font-semibold', (user?.creditBalance || 0) >= totalPrice ? 'text-green-600' : 'text-red-600')}>
+                <span className={cn('font-semibold', Number(user?.creditBalance || 0) >= totalPrice ? 'text-green-600' : 'text-red-600')}>
                   {formatCurrency(user?.creditBalance || 0)}
                 </span>
               </div>
@@ -276,7 +276,7 @@ export default function NewJobPage() {
               Next <ChevronRight size={16} />
             </button>
           ) : (
-            <button onClick={handleSubmit} disabled={submitting || !canNext() || totalPrice > (user?.creditBalance || 0)}
+            <button onClick={handleSubmit} disabled={submitting || !canNext() || totalPrice > Number(user?.creditBalance || 0)}
               className="btn-primary">
               {submitting ? <Spinner size="sm" /> : null}
               {submitting ? 'Creating...' : 'Submit Job'}

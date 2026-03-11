@@ -2,7 +2,22 @@ import { Router, Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { authenticate } from '../middleware/auth';
 import { requireAdmin } from '../middleware/admin';
-import { asyncHandler } from '../utils/helpers';
+import { asyncHandler, toNumber } from '../utils/helpers';
+
+/**
+ * Converts Prisma Decimal fields in service categories/services to plain numbers
+ * so they serialise correctly in JSON responses (SQL Server Decimals arrive as strings).
+ */
+function serializeCategories(categories: any[]): any[] {
+  return categories.map((cat) => ({
+    ...cat,
+    services: (cat.services || []).map((svc: any) => ({
+      ...svc,
+      basePrice: toNumber(svc.basePrice),
+      estimatedHours: svc.estimatedHours != null ? toNumber(svc.estimatedHours) : null,
+    })),
+  }));
+}
 
 const router = Router();
 
@@ -23,7 +38,7 @@ router.get(
       },
     });
 
-    res.json({ data: categories });
+    res.json({ data: serializeCategories(categories) });
   })
 );
 
@@ -44,7 +59,7 @@ router.get(
       },
     });
 
-    res.json({ data: categories });
+    res.json({ data: serializeCategories(categories) });
   })
 );
 
@@ -113,7 +128,11 @@ router.post(
       include: { category: true },
     });
 
-    res.status(201).json(service);
+    res.status(201).json({
+      ...service,
+      basePrice: toNumber(service.basePrice),
+      estimatedHours: service.estimatedHours != null ? toNumber(service.estimatedHours) : null,
+    });
   })
 );
 
@@ -190,7 +209,11 @@ router.put(
       include: { category: true },
     });
 
-    res.json(service);
+    res.json({
+      ...service,
+      basePrice: toNumber(service.basePrice),
+      estimatedHours: service.estimatedHours != null ? toNumber(service.estimatedHours) : null,
+    });
   })
 );
 
