@@ -5,7 +5,7 @@ import type { BrandingSettings } from '../types';
 // Convert hex color to RGB values for CSS variables
 function hexToRgb(hex: string): string {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) return '37 99 235'; // default blue
+  if (!result) return '220 38 38'; // default red
   return `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}`;
 }
 
@@ -40,8 +40,8 @@ function applyBrandingColors(primaryColor: string) {
 const defaultBranding: BrandingSettings = {
   brand_name: 'ChipTuneFiles',
   logo_url: '',
-  primary_color: '#2563eb',
-  accent_color: '#1d4ed8',
+  primary_color: '#dc2626',
+  accent_color: '#b91c1c',
   contact_email: '',
   currency_symbol: '€',
   support_url: '',

@@ -7,6 +7,7 @@ import { useServices, createJob, uploadFile } from '../hooks/useApi';
 import { formatCurrency, cn } from '../lib/utils';
 import FileUpload from '../components/FileUpload';
 import Spinner from '../components/Spinner';
+import VehicleSelector from '../components/VehicleSelector';
 import type { ServiceCategory, JobType } from '../types';
 
 const steps = [
@@ -175,14 +176,16 @@ export default function NewJobPage() {
         {currentStep === 2 && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Vehicle Information</h2>
+
+            {/* Vehicle database selector: Brand, Model, Generation, Year, Engine, HP, ECU */}
+            <VehicleSelector
+              vehicle={vehicle}
+              onChange={updates => setVehicle(prev => ({ ...prev, ...updates }))}
+            />
+
+            {/* Remaining manual fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { key: 'brand', label: 'Brand', placeholder: 'e.g. BMW' },
-                { key: 'model', label: 'Model', placeholder: 'e.g. 320d' },
-                { key: 'year', label: 'Year', placeholder: 'e.g. 2020', type: 'number' },
-                { key: 'engineType', label: 'Engine Type', placeholder: 'e.g. N47D20' },
-                { key: 'powerHp', label: 'Power (HP)', placeholder: 'e.g. 190', type: 'number' },
-                { key: 'ecuType', label: 'ECU Type', placeholder: 'e.g. Bosch EDC17' },
                 { key: 'gearboxType', label: 'Gearbox Type', placeholder: 'e.g. ZF 8HP' },
                 { key: 'fuelType', label: 'Fuel Type', placeholder: 'e.g. Diesel' },
                 { key: 'vin', label: 'VIN', placeholder: 'Vehicle identification number' },

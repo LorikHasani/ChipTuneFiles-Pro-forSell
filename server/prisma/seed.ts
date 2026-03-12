@@ -425,9 +425,9 @@ async function main() {
   // ============================================
   const defaultSettings: Record<string, string> = {
     brand_name: 'ChipTuneFiles Pro',
-    primary_color: '#1e40af',
-    secondary_color: '#3b82f6',
-    accent_color: '#f59e0b',
+    primary_color: '#dc2626',
+    secondary_color: '#ef4444',
+    accent_color: '#b91c1c',
     logo_url: '',
     favicon_url: '',
     support_email: 'support@chiptunefiles.com',
