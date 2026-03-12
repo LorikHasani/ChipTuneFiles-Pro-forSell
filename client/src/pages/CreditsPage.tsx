@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CreditCard, Gift, ArrowUpRight, ArrowDownRight, ShoppingCart, CheckCircle } from 'lucide-react';
+import { CreditCard, Gift, ArrowUpRight, ArrowDownRight, ShoppingCart, Shield, Zap, Edit3 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../stores/authStore';
 import { useCreditPackages, useTransactions, createCheckout, verifyPayment } from '../hooks/useApi';
@@ -68,86 +68,148 @@ export default function CreditsPage() {
   };
 
   const getTransactionIcon = (type: string) => {
-    if (type === 'CREDIT_PURCHASE' || type === 'ADMIN_ADJUSTMENT') return <ArrowUpRight size={16} className="text-green-500" />;
-    return <ArrowDownRight size={16} className="text-red-500" />;
+    if (type === 'CREDIT_PURCHASE' || type === 'ADMIN_ADJUSTMENT') return <ArrowUpRight size={16} className="text-green-400" />;
+    return <ArrowDownRight size={16} className="text-red-400" />;
   };
+
+  // Find the "most popular" package (highest bonusCredits or middle one)
+  const sortedPackages = [...(packages || [])];
+  const popularIdx = sortedPackages.length >= 3 ? 2 : -1; // 3rd package (index 2) as popular
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Credits" subtitle="Purchase credits to use for tuning services" />
+      <PageHeader title="Balance" subtitle="Manage your credits and top up your balance" />
 
-      {/* Balance card */}
-      <div className="card p-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white border-0">
-        <div className="flex items-center gap-3 mb-2">
-          <CreditCard size={24} />
-          <span className="text-primary-100">Current Balance</span>
+      {/* Balance card - dark red gradient */}
+      <div className="rounded-xl p-6 bg-gradient-to-r from-red-950 via-red-900 to-red-950 border border-red-800/50">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-red-300/70 mb-1">Your Balance</p>
+            <p className="text-4xl font-bold text-white">
+              {formatCurrency(user?.creditBalance ?? 0)}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/30 border border-red-800/30">
+            <Shield size={14} className="text-green-400" />
+            <span className="text-xs text-gray-300">Secure payments via Stripe</span>
+          </div>
         </div>
-        <p className="text-4xl font-bold">{user?.creditBalance != null ? Number(user.creditBalance).toFixed(0) : '0'} <span className="text-lg font-normal text-primary-200">credits</span></p>
       </div>
 
-      {/* Credit Packages */}
+      {/* Top Up Balance */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Credit Packages</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <Zap size={18} className="text-yellow-400" />
+          <h2 className="text-lg font-bold text-white">Top Up Balance</h2>
+        </div>
+        <p className="text-sm text-gray-500 mb-4">Choose a package to add funds to your balance.</p>
+
         {loadingPkg ? <Spinner /> : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {(packages || []).map((pkg: CreditPackage) => (
-              <div key={pkg.id} className="card p-4 flex flex-col relative">
-                {pkg.bonusCredits > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <Gift size={12} /> +{pkg.bonusCredits}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {sortedPackages.map((pkg: CreditPackage, idx: number) => {
+              const isPopular = idx === popularIdx;
+              const priceNum = Number(pkg.price);
+              const creditsNum = Number(pkg.credits);
+              const perUnit = creditsNum > 0 ? (priceNum / creditsNum).toFixed(2) : '0';
+              const totalWithBonus = creditsNum + (pkg.bonusCredits || 0);
+
+              return (
+                <div key={pkg.id}
+                  className={cn(
+                    'card p-5 flex flex-col relative',
+                    isPopular && 'ring-2 ring-red-500 border-red-500'
+                  )}>
+                  {/* Popular badge */}
+                  {isPopular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-red-600 text-white text-xs font-bold rounded-full">
+                      Most Popular
+                    </div>
+                  )}
+
+                  <h3 className="font-bold text-white text-sm">{pkg.name}</h3>
+
+                  {/* Main price */}
+                  <p className="text-3xl font-bold text-white mt-2">{formatCurrency(pkg.price)}</p>
+                  <p className="text-xs text-gray-500 mb-3">{formatCurrency(perUnit)}/unit</p>
+
+                  {/* Credits breakdown */}
+                  <div className="space-y-1.5 mb-4 flex-1">
+                    <div className="flex items-center gap-2 text-sm">
+                      <CreditCard size={14} className="text-gray-500" />
+                      <span className="text-gray-300">{formatCurrency(pkg.credits)}</span>
+                    </div>
+                    {pkg.bonusCredits > 0 && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <Zap size={14} className="text-green-400" />
+                        <span className="text-green-400">+{formatCurrency(pkg.bonusCredits)} bonus</span>
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500">Total: {formatCurrency(totalWithBonus)}</p>
                   </div>
-                )}
-                <h3 className="font-bold text-gray-900 dark:text-white">{pkg.name}</h3>
-                <p className="text-2xl font-bold text-primary-600 dark:text-primary-400 mt-2">{pkg.credits}</p>
-                <p className="text-xs text-gray-500 mb-3">credits{pkg.bonusCredits > 0 ? ` + ${pkg.bonusCredits} bonus` : ''}</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{formatCurrency(pkg.price)}</p>
-                <button onClick={() => handleBuyPackage(pkg)} disabled={purchasing === pkg.id}
-                  className="btn-primary mt-auto w-full">
-                  {purchasing === pkg.id ? <Spinner size="sm" /> : <ShoppingCart size={16} />}
-                  Buy Now
-                </button>
-              </div>
-            ))}
+
+                  {/* Buy button */}
+                  <button
+                    onClick={() => handleBuyPackage(pkg)}
+                    disabled={purchasing === pkg.id}
+                    className={cn(
+                      'w-full py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2',
+                      isPopular
+                        ? 'bg-red-600 hover:bg-red-700 text-white'
+                        : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                    )}
+                  >
+                    {purchasing === pkg.id ? <Spinner size="sm" /> : null}
+                    Buy for {formatCurrency(pkg.price)}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
       {/* Custom Amount */}
       <div className="card p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Custom Amount</h2>
-        <p className="text-sm text-gray-500 mb-4">1 credit = {formatCurrency(1)}. Minimum 10 credits, maximum 10,000.</p>
+        <div className="flex items-center gap-2 mb-4">
+          <Edit3 size={18} className="text-gray-400" />
+          <h2 className="text-lg font-bold text-white">Custom Amount</h2>
+        </div>
+        <p className="text-sm text-gray-500 mb-4">Need a specific amount? Enter how much you'd like to add.</p>
         <div className="flex gap-3">
-          <input type="number" className="input max-w-xs" placeholder="Enter amount (10-10000)"
-            value={customAmount} onChange={e => setCustomAmount(e.target.value)} min={10} max={10000} />
+          <div className="relative max-w-xs">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">Amount (&euro;)</span>
+            <input type="number" className="input pl-24" placeholder="Min 10, Max 10,000"
+              value={customAmount} onChange={e => setCustomAmount(e.target.value)} min={10} max={10000} />
+          </div>
           <button onClick={handleBuyCustom} disabled={purchasing === 'custom'}
             className="btn-primary whitespace-nowrap">
             {purchasing === 'custom' ? <Spinner size="sm" /> : null}
-            Buy {customAmount ? `${customAmount} credits for ${formatCurrency(parseInt(customAmount) || 0)}` : 'Credits'}
+            Buy for {formatCurrency(parseInt(customAmount) || 0)}
           </button>
         </div>
       </div>
 
       {/* Transaction History */}
       <div className="card">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Transaction History</h2>
+        <div className="p-4 border-b border-gray-800">
+          <h2 className="text-lg font-bold text-white">Transaction History</h2>
         </div>
         {loadingTx ? <div className="p-4"><Spinner /></div> : !transactions?.length ? (
           <p className="p-4 text-gray-500 text-sm">No transactions yet.</p>
         ) : (
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="divide-y divide-gray-800">
             {transactions.map((tx: Transaction) => (
               <div key={tx.id} className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {getTransactionIcon(tx.type)}
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{tx.description || tx.type.replace(/_/g, ' ')}</p>
+                    <p className="text-sm font-medium text-white">{tx.description || tx.type.replace(/_/g, ' ')}</p>
                     <p className="text-xs text-gray-500">{formatDateTime(tx.createdAt)}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className={cn('font-semibold text-sm',
-                    tx.type === 'JOB_PAYMENT' ? 'text-red-600' : 'text-green-600')}>
+                    tx.type === 'JOB_PAYMENT' ? 'text-red-400' : 'text-green-400')}>
                     {tx.type === 'JOB_PAYMENT' ? '-' : '+'}{Math.abs(Number(tx.amount)).toFixed(0)}
                   </p>
                   <p className="text-xs text-gray-500">Balance: {tx.balanceAfter != null ? Number(tx.balanceAfter).toFixed(0) : '0'}</p>

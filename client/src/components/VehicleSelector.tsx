@@ -99,7 +99,7 @@ function ComboBox({
         )}
       </div>
       {open && (
-        <div className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-lg">
+        <div className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-[#1a1a2e] shadow-lg">
           {filtered.length === 0 ? (
             <div className="px-3 py-2 text-sm text-gray-500">
               {search ? (
