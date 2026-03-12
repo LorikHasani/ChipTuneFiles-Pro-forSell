@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Plus, Edit2, Trash2, Megaphone, ToggleLeft, ToggleRight } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Plus, Edit2, Trash2, Megaphone, ToggleLeft, ToggleRight, ImagePlus, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement } from '../../hooks/useApi';
+import { useAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement, uploadAnnouncementImage } from '../../hooks/useApi';
 import { formatDate, cn } from '../../lib/utils';
 import Spinner from '../../components/Spinner';
 import PageHeader from '../../components/PageHeader';
@@ -15,22 +16,62 @@ export default function AdminAnnouncementsPage() {
   const [modal, setModal] = useState<Partial<Announcement> | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] },
+    maxSize: 5 * 1024 * 1024,
+    multiple: false,
+  });
+
+  const openModal = (data: Partial<Announcement>) => {
+    setModal(data);
+    setImageFile(null);
+    setImagePreview(data.imageUrl || null);
+  };
 
   const handleSave = async () => {
     if (!modal?.title || !modal?.message) return;
     setSaving(true);
     try {
+      let imageUrl = modal.imageUrl || null;
+
+      // Upload new image if one was selected
+      if (imageFile) {
+        setUploadingImage(true);
+        imageUrl = await uploadAnnouncementImage(imageFile);
+        setUploadingImage(false);
+      }
+
+      const payload = { ...modal, imageUrl };
+
       if (modal.id) {
-        await updateAnnouncement(modal.id, modal);
+        await updateAnnouncement(modal.id, payload);
       } else {
-        await createAnnouncement(modal);
+        await createAnnouncement(payload);
       }
       toast.success('Announcement saved');
       setModal(null);
+      setImageFile(null);
+      setImagePreview(null);
       refetch();
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Failed');
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+      setUploadingImage(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -50,6 +91,12 @@ export default function AdminAnnouncementsPage() {
     } catch { toast.error('Failed'); }
   };
 
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setModal(m => m ? { ...m, imageUrl: null } : m);
+  };
+
   const typeColors: Record<string, string> = {
     INFO: 'bg-blue-100 text-blue-700',
     WARNING: 'bg-yellow-100 text-yellow-700',
@@ -61,7 +108,7 @@ export default function AdminAnnouncementsPage() {
   return (
     <div className="space-y-6">
       <PageHeader title="Announcements" subtitle="Broadcast messages to all users">
-        <button onClick={() => setModal({ title: '', message: '', type: 'INFO', isActive: true })} className="btn-primary">
+        <button onClick={() => openModal({ title: '', message: '', type: 'INFO', isActive: true })} className="btn-primary">
           <Plus size={16} /> New Announcement
         </button>
       </PageHeader>
@@ -81,13 +128,16 @@ export default function AdminAnnouncementsPage() {
                   {!a.isActive && <span className="text-xs text-gray-400">(Inactive)</span>}
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{a.message}</p>
+                {a.imageUrl && (
+                  <img src={a.imageUrl} alt="" className="mt-2 h-16 rounded object-cover" />
+                )}
                 <p className="text-xs text-gray-400 mt-1">{formatDate(a.createdAt)}</p>
               </div>
               <div className="flex gap-2 ml-4">
                 <button onClick={() => toggleActive(a)} className="text-gray-400 hover:text-gray-600">
                   {a.isActive ? <ToggleRight size={20} className="text-green-500" /> : <ToggleLeft size={20} />}
                 </button>
-                <button onClick={() => setModal(a)} className="text-gray-400 hover:text-gray-600"><Edit2 size={16} /></button>
+                <button onClick={() => openModal(a)} className="text-gray-400 hover:text-gray-600"><Edit2 size={16} /></button>
                 <button onClick={() => setDeleteId(a.id)} className="text-gray-400 hover:text-red-600"><Trash2 size={16} /></button>
               </div>
             </div>
@@ -95,28 +145,63 @@ export default function AdminAnnouncementsPage() {
         </div>
       )}
 
-      <Modal isOpen={!!modal} onClose={() => setModal(null)} title={modal?.id ? 'Edit Announcement' : 'New Announcement'} size="md">
+      <Modal isOpen={!!modal} onClose={() => { setModal(null); setImageFile(null); setImagePreview(null); }} title={modal?.id ? 'Edit Announcement' : 'New Announcement'} size="md">
         {modal && (
           <div className="space-y-4">
-            <div><label className="label">Title</label><input className="input" value={modal.title || ''}
-              onChange={e => setModal(m => m ? { ...m, title: e.target.value } : m)} /></div>
-            <div><label className="label">Message</label><textarea className="input" rows={4} value={modal.message || ''}
-              onChange={e => setModal(m => m ? { ...m, message: e.target.value } : m)} /></div>
-            <div className="grid grid-cols-2 gap-4">
-              <div><label className="label">Type</label>
-                <select className="input" value={modal.type || 'INFO'}
-                  onChange={e => setModal(m => m ? { ...m, type: e.target.value as AnnouncementType } : m)}>
-                  <option value="INFO">Info</option>
-                  <option value="WARNING">Warning</option>
-                  <option value="SUCCESS">Success</option>
-                </select></div>
-              <div><label className="label">Image URL (optional)</label><input className="input" value={modal.imageUrl || ''}
-                onChange={e => setModal(m => m ? { ...m, imageUrl: e.target.value } : m)} /></div>
+            <div>
+              <label className="label">Title</label>
+              <input className="input" placeholder="Announcement title" value={modal.title || ''}
+                onChange={e => setModal(m => m ? { ...m, title: e.target.value } : m)} />
             </div>
+            <div>
+              <label className="label">Message</label>
+              <textarea className="input" rows={4} placeholder="Announcement message..." value={modal.message || ''}
+                onChange={e => setModal(m => m ? { ...m, message: e.target.value } : m)} />
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <label className="label">Image (optional)</label>
+              {imagePreview ? (
+                <div className="relative inline-block">
+                  <img src={imagePreview} alt="Preview" className="h-32 rounded-lg object-cover" />
+                  <button onClick={clearImage}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700">
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  {...getRootProps()}
+                  className={cn(
+                    'flex flex-col items-center justify-center px-6 py-8 border-2 border-dashed rounded-xl cursor-pointer transition-colors',
+                    isDragActive
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                      : 'border-gray-300 dark:border-gray-600 hover:border-primary-400'
+                  )}
+                >
+                  <input {...getInputProps()} />
+                  <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-500">Click to upload image</p>
+                  <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</p>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="label">Type</label>
+              <select className="input" value={modal.type || 'INFO'}
+                onChange={e => setModal(m => m ? { ...m, type: e.target.value as AnnouncementType } : m)}>
+                <option value="INFO">Info</option>
+                <option value="WARNING">Warning</option>
+                <option value="SUCCESS">Success</option>
+              </select>
+            </div>
+
             <div className="flex justify-end gap-3">
-              <button onClick={() => setModal(null)} className="btn-secondary">Cancel</button>
-              <button onClick={handleSave} disabled={saving} className="btn-primary">
-                {saving ? <Spinner size="sm" /> : null} Save
+              <button onClick={() => { setModal(null); setImageFile(null); setImagePreview(null); }} className="btn-secondary">Cancel</button>
+              <button onClick={handleSave} disabled={saving || uploadingImage} className="btn-primary">
+                {(saving || uploadingImage) ? <Spinner size="sm" /> : null} {modal.id ? 'Save' : 'Create'}
               </button>
             </div>
           </div>

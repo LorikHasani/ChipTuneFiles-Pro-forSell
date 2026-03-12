@@ -26,8 +26,10 @@ router.get(
     if (!isAdmin) {
       // Clients only see their own tickets
       where.clientId = user.id;
-    } else if (status && (TICKET_STATUSES as readonly string[]).includes(status as string)) {
-      // Admins can filter by status
+    }
+
+    // All roles can filter by status
+    if (status && (TICKET_STATUSES as readonly string[]).includes(status as string)) {
       where.status = status as string;
     }
 

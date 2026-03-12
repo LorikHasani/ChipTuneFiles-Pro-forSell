@@ -629,6 +629,15 @@ export async function deleteAnnouncement(id: string): Promise<void> {
   await api.delete(`/admin/announcements/${id}`);
 }
 
+export async function uploadAnnouncementImage(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('image', file);
+  const response = await api.post('/files/upload-image', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data.imageUrl;
+}
+
 // ============================================
 // Settings Mutation Functions (Admin)
 // ============================================

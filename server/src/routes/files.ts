@@ -1,10 +1,12 @@
 import { Router, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { authenticate, AuthRequest } from '../middleware/auth';
-import { uploadSingle } from '../middleware/upload';
+import { uploadSingle, createUploader } from '../middleware/upload';
 import { saveFile, getFilePath, fileExists } from '../services/fileStorage';
 import { asyncHandler } from '../utils/helpers';
 import path from 'path';
+
+const announcementUploader = createUploader('announcements');
 
 const router = Router();
 
@@ -69,6 +71,16 @@ router.post(
         });
         return;
       }
+    }
+
+    // If replacing an existing file of the same type, delete old records
+    const existingFiles = await prisma.file.findMany({
+      where: { jobId, fileType },
+    });
+    if (existingFiles.length > 0) {
+      await prisma.file.deleteMany({
+        where: { jobId, fileType },
+      });
     }
 
     // Save file to organized storage
@@ -161,6 +173,32 @@ router.get(
         }
       }
     });
+  })
+);
+
+// ============================================
+// POST /upload-image - Upload announcement image (admin only)
+// ============================================
+router.post(
+  '/upload-image',
+  authenticate,
+  announcementUploader.single('image'),
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const user = req.user!;
+
+    if (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN') {
+      res.status(403).json({ error: 'Admin access required.' });
+      return;
+    }
+
+    if (!req.file) {
+      res.status(400).json({ error: 'No image provided.' });
+      return;
+    }
+
+    // Return the URL path that can be used to access the image
+    const imageUrl = `/uploads/announcements/${req.file.filename}`;
+    res.json({ imageUrl });
   })
 );
 

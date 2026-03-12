@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Wallet,
@@ -13,6 +14,8 @@ import {
   ArrowRight,
   Shield,
   ChevronRight,
+  X,
+  Send as SendIcon,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { useJobs, useActiveAnnouncements } from '../hooks/useApi';
@@ -25,6 +28,26 @@ export default function DashboardPage() {
   const isAdmin = useAuthStore((s) => s.isAdmin);
   const { jobs, loading: jobsLoading } = useJobs();
   const { announcements, loading: announcementsLoading } = useActiveAnnouncements();
+  const [showNewsModal, setShowNewsModal] = useState(false);
+
+  // Show news modal automatically when announcements load (for clients only)
+  useEffect(() => {
+    if (!announcementsLoading && announcements && announcements.length > 0 && !isAdmin) {
+      // Check if user has dismissed these announcements in this session
+      const dismissedKey = `news_dismissed_${announcements.map(a => a.id).join('_')}`;
+      if (!sessionStorage.getItem(dismissedKey)) {
+        setShowNewsModal(true);
+      }
+    }
+  }, [announcementsLoading, announcements, isAdmin]);
+
+  const dismissNewsModal = () => {
+    setShowNewsModal(false);
+    if (announcements) {
+      const dismissedKey = `news_dismissed_${announcements.map(a => a.id).join('_')}`;
+      sessionStorage.setItem(dismissedKey, '1');
+    }
+  };
 
   const pendingCount = jobs?.filter((j) => j.status === 'PENDING').length ?? 0;
   const completedCount = jobs?.filter((j) => j.status === 'COMPLETED').length ?? 0;
@@ -88,12 +111,12 @@ export default function DashboardPage() {
           Welcome back, {user?.contactName || user?.email?.split('@')[0] || 'User'}
         </h1>
         <p className="mt-1 text-gray-500 dark:text-gray-400">
-          Here's an overview of your account activity.
+          Here's what's happening with your tuning jobs today.
         </p>
       </div>
 
-      {/* Active Announcements */}
-      {!announcementsLoading && announcements && announcements.length > 0 && (
+      {/* Active Announcements (inline for admins, or if modal dismissed for clients) */}
+      {!announcementsLoading && announcements && announcements.length > 0 && (isAdmin || !showNewsModal) && (
         <div className="space-y-3">
           {announcements.map((a) => (
             <div
@@ -297,6 +320,65 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* News Modal for Clients */}
+      {showNewsModal && announcements && announcements.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={(e) => { if (e.target === e.currentTarget) dismissNewsModal(); }}
+        >
+          <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 fade-in duration-200">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <SendIcon className="w-5 h-5 text-red-500" />
+                News
+              </h2>
+              <button
+                onClick={dismissNewsModal}
+                className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="px-6 py-4 max-h-[60vh] overflow-y-auto space-y-4">
+              {announcements.map((a) => (
+                <div
+                  key={a.id}
+                  className={cn(
+                    'p-4 rounded-lg border',
+                    announcementBg(a.type)
+                  )}
+                >
+                  <div className="flex items-start gap-3">
+                    {announcementIcon(a.type)}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 dark:text-white">
+                        {a.title}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 whitespace-pre-wrap">
+                        {a.message}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+              <button
+                onClick={dismissNewsModal}
+                className="btn-primary w-full"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -148,12 +148,12 @@ router.get(
     if (user.role === 'CLIENT') {
       // Clients can only see their own jobs
       where.clientId = user.id;
-    } else {
-      // Admins can filter by status
-      const statusFilter = req.query.status as string | undefined;
-      if (statusFilter && (JOB_STATUSES as readonly string[]).includes(statusFilter)) {
-        where.status = statusFilter;
-      }
+    }
+
+    // All roles can filter by status
+    const statusFilter = req.query.status as string | undefined;
+    if (statusFilter && (JOB_STATUSES as readonly string[]).includes(statusFilter)) {
+      where.status = statusFilter;
     }
 
     // Optional search by reference number

@@ -43,17 +43,17 @@ export default function JobDetailPage() {
 
   const [newMessage, setNewMessage] = useState('');
   const [sendingMessage, setSendingMessage] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const msgContainerRef = useRef<HTMLDivElement>(null);
 
   const [showRevisionModal, setShowRevisionModal] = useState(false);
   const [revisionReason, setRevisionReason] = useState('');
   const [submittingRevision, setSubmittingRevision] = useState(false);
 
-  // Track message count to only scroll on NEW messages
+  // Scroll messages container (not the whole page) when new messages arrive
   const prevMsgCount = useRef(0);
   useEffect(() => {
-    if (messages && messages.length > prevMsgCount.current) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages && messages.length > prevMsgCount.current && msgContainerRef.current) {
+      msgContainerRef.current.scrollTop = msgContainerRef.current.scrollHeight;
     }
     prevMsgCount.current = messages?.length || 0;
   }, [messages?.length]);
@@ -210,7 +210,7 @@ export default function JobDetailPage() {
                 <MessageSquare size={18} /> Messages
               </h3>
             </div>
-            <div className="p-5 space-y-3 max-h-[400px] overflow-y-auto">
+            <div ref={msgContainerRef} className="p-5 space-y-3 max-h-[400px] overflow-y-auto">
               {messagesLoading && <div className="flex justify-center py-4"><Spinner size="sm" /></div>}
               {!messagesLoading && (!messages || messages.length === 0) && (
                 <p className="text-sm text-gray-400 text-center py-6">No messages yet</p>
@@ -234,7 +234,6 @@ export default function JobDetailPage() {
                   </div>
                 </div>
               ))}
-              <div ref={messagesEndRef} />
             </div>
             <form onSubmit={handleSendMessage} className="flex gap-2 p-4 border-t border-gray-200 dark:border-gray-700">
               <input type="text" value={newMessage} onChange={e => setNewMessage(e.target.value)}

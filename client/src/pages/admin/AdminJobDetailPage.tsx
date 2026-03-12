@@ -62,7 +62,8 @@ export default function AdminJobDetailPage() {
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [adminNotes, setAdminNotes] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<JobStatus>('PENDING');
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const msgContainerRef = useRef<HTMLDivElement>(null);
+  const prevMsgCount = useRef(0);
 
   useEffect(() => {
     if (job) {
@@ -76,9 +77,13 @@ export default function AdminJobDetailPage() {
     return () => clearInterval(interval);
   }, [id]);
 
+  // Scroll messages container (not the whole page) when new messages arrive
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (messages && messages.length > prevMsgCount.current && msgContainerRef.current) {
+      msgContainerRef.current.scrollTop = msgContainerRef.current.scrollHeight;
+    }
+    prevMsgCount.current = messages?.length || 0;
+  }, [messages?.length]);
 
   useEffect(() => {
     if (id) markJobMessagesRead(id).catch(() => {});
@@ -257,7 +262,7 @@ export default function AdminJobDetailPage() {
                 <MessageSquare size={18} /> Messages with Client
               </h3>
             </div>
-            <div className="p-5 space-y-3 max-h-[400px] overflow-y-auto">
+            <div ref={msgContainerRef} className="p-5 space-y-3 max-h-[400px] overflow-y-auto">
               {(!messages || messages.length === 0) ? (
                 <p className="text-sm text-gray-400 text-center py-6">No messages yet</p>
               ) : (
@@ -274,7 +279,6 @@ export default function AdminJobDetailPage() {
                   </div>
                 ))
               )}
-              <div ref={bottomRef} />
             </div>
             <div className="p-4 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-2">
@@ -360,7 +364,7 @@ export default function AdminJobDetailPage() {
               {/* Modified Files */}
               <div>
                 <p className="text-xs font-medium text-gray-500 mb-2">Modified File (tuned)</p>
-                {modFiles.length > 0 ? (
+                {modFiles.length > 0 && (
                   modFiles.map(f => (
                     <div key={f.id} className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-2">
                       <div className="min-w-0">
@@ -373,16 +377,15 @@ export default function AdminJobDetailPage() {
                       </button>
                     </div>
                   ))
-                ) : (
-                  <div className="border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                    <FileUpload onFileSelected={setModFile} label="Upload modified file" />
-                    {modFile && (
-                      <button onClick={handleUploadMod} disabled={uploading} className="btn-primary w-full mt-2 bg-red-600 hover:bg-red-700">
-                        {uploading ? <Spinner size="sm" /> : <Upload size={16} />} Upload
-                      </button>
-                    )}
-                  </div>
                 )}
+                <div className="border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                  <FileUpload onFileSelected={setModFile} label={modFiles.length > 0 ? 'Replace modified file' : 'Upload modified file'} />
+                  {modFile && (
+                    <button onClick={handleUploadMod} disabled={uploading} className="btn-primary w-full mt-2 bg-red-600 hover:bg-red-700">
+                      {uploading ? <Spinner size="sm" /> : <Upload size={16} />} {modFiles.length > 0 ? 'Replace' : 'Upload'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
