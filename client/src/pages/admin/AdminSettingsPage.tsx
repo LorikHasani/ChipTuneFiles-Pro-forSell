@@ -56,44 +56,15 @@ export default function AdminSettingsPage() {
             <input className="input" value={form.logo_url || ''} onChange={e => updateField('logo_url', e.target.value)}
               placeholder="https://your-logo-url.com/logo.png" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">Primary Color</label>
-              <div className="flex gap-2">
-                <input type="color" value={form.primary_color || '#2563eb'}
-                  onChange={e => updateField('primary_color', e.target.value)}
-                  className="h-10 w-14 rounded border border-gray-300 cursor-pointer" />
-                <input className="input flex-1" value={form.primary_color || '#2563eb'}
-                  onChange={e => updateField('primary_color', e.target.value)} />
-              </div>
-            </div>
-            <div>
-              <label className="label">Accent Color</label>
-              <div className="flex gap-2">
-                <input type="color" value={form.accent_color || '#1d4ed8'}
-                  onChange={e => updateField('accent_color', e.target.value)}
-                  className="h-10 w-14 rounded border border-gray-300 cursor-pointer" />
-                <input className="input flex-1" value={form.accent_color || '#1d4ed8'}
-                  onChange={e => updateField('accent_color', e.target.value)} />
-              </div>
-            </div>
-          </div>
           {/* Preview */}
           <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-500 mb-2">Preview:</p>
             <div className="flex items-center gap-3">
               {form.logo_url ? <img src={form.logo_url} alt="Logo" className="h-8 w-8 object-contain" /> :
-                <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-                  style={{ backgroundColor: form.primary_color || '#2563eb' }}>
+                <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-red-600">
                   {(form.brand_name || 'C')[0]}
                 </div>}
               <span className="text-lg font-bold">{form.brand_name || 'ChipTuneFiles'}</span>
-            </div>
-            <div className="flex gap-2 mt-3">
-              <button className="px-4 py-2 rounded-lg text-white text-sm font-medium"
-                style={{ backgroundColor: form.primary_color || '#2563eb' }}>Primary Button</button>
-              <button className="px-4 py-2 rounded-lg text-white text-sm font-medium"
-                style={{ backgroundColor: form.accent_color || '#1d4ed8' }}>Accent Button</button>
             </div>
           </div>
         </div>
