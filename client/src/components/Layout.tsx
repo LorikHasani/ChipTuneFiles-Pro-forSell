@@ -112,7 +112,7 @@ export default function Layout() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-[#0a0a1a]">
+    <div className="flex h-screen bg-gray-50 dark:bg-black">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -124,7 +124,7 @@ export default function Layout() {
       {/* Sidebar - always dark */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-[#0e0e22] border-r border-gray-800 transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto',
+          'fixed inset-y-0 left-0 z-40 flex flex-col w-64 bg-[#0a0a0a] border-r border-gray-800 transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
@@ -261,7 +261,7 @@ export default function Layout() {
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top header bar */}
-        <header className="flex items-center justify-between h-16 px-4 sm:px-6 bg-white dark:bg-[#0e0e22] border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
+        <header className="flex items-center justify-between h-16 px-4 sm:px-6 bg-white dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
