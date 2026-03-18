@@ -26,23 +26,23 @@ export default function DataTable<T extends Record<string, any>>({
     <div className={cn('overflow-x-auto', className)}>
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
+          <tr className="border-b border-neutral-200 dark:border-neutral-800">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                className="px-4 py-3 text-left text-[11px] font-medium text-neutral-400 dark:text-neutral-600 uppercase tracking-wider"
               >
                 {col.label}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 dark:divide-gray-700/50">
+        <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/50">
           {data.length === 0 ? (
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-12 text-center text-gray-500 dark:text-gray-400"
+                className="px-4 py-12 text-center text-neutral-400 dark:text-neutral-600"
               >
                 {emptyMessage}
               </td>
@@ -55,9 +55,9 @@ export default function DataTable<T extends Record<string, any>>({
                 className={cn(
                   'transition-colors',
                   onRowClick
-                    ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                    ? 'cursor-pointer hover:bg-neutral-50 dark:hover:bg-white/[0.03]'
                     : '',
-                  'text-gray-700 dark:text-gray-300'
+                  'text-neutral-600 dark:text-neutral-400'
                 )}
               >
                 {columns.map((col) => (

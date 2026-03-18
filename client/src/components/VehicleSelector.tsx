@@ -52,7 +52,6 @@ function ComboBox({
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  // Sync search with value when value changes externally
   useEffect(() => {
     if (!open) setSearch('');
   }, [value, open]);
@@ -64,7 +63,7 @@ function ComboBox({
         className={cn(
           'input flex items-center gap-2 cursor-pointer',
           disabled && 'opacity-50 cursor-not-allowed',
-          open && 'ring-2 ring-primary-500 border-primary-500'
+          open && 'ring-2 ring-neutral-400 dark:ring-white/30 border-neutral-400 dark:border-neutral-600'
         )}
         onClick={() => {
           if (!disabled) {
@@ -84,27 +83,27 @@ function ComboBox({
             onClick={e => e.stopPropagation()}
           />
         ) : (
-          <span className={cn('flex-1 text-sm truncate', !value && 'text-gray-400 dark:text-gray-500')}>
+          <span className={cn('flex-1 text-sm truncate', !value && 'text-neutral-400 dark:text-neutral-600')}>
             {value || placeholder}
           </span>
         )}
         {value && !open ? (
           <X
             size={14}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 shrink-0"
+            className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 shrink-0"
             onClick={e => { e.stopPropagation(); onChange(''); }}
           />
         ) : (
-          <ChevronDown size={14} className={cn('text-gray-400 shrink-0 transition-transform', open && 'rotate-180')} />
+          <ChevronDown size={14} className={cn('text-neutral-400 shrink-0 transition-transform', open && 'rotate-180')} />
         )}
       </div>
       {open && (
-        <div className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-[#111111] shadow-lg">
+        <div className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-lg">
           {filtered.length === 0 ? (
-            <div className="px-3 py-2 text-sm text-gray-500">
+            <div className="px-3 py-2 text-sm text-neutral-500">
               {search ? (
                 <button
-                  className="w-full text-left hover:text-primary-600 dark:hover:text-primary-400"
+                  className="w-full text-left hover:text-neutral-900 dark:hover:text-white"
                   onClick={() => { onChange(search); setOpen(false); }}
                 >
                   Use "{search}" as custom value
@@ -119,8 +118,8 @@ function ComboBox({
                 <button
                   key={option}
                   className={cn(
-                    'w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors',
-                    option === value && 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-medium'
+                    'w-full text-left px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors',
+                    option === value && 'bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-white font-medium'
                   )}
                   onClick={() => { onChange(option); setOpen(false); }}
                 >
@@ -129,7 +128,7 @@ function ComboBox({
               ))}
               {search && !filtered.includes(search) && (
                 <button
-                  className="w-full text-left px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 border-t border-gray-100 dark:border-gray-700"
+                  className="w-full text-left px-3 py-2 text-sm text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-t border-neutral-100 dark:border-neutral-800"
                   onClick={() => { onChange(search); setOpen(false); }}
                 >
                   Use "{search}" as custom value
@@ -146,7 +145,6 @@ function ComboBox({
 export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorProps) {
   const { data, loading, error } = useVehicleData();
 
-  // Derived options based on current selections
   const brands = useMemo(() => data ? Object.keys(data).sort() : [], [data]);
 
   const models = useMemo(() => {
@@ -161,7 +159,6 @@ export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorPr
     return Object.keys(brandData[vehicle.model]);
   }, [data, vehicle.brand, vehicle.model]);
 
-  // Track selected generation for engine lookup
   const [selectedGeneration, setSelectedGeneration] = useState('');
 
   const engines = useMemo(() => {
@@ -177,7 +174,6 @@ export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorPr
     return engineData?.ecus || [];
   }, [data, vehicle.brand, vehicle.model, selectedGeneration, vehicle.engineType]);
 
-  // When engine is selected, auto-fill HP and ECU
   const handleEngineSelect = (engineName: string) => {
     if (!data || !vehicle.brand || !vehicle.model || !selectedGeneration) {
       onChange({ engineType: engineName });
@@ -199,7 +195,7 @@ export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorPr
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center gap-2 py-8 text-gray-500">
+      <div className="flex items-center justify-center gap-2 py-8 text-neutral-500">
         <Loader2 size={16} className="animate-spin" />
         <span className="text-sm">Loading vehicle database...</span>
       </div>
@@ -207,7 +203,6 @@ export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorPr
   }
 
   if (error || !data) {
-    // Fallback: show manual inputs
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[

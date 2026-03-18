@@ -14,7 +14,7 @@ export default function ProtectedRoute({ children, requireAdmin = false }: Prote
   // Still initializing -- show loading spinner
   if (!isInitialized || isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-neutral-50 dark:bg-black">
         <Spinner size="lg" />
       </div>
     );

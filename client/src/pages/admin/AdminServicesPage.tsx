@@ -72,7 +72,7 @@ export default function AdminServicesPage() {
         {(['ECU', 'TCU'] as JobType[]).map(t => (
           <button key={t} onClick={() => setActiveTab(t)}
             className={cn('px-6 py-2 rounded-lg text-sm font-medium',
-              activeTab === t ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400')}>
+              activeTab === t ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400')}>
             {t}
           </button>
         ))}
@@ -80,10 +80,10 @@ export default function AdminServicesPage() {
 
       {filtered.map((cat: ServiceCategory) => (
         <div key={cat.id} className="card">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white">{cat.name}</h3>
-              <p className="text-xs text-gray-500">{cat.selectionType} selection &middot; {cat.isActive ? 'Active' : 'Inactive'}</p>
+              <h3 className="font-semibold text-neutral-900 dark:text-white">{cat.name}</h3>
+              <p className="text-xs text-neutral-500">{cat.selectionType} selection &middot; {cat.isActive ? 'Active' : 'Inactive'}</p>
             </div>
             <div className="flex gap-2">
               <button onClick={() => setSvcModal({ categoryId: cat.id, code: '', name: '', basePrice: 0, sortOrder: 0 })}
@@ -91,23 +91,23 @@ export default function AdminServicesPage() {
               <button onClick={() => setCatModal(cat)} className="btn-ghost text-xs py-1 px-2"><Edit2 size={14} /></button>
             </div>
           </div>
-          <div className="divide-y divide-gray-100 dark:divide-gray-700/50">
+          <div className="divide-y divide-neutral-100 dark:divide-neutral-800/50">
             {(cat.services || []).map((svc: Service) => (
-              <div key={svc.id} className="p-3 px-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/30">
+              <div key={svc.id} className="p-3 px-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-white/[0.03]">
                 <div className="flex items-center gap-3">
-                  <button onClick={() => toggleService(svc)} className="text-gray-400 hover:text-gray-600">
-                    {svc.isActive ? <ToggleRight size={20} className="text-green-500" /> : <ToggleLeft size={20} />}
+                  <button onClick={() => toggleService(svc)} className="text-neutral-400 hover:text-neutral-500">
+                    {svc.isActive ? <ToggleRight size={20} className="text-neutral-500" /> : <ToggleLeft size={20} />}
                   </button>
                   <div>
-                    <p className={cn('text-sm font-medium', !svc.isActive && 'text-gray-400 line-through')}>
-                      {svc.name} <span className="text-gray-400 font-normal">({svc.code})</span>
+                    <p className={cn('text-sm font-medium', !svc.isActive && 'text-neutral-400 line-through')}>
+                      {svc.name} <span className="text-neutral-400 font-normal">({svc.code})</span>
                     </p>
-                    {svc.description && <p className="text-xs text-gray-500 truncate max-w-md">{svc.description}</p>}
+                    {svc.description && <p className="text-xs text-neutral-500 truncate max-w-md">{svc.description}</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="font-semibold text-sm">{formatCurrency(svc.basePrice)}</span>
-                  <button onClick={() => setSvcModal({ ...svc, categoryId: cat.id })} className="text-gray-400 hover:text-gray-600">
+                  <button onClick={() => setSvcModal({ ...svc, categoryId: cat.id })} className="text-neutral-400 hover:text-neutral-500">
                     <Edit2 size={14} />
                   </button>
                 </div>

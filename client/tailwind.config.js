@@ -19,6 +19,9 @@ export default {
           950: 'rgb(var(--color-primary-950) / <alpha-value>)',
         },
       },
+      borderRadius: {
+        '2xl': '1rem',
+      },
     },
   },
   plugins: [],

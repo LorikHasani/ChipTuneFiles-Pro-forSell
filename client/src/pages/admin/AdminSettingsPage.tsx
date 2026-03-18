@@ -44,7 +44,7 @@ export default function AdminSettingsPage() {
 
       {/* Branding */}
       <div className="card p-6">
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Palette size={18} /> Branding</h3>
+        <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2"><Palette size={18} /> Branding</h3>
         <div className="space-y-4">
           <div>
             <label className="label">Brand Name</label>
@@ -57,11 +57,11 @@ export default function AdminSettingsPage() {
               placeholder="https://your-logo-url.com/logo.png" />
           </div>
           {/* Preview */}
-          <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 mb-2">Preview:</p>
+          <div className="p-4 rounded-lg border border-neutral-200 dark:border-neutral-800">
+            <p className="text-sm text-neutral-500 mb-2">Preview:</p>
             <div className="flex items-center gap-3">
               {form.logo_url ? <img src={form.logo_url} alt="Logo" className="h-8 w-8 object-contain" /> :
-                <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-red-600">
+                <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-neutral-900 dark:bg-white dark:text-black">
                   {(form.brand_name || 'C')[0]}
                 </div>}
               <span className="text-lg font-bold">{form.brand_name || 'ChipTuneFiles'}</span>
@@ -72,7 +72,7 @@ export default function AdminSettingsPage() {
 
       {/* Contact */}
       <div className="card p-6">
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Globe size={18} /> Contact & General</h3>
+        <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2"><Globe size={18} /> Contact & General</h3>
         <div className="space-y-4">
           <div>
             <label className="label">Contact Email</label>
@@ -91,7 +91,7 @@ export default function AdminSettingsPage() {
 
       {/* SMTP */}
       <div className="card p-6">
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"><Mail size={18} /> Email (SMTP)</h3>
+        <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2"><Mail size={18} /> Email (SMTP)</h3>
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>

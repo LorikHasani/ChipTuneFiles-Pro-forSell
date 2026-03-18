@@ -49,7 +49,7 @@ export default function TicketDetailPage() {
   };
 
   if (loading) return <div className="flex justify-center py-12"><Spinner size="lg" /></div>;
-  if (!ticket) return <p className="text-center text-gray-500 py-12">Ticket not found</p>;
+  if (!ticket) return <p className="text-center text-neutral-500 py-12">Ticket not found</p>;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -65,12 +65,12 @@ export default function TicketDetailPage() {
             return (
               <div key={msg.id} className={cn('flex', isMe ? 'justify-end' : 'justify-start')}>
                 <div className={cn('max-w-[80%] rounded-xl px-4 py-3',
-                  isMe ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-700')}>
-                  <p className={cn('text-xs font-medium mb-1', isMe ? 'text-primary-200' : 'text-gray-500')}>
+                  isMe ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' : 'bg-neutral-100 dark:bg-neutral-800')}>
+                  <p className={cn('text-xs font-medium mb-1', isMe ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-500')}>
                     {msg.sender?.contactName || msg.sender?.email || 'User'}
                   </p>
                   <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
-                  <p className={cn('text-xs mt-1', isMe ? 'text-primary-200' : 'text-gray-400')}>
+                  <p className={cn('text-xs mt-1', isMe ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-400')}>
                     {formatDateTime(msg.createdAt)}
                   </p>
                 </div>
@@ -82,7 +82,7 @@ export default function TicketDetailPage() {
 
         {/* Send */}
         {ticket.status !== 'CLOSED' && (
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="p-4 border-t border-neutral-200 dark:border-neutral-800">
             <div className="flex gap-2">
               <input className="input flex-1" placeholder="Type a message..." value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}

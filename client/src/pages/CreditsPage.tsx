@@ -67,7 +67,7 @@ export default function CreditsPage() {
   };
 
   const getTransactionIcon = (type: string) => {
-    if (type === 'CREDIT_PURCHASE' || type === 'ADMIN_ADJUSTMENT') return <ArrowUpRight size={16} className="text-green-500" />;
+    if (type === 'CREDIT_PURCHASE' || type === 'ADMIN_ADJUSTMENT') return <ArrowUpRight size={16} className="text-emerald-500" />;
     return <ArrowDownRight size={16} className="text-red-500" />;
   };
 
@@ -79,15 +79,15 @@ export default function CreditsPage() {
       <PageHeader title="Balance" subtitle="Manage your credits and top up your balance" />
 
       {/* Balance card */}
-      <div className="rounded-xl p-6 bg-gradient-to-br from-red-950/80 to-black border border-red-900/30">
+      <div className="rounded-xl p-6 bg-gradient-to-br from-neutral-950 to-black border border-neutral-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500 mb-1">Your Balance</p>
+            <p className="text-sm text-neutral-500 mb-1">Your Balance</p>
             <p className="text-4xl font-bold text-white">{formatCurrency(user?.creditBalance ?? 0)}</p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/40 border border-gray-800">
-            <Shield size={14} className="text-red-400" />
-            <span className="text-xs text-gray-400">Secure payments via Stripe</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/40 border border-neutral-800">
+            <Shield size={14} className="text-neutral-400" />
+            <span className="text-xs text-neutral-400">Secure payments via Stripe</span>
           </div>
         </div>
       </div>
@@ -95,10 +95,10 @@ export default function CreditsPage() {
       {/* Packages */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <Zap size={16} className="text-red-400" />
+          <Zap size={16} className="text-neutral-400" />
           <h2 className="text-base font-bold text-white">Top Up Balance</h2>
         </div>
-        <p className="text-xs text-gray-600 mb-4">Choose a package to add funds to your balance.</p>
+        <p className="text-xs text-neutral-500 mb-4">Choose a package to add funds to your balance.</p>
 
         {loadingPkg ? <Spinner /> : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -111,34 +111,34 @@ export default function CreditsPage() {
 
               return (
                 <div key={pkg.id}
-                  className={cn('card p-5 flex flex-col relative', isPopular && 'ring-1 ring-red-500')}>
+                  className={cn('card p-5 flex flex-col relative', isPopular && 'ring-1 ring-neutral-400')}>
                   {isPopular && (
-                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wide">
+                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-neutral-900 dark:bg-white text-white dark:text-black text-[10px] font-bold rounded-full uppercase tracking-wide">
                       Most Popular
                     </div>
                   )}
 
-                  <h3 className="font-semibold text-gray-400 text-sm">{pkg.name}</h3>
+                  <h3 className="font-semibold text-neutral-400 text-sm">{pkg.name}</h3>
                   <p className="text-3xl font-bold text-white mt-2">{formatCurrency(pkg.price)}</p>
-                  <p className="text-xs text-gray-600 mb-3">{formatCurrency(perUnit)}/unit</p>
+                  <p className="text-xs text-neutral-500 mb-3">{formatCurrency(perUnit)}/unit</p>
 
                   <div className="space-y-1.5 mb-4 flex-1">
                     <div className="flex items-center gap-2 text-sm">
-                      <CreditCard size={14} className="text-gray-600" />
-                      <span className="text-gray-400">{formatCurrency(pkg.credits)}</span>
+                      <CreditCard size={14} className="text-neutral-500" />
+                      <span className="text-neutral-400">{formatCurrency(pkg.credits)}</span>
                     </div>
                     {pkg.bonusCredits > 0 && (
                       <div className="flex items-center gap-2 text-sm">
-                        <Zap size={14} className="text-red-400" />
-                        <span className="text-red-400">+{formatCurrency(pkg.bonusCredits)} bonus</span>
+                        <Zap size={14} className="text-neutral-400" />
+                        <span className="text-neutral-400">+{formatCurrency(pkg.bonusCredits)} bonus</span>
                       </div>
                     )}
-                    <p className="text-xs text-gray-600">Total: {formatCurrency(totalWithBonus)}</p>
+                    <p className="text-xs text-neutral-500">Total: {formatCurrency(totalWithBonus)}</p>
                   </div>
 
                   <button onClick={() => handleBuyPackage(pkg)} disabled={purchasing === pkg.id}
                     className={cn('w-full py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2',
-                      isPopular ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-800 hover:bg-gray-700 text-gray-300')}>
+                      isPopular ? 'bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800' : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300')}>
                     {purchasing === pkg.id ? <Spinner size="sm" /> : null}
                     Buy for {formatCurrency(pkg.price)}
                   </button>
@@ -152,10 +152,10 @@ export default function CreditsPage() {
       {/* Custom Amount */}
       <div className="card p-6">
         <div className="flex items-center gap-2 mb-1">
-          <Edit3 size={16} className="text-gray-500" />
+          <Edit3 size={16} className="text-neutral-500" />
           <h2 className="text-base font-bold text-white">Custom Amount</h2>
         </div>
-        <p className="text-xs text-gray-600 mb-4">Need a specific amount? Enter how much you'd like to add.</p>
+        <p className="text-xs text-neutral-500 mb-4">Need a specific amount? Enter how much you'd like to add.</p>
         <div className="flex gap-3 items-center">
           <input type="number" className="input max-w-xs" placeholder="Min 10, Max 10,000"
             value={customAmount} onChange={e => setCustomAmount(e.target.value)} min={10} max={10000} />
@@ -169,28 +169,28 @@ export default function CreditsPage() {
 
       {/* Transaction History */}
       <div className="card">
-        <div className="p-4 border-b border-gray-800">
+        <div className="p-4 border-b border-neutral-800">
           <h2 className="text-base font-bold text-white">Transaction History</h2>
         </div>
         {loadingTx ? <div className="p-4"><Spinner /></div> : !transactions?.length ? (
-          <p className="p-4 text-gray-600 text-sm">No transactions yet.</p>
+          <p className="p-4 text-neutral-500 text-sm">No transactions yet.</p>
         ) : (
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-neutral-800/50">
             {transactions.map((tx: Transaction) => (
               <div key={tx.id} className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {getTransactionIcon(tx.type)}
                   <div>
-                    <p className="text-sm font-medium text-gray-300">{tx.description || tx.type.replace(/_/g, ' ')}</p>
-                    <p className="text-xs text-gray-600">{formatDateTime(tx.createdAt)}</p>
+                    <p className="text-sm font-medium text-neutral-300">{tx.description || tx.type.replace(/_/g, ' ')}</p>
+                    <p className="text-xs text-neutral-500">{formatDateTime(tx.createdAt)}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className={cn('font-semibold text-sm',
-                    tx.type === 'JOB_PAYMENT' ? 'text-red-400' : 'text-green-500')}>
+                    tx.type === 'JOB_PAYMENT' ? 'text-red-400' : 'text-emerald-500')}>
                     {tx.type === 'JOB_PAYMENT' ? '-' : '+'}{Math.abs(Number(tx.amount)).toFixed(0)}
                   </p>
-                  <p className="text-xs text-gray-600">Balance: {tx.balanceAfter != null ? Number(tx.balanceAfter).toFixed(0) : '0'}</p>
+                  <p className="text-xs text-neutral-500">Balance: {tx.balanceAfter != null ? Number(tx.balanceAfter).toFixed(0) : '0'}</p>
                 </div>
               </div>
             ))}

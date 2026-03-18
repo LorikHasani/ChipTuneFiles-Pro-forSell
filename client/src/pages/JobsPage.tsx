@@ -53,8 +53,8 @@ export default function JobsPage() {
               className={cn(
                 'px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap',
                 activeStatus === tab.value
-                  ? 'bg-primary-600 text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-black shadow-sm'
+                  : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
               )}
             >
               {tab.label}
@@ -65,7 +65,7 @@ export default function JobsPage() {
 
       {/* Error State */}
       {error && (
-        <div className="flex items-center gap-3 p-4 mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+        <div className="flex items-center gap-3 p-4 mb-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl">
           <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
           <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
@@ -106,25 +106,25 @@ export default function JobsPage() {
             <button
               key={job.id}
               onClick={() => navigate(`/jobs/${job.id}`)}
-              className="w-full text-left bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all group"
+              className="w-full text-left bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 hover:border-neutral-300 dark:hover:border-neutral-700 hover:shadow-md transition-all group"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   {/* Reference & Status */}
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm font-mono font-semibold text-primary-600 dark:text-primary-400">
+                    <span className="text-sm font-mono font-semibold text-neutral-900 dark:text-white">
                       {job.referenceNumber}
                     </span>
                     <Badge status={job.status} />
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-300">
                       {job.jobType}
                     </span>
                   </div>
 
                   {/* Vehicle */}
                   <div className="flex items-center gap-2 mb-1">
-                    <Car className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <span className="text-base font-medium text-gray-900 dark:text-white truncate">
+                    <Car className="w-4 h-4 text-neutral-400 flex-shrink-0" />
+                    <span className="text-base font-medium text-neutral-900 dark:text-white truncate">
                       {job.brand && job.model
                         ? `${job.brand} ${job.model}${job.year ? ` (${job.year})` : ''}`
                         : 'Vehicle not specified'}
@@ -132,7 +132,7 @@ export default function JobsPage() {
                   </div>
 
                   {/* Meta Row */}
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-neutral-500 dark:text-neutral-400">
                     <span className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5" />
                       {formatDate(job.createdAt)}
@@ -144,14 +144,14 @@ export default function JobsPage() {
                       </span>
                     )}
                     {job.totalPrice > 0 && (
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
+                      <span className="font-medium text-neutral-600 dark:text-neutral-300">
                         {formatCredits(job.totalPrice)}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <ChevronRight className="w-5 h-5 text-gray-300 dark:text-gray-600 group-hover:text-primary-500 transition-colors flex-shrink-0 mt-1" />
+                <ChevronRight className="w-5 h-5 text-neutral-300 dark:text-neutral-600 group-hover:text-neutral-500 transition-colors flex-shrink-0 mt-1" />
               </div>
             </button>
           ))}

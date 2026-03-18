@@ -145,7 +145,7 @@ export default function AdminJobDetailPage() {
   };
 
   if (loading) return <div className="flex justify-center py-12"><Spinner size="lg" /></div>;
-  if (!job) return <p className="text-center text-gray-500 py-12">Job not found</p>;
+  if (!job) return <p className="text-center text-neutral-500 py-12">Job not found</p>;
 
   const origFiles = (job.files || []).filter(f => f.fileType === 'ORIGINAL');
   const modFiles = (job.files || []).filter(f => f.fileType === 'MODIFIED');
@@ -154,14 +154,14 @@ export default function AdminJobDetailPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <Link to="/admin/jobs" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-red-600 transition-colors mb-3">
+        <Link to="/admin/jobs" className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors mb-3">
           <ArrowLeft className="w-4 h-4" /> Back to all jobs
         </Link>
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{job.referenceNumber}</h1>
+          <h1 className="text-xl font-semibold text-neutral-900 dark:text-white">{job.referenceNumber}</h1>
           <Badge status={job.status} />
         </div>
-        <p className="text-sm text-gray-500 mt-1">Created {formatRelativeTime(job.createdAt)}</p>
+        <p className="text-sm text-neutral-500 mt-1">Created {formatRelativeTime(job.createdAt)}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -169,32 +169,32 @@ export default function AdminJobDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Client Information */}
           <div className="card p-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
               <User size={18} /> Client Information
             </h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-xs text-gray-500 mb-0.5">Name</p>
-                <p className="font-medium text-gray-900 dark:text-white">{job.client?.contactName || '-'}</p>
+                <p className="text-xs text-neutral-500 mb-0.5">Name</p>
+                <p className="font-medium text-neutral-900 dark:text-white">{job.client?.contactName || '-'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-0.5">Email</p>
-                <p className="font-medium text-gray-900 dark:text-white">{job.client?.email || '-'}</p>
+                <p className="text-xs text-neutral-500 mb-0.5">Email</p>
+                <p className="font-medium text-neutral-900 dark:text-white">{job.client?.email || '-'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-0.5">Company</p>
-                <p className="font-medium text-gray-900 dark:text-white">{job.client?.companyName || '-'}</p>
+                <p className="text-xs text-neutral-500 mb-0.5">Company</p>
+                <p className="font-medium text-neutral-900 dark:text-white">{job.client?.companyName || '-'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-0.5">Balance</p>
-                <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(job.client?.creditBalance || 0)}</p>
+                <p className="text-xs text-neutral-500 mb-0.5">Balance</p>
+                <p className="font-medium text-neutral-900 dark:text-white">{formatCurrency(job.client?.creditBalance || 0)}</p>
               </div>
             </div>
           </div>
 
           {/* Vehicle Information */}
           <div className="card p-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
               <Car size={18} /> Vehicle Information
             </h3>
             <div className="grid grid-cols-3 gap-4 text-sm">
@@ -213,23 +213,23 @@ export default function AdminJobDetailPage() {
                 ['Tool Type', job.toolType],
               ].filter(([, val]) => val).map(([label, val]) => (
                 <div key={label as string}>
-                  <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-                  <p className="font-medium text-gray-900 dark:text-white">{val}</p>
+                  <p className="text-xs text-neutral-500 mb-0.5">{label}</p>
+                  <p className="font-medium text-neutral-900 dark:text-white">{val}</p>
                 </div>
               ))}
             </div>
             {(job.carNotes || job.clientNotes) && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+              <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-2">
                 {job.clientNotes && (
                   <div>
-                    <p className="text-xs text-gray-500 italic">Client Notes</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{job.clientNotes}</p>
+                    <p className="text-xs text-neutral-500 italic">Client Notes</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-300">{job.clientNotes}</p>
                   </div>
                 )}
                 {job.carNotes && (
                   <div>
-                    <p className="text-xs text-gray-500 italic">Car Notes</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{job.carNotes}</p>
+                    <p className="text-xs text-neutral-500 italic">Car Notes</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-300">{job.carNotes}</p>
                   </div>
                 )}
               </div>
@@ -238,52 +238,52 @@ export default function AdminJobDetailPage() {
 
           {/* Requested Services */}
           <div className="card p-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
               <Wrench size={18} /> Requested Services
             </h3>
             <div className="space-y-3">
               {(job.services || []).map(s => (
-                <div key={s.id} className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{s.serviceName}</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(s.price)}</span>
+                <div key={s.id} className="flex justify-between items-center py-2 border-b border-neutral-100 dark:border-neutral-800 last:border-0">
+                  <span className="text-sm font-medium text-neutral-900 dark:text-white">{s.serviceName}</span>
+                  <span className="text-sm font-semibold text-neutral-900 dark:text-white">{formatCurrency(s.price)}</span>
                 </div>
               ))}
-              <div className="flex justify-between items-center pt-3 border-t-2 border-gray-200 dark:border-gray-600">
-                <span className="text-sm font-bold text-red-600">Total</span>
-                <span className="text-lg font-bold text-red-600">{formatCurrency(job.totalPrice)}</span>
+              <div className="flex justify-between items-center pt-3 border-t-2 border-neutral-200 dark:border-neutral-700">
+                <span className="text-sm font-bold text-neutral-900 dark:text-white">Total</span>
+                <span className="text-lg font-bold text-neutral-900 dark:text-white">{formatCurrency(job.totalPrice)}</span>
               </div>
             </div>
           </div>
 
           {/* Messages */}
           <div className="card">
-            <div className="p-5 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <div className="p-5 border-b border-neutral-200 dark:border-neutral-800">
+              <h3 className="font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
                 <MessageSquare size={18} /> Messages with Client
               </h3>
             </div>
             <div ref={msgContainerRef} className="p-5 space-y-3 max-h-[400px] overflow-y-auto">
               {(!messages || messages.length === 0) ? (
-                <p className="text-sm text-gray-400 text-center py-6">No messages yet</p>
+                <p className="text-sm text-neutral-400 text-center py-6">No messages yet</p>
               ) : (
                 messages.map((msg: any) => (
                   <div key={msg.id} className={cn('rounded-lg px-3 py-2 text-sm',
-                    msg.isInternal ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' :
-                    msg.sender?.role === 'CLIENT' ? 'bg-gray-100 dark:bg-gray-700' : 'bg-red-50 dark:bg-red-900/20')}>
+                    msg.isInternal ? 'bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200 dark:border-neutral-800' :
+                    msg.sender?.role === 'CLIENT' ? 'bg-neutral-100 dark:bg-neutral-800' : 'bg-red-50 dark:bg-red-950/30')}>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-medium text-xs">{msg.sender?.contactName || msg.sender?.email}</span>
-                      {msg.isInternal && <span className="text-xs bg-yellow-200 text-yellow-800 px-1.5 rounded">Internal</span>}
-                      <span className="text-xs text-gray-400 ml-auto">{formatDateTime(msg.createdAt)}</span>
+                      {msg.isInternal && <span className="text-xs bg-neutral-200 text-neutral-700 px-1.5 rounded">Internal</span>}
+                      <span className="text-xs text-neutral-400 ml-auto">{formatDateTime(msg.createdAt)}</span>
                     </div>
                     <p className="whitespace-pre-wrap">{msg.message}</p>
                   </div>
                 ))
               )}
             </div>
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-800">
               <div className="flex items-center gap-2 mb-2">
                 <input type="checkbox" checked={isInternal} onChange={e => setIsInternal(e.target.checked)} className="rounded" />
-                <label className="text-xs text-gray-500 flex items-center gap-1">
+                <label className="text-xs text-neutral-500 flex items-center gap-1">
                   {isInternal ? <EyeOff size={14} /> : <Eye size={14} />}
                   {isInternal ? 'Internal (admin only)' : 'Visible to client'}
                 </label>
@@ -304,7 +304,7 @@ export default function AdminJobDetailPage() {
         <div className="space-y-6">
           {/* Job Status */}
           <div className="card p-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Job Status</h3>
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4">Job Status</h3>
             <div className="space-y-3">
               <div>
                 <label className="label">Update Status</label>
@@ -328,7 +328,7 @@ export default function AdminJobDetailPage() {
                 <textarea className="input" rows={3} value={adminNotes}
                   onChange={e => setAdminNotes(e.target.value)} placeholder="Add notes about this job..." />
               </div>
-              <button onClick={handleSaveNotes} disabled={updatingStatus} className="btn-primary w-full bg-red-600 hover:bg-red-700">
+              <button onClick={handleSaveNotes} disabled={updatingStatus} className="btn-primary w-full bg-neutral-900 dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200">
                 Save Notes
               </button>
             </div>
@@ -336,24 +336,24 @@ export default function AdminJobDetailPage() {
 
           {/* Files */}
           <div className="card p-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
               <FileText size={18} /> Files
             </h3>
             <div className="space-y-4">
               {/* Original Files */}
               <div>
-                <p className="text-xs font-medium text-gray-500 mb-2">Original File (from client)</p>
+                <p className="text-xs font-medium text-neutral-500 mb-2">Original File (from client)</p>
                 {origFiles.length === 0 ? (
-                  <p className="text-sm text-gray-400">None uploaded</p>
+                  <p className="text-sm text-neutral-400">None uploaded</p>
                 ) : (
                   origFiles.map(f => (
-                    <div key={f.id} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 mb-2">
+                    <div key={f.id} className="flex items-center justify-between bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-3 mb-2">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{f.originalName}</p>
-                        <p className="text-xs text-gray-500">{formatFileSize(f.fileSize)}</p>
+                        <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">{f.originalName}</p>
+                        <p className="text-xs text-neutral-500">{formatFileSize(f.fileSize)}</p>
                       </div>
                       <button onClick={() => downloadFile(f.id, f.originalName)}
-                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-600 hover:bg-red-700 text-white flex-shrink-0 ml-2 transition-colors">
+                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black flex-shrink-0 ml-2 transition-colors">
                         <Plus size={16} />
                       </button>
                     </div>
@@ -363,25 +363,25 @@ export default function AdminJobDetailPage() {
 
               {/* Modified Files */}
               <div>
-                <p className="text-xs font-medium text-gray-500 mb-2">Modified File (tuned)</p>
+                <p className="text-xs font-medium text-neutral-500 mb-2">Modified File (tuned)</p>
                 {modFiles.length > 0 && (
                   modFiles.map(f => (
-                    <div key={f.id} className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-2">
+                    <div key={f.id} className="flex items-center justify-between bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 mb-2">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{f.originalName}</p>
-                        <p className="text-xs text-gray-500">{formatFileSize(f.fileSize)}</p>
+                        <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">{f.originalName}</p>
+                        <p className="text-xs text-neutral-500">{formatFileSize(f.fileSize)}</p>
                       </div>
                       <button onClick={() => downloadFile(f.id, f.originalName)}
-                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-600 hover:bg-red-700 text-white flex-shrink-0 ml-2 transition-colors">
+                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black flex-shrink-0 ml-2 transition-colors">
                         <Download size={16} />
                       </button>
                     </div>
                   ))
                 )}
-                <div className="border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                <div className="border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
                   <FileUpload onFileSelected={setModFile} label={modFiles.length > 0 ? 'Replace modified file' : 'Upload modified file'} />
                   {modFile && (
-                    <button onClick={handleUploadMod} disabled={uploading} className="btn-primary w-full mt-2 bg-red-600 hover:bg-red-700">
+                    <button onClick={handleUploadMod} disabled={uploading} className="btn-primary w-full mt-2 bg-neutral-900 dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200">
                       {uploading ? <Spinner size="sm" /> : <Upload size={16} />} {modFiles.length > 0 ? 'Replace' : 'Upload'}
                     </button>
                   )}
@@ -392,53 +392,53 @@ export default function AdminJobDetailPage() {
 
           {/* Quick Actions */}
           <div className="card p-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4">Quick Actions</h3>
             <div className="space-y-2">
               {job.status === 'PENDING' && (
                 <button onClick={() => handleStatusUpdate('IN_PROGRESS')} disabled={updatingStatus}
-                  className="w-full py-2.5 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2">
+                  className="w-full py-2.5 rounded-lg text-sm font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2">
                   <Play size={16} /> Start Working
                 </button>
               )}
               {(job.status === 'IN_PROGRESS' || job.status === 'REVISION_REQUESTED') && modFiles.length > 0 && (
                 <button onClick={() => handleStatusUpdate('COMPLETED')} disabled={updatingStatus}
-                  className="w-full py-2.5 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-700 text-white transition-colors flex items-center justify-center gap-2">
+                  className="w-full py-2.5 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black transition-colors flex items-center justify-center gap-2">
                   <CheckCircle2 size={16} /> Mark Complete
                 </button>
               )}
               {(job.status === 'IN_PROGRESS' || job.status === 'REVISION_REQUESTED') && modFiles.length === 0 && (
-                <p className="text-xs text-gray-500 text-center italic">Upload modified file to mark as complete</p>
+                <p className="text-xs text-neutral-500 text-center italic">Upload modified file to mark as complete</p>
               )}
             </div>
           </div>
 
           {/* Timeline */}
           <div className="card p-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
               <Clock size={18} /> Timeline
             </h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
+                <div className="w-2 h-2 rounded-full bg-neutral-500 mt-1.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Created</p>
-                  <p className="text-xs text-gray-500">{formatDateTime(job.createdAt)}</p>
+                  <p className="text-sm font-medium text-neutral-900 dark:text-white">Created</p>
+                  <p className="text-xs text-neutral-500">{formatDateTime(job.createdAt)}</p>
                 </div>
               </div>
               {job.updatedAt !== job.createdAt && (
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                  <div className="w-2 h-2 rounded-full bg-neutral-400 mt-1.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Last Updated</p>
-                    <p className="text-xs text-gray-500">{formatDateTime(job.updatedAt)}</p>
+                    <p className="text-sm font-medium text-neutral-900 dark:text-white">Last Updated</p>
+                    <p className="text-xs text-neutral-500">{formatDateTime(job.updatedAt)}</p>
                   </div>
                 </div>
               )}
               {job.revisionCount > 0 && (
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-orange-500 mt-1.5 flex-shrink-0" />
+                  <div className="w-2 h-2 rounded-full bg-neutral-300 mt-1.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{job.revisionCount} Revision(s)</p>
+                    <p className="text-sm font-medium text-neutral-900 dark:text-white">{job.revisionCount} Revision(s)</p>
                   </div>
                 </div>
               )}

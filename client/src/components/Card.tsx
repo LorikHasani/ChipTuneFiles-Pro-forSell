@@ -13,20 +13,20 @@ export default function Card({ children, className, title, subtitle, action }: C
   return (
     <div
       className={cn(
-        'bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm',
+        'bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200/80 dark:border-neutral-800',
         className
       )}
     >
       {(title || subtitle || action) && (
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800">
           <div>
             {title && (
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-base font-semibold text-neutral-900 dark:text-white">
                 {title}
               </h3>
             )}
             {subtitle && (
-              <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mt-0.5 text-sm text-neutral-500">
                 {subtitle}
               </p>
             )}

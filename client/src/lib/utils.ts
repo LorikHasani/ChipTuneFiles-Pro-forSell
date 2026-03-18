@@ -58,17 +58,17 @@ export function formatFileSize(bytes: number): string {
 
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    PENDING: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-    IN_PROGRESS: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    WAITING_FOR_INFO: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-    COMPLETED: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    REVISION_REQUESTED: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
-    REJECTED: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-    OPEN: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    IN_PROGRESS_TICKET: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-    CLOSED: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+    PENDING: 'bg-amber-100/80 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+    IN_PROGRESS: 'bg-blue-100/80 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+    WAITING_FOR_INFO: 'bg-orange-100/80 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400',
+    COMPLETED: 'bg-emerald-100/80 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',
+    REVISION_REQUESTED: 'bg-violet-100/80 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400',
+    REJECTED: 'bg-red-100/80 text-red-700 dark:bg-red-500/10 dark:text-red-400',
+    OPEN: 'bg-blue-100/80 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+    IN_PROGRESS_TICKET: 'bg-amber-100/80 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+    CLOSED: 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400',
   };
-  return colors[status] || 'bg-gray-100 text-gray-800';
+  return colors[status] || 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400';
 }
 
 export function getStatusLabel(status: string): string {

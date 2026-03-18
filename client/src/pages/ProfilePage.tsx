@@ -63,12 +63,12 @@ export default function ProfilePage() {
       {/* Profile info */}
       <div className="card p-6 space-y-4">
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-            <User size={24} className="text-primary-600" />
+          <div className="h-12 w-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+            <User size={24} className="text-neutral-900 dark:text-white" />
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">{user?.email}</p>
-            <p className="text-sm text-gray-500 capitalize">{user?.role?.toLowerCase()}</p>
+            <p className="font-medium text-neutral-900 dark:text-white">{user?.email}</p>
+            <p className="text-sm text-neutral-500 capitalize">{user?.role?.toLowerCase()}</p>
           </div>
         </div>
 
@@ -98,8 +98,8 @@ export default function ProfilePage() {
         <div className="flex items-center gap-2">
           <input type="checkbox" id="emailNotif" checked={form.emailNotifications}
             onChange={e => setForm(f => ({ ...f, emailNotifications: e.target.checked }))}
-            className="rounded border-gray-300" />
-          <label htmlFor="emailNotif" className="text-sm text-gray-700 dark:text-gray-300">Receive email notifications</label>
+            className="rounded border-neutral-300" />
+          <label htmlFor="emailNotif" className="text-sm text-neutral-600 dark:text-neutral-300">Receive email notifications</label>
         </div>
 
         <button onClick={handleSave} disabled={saving} className="btn-primary">
@@ -109,7 +109,7 @@ export default function ProfilePage() {
 
       {/* Change Password */}
       <div className="card p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+        <h3 className="text-base font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
           <Lock size={20} /> Change Password
         </h3>
         <div>

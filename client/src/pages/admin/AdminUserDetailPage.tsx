@@ -73,7 +73,7 @@ export default function AdminUserDetailPage() {
   };
 
   if (loading) return <div className="flex justify-center py-12"><Spinner size="lg" /></div>;
-  if (!userData) return <p className="text-center text-gray-500 py-12">User not found</p>;
+  if (!userData) return <p className="text-center text-neutral-500 py-12">User not found</p>;
 
   return (
     <div className="space-y-6">
@@ -85,7 +85,7 @@ export default function AdminUserDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Edit form */}
           <div className="card p-6 space-y-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white">Edit User</h3>
+            <h3 className="font-semibold text-neutral-900 dark:text-white">Edit User</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="label">Contact Name</label>
@@ -120,7 +120,7 @@ export default function AdminUserDetailPage() {
                 <label className="flex items-center gap-2">
                   <input type="checkbox" checked={form.isActive ?? true}
                     onChange={e => setForm((f: any) => ({ ...f, isActive: e.target.checked }))} className="rounded" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Active Account</span>
+                  <span className="text-sm text-neutral-600 dark:text-neutral-300">Active Account</span>
                 </label>
               </div>
             </div>
@@ -132,14 +132,14 @@ export default function AdminUserDetailPage() {
           {/* Recent jobs */}
           {(userData as any).recentJobs?.length > 0 && (
             <div className="card p-6">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Recent Jobs</h3>
+              <h3 className="font-semibold text-neutral-900 dark:text-white mb-3">Recent Jobs</h3>
               <div className="space-y-2">
                 {(userData as any).recentJobs.map((j: any) => (
                   <Link key={j.id} to={`/admin/jobs/${j.id}`}
-                    className="flex items-center justify-between p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                    className="flex items-center justify-between p-2 rounded hover:bg-neutral-50 dark:hover:bg-white/[0.03]">
                     <div>
-                      <span className="text-primary-600 font-medium text-sm">{j.referenceNumber}</span>
-                      <span className="text-gray-500 text-sm ml-2">{[j.brand, j.model].filter(Boolean).join(' ')}</span>
+                      <span className="text-neutral-900 dark:text-white font-medium text-sm">{j.referenceNumber}</span>
+                      <span className="text-neutral-500 text-sm ml-2">{[j.brand, j.model].filter(Boolean).join(' ')}</span>
                     </div>
                     <Badge status={j.status} />
                   </Link>
@@ -151,15 +151,15 @@ export default function AdminUserDetailPage() {
           {/* Transactions */}
           {(userData as any).recentTransactions?.length > 0 && (
             <div className="card p-6">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Recent Transactions</h3>
+              <h3 className="font-semibold text-neutral-900 dark:text-white mb-3">Recent Transactions</h3>
               <div className="space-y-2 text-sm">
                 {(userData as any).recentTransactions.map((tx: any) => (
                   <div key={tx.id} className="flex justify-between py-1">
                     <div>
-                      <span className="text-gray-700 dark:text-gray-300">{tx.description || tx.type}</span>
-                      <span className="text-gray-400 text-xs ml-2">{formatDateTime(tx.createdAt)}</span>
+                      <span className="text-neutral-600 dark:text-neutral-300">{tx.description || tx.type}</span>
+                      <span className="text-neutral-400 text-xs ml-2">{formatDateTime(tx.createdAt)}</span>
                     </div>
-                    <span className={cn('font-medium', tx.type === 'JOB_PAYMENT' ? 'text-red-600' : 'text-green-600')}>
+                    <span className={cn('font-medium', tx.type === 'JOB_PAYMENT' ? 'text-red-600' : 'text-neutral-500')}>
                       {tx.type === 'JOB_PAYMENT' ? '-' : '+'}{Math.abs(Number(tx.amount)).toFixed(0)}
                     </span>
                   </div>
@@ -173,27 +173,27 @@ export default function AdminUserDetailPage() {
         <div className="space-y-6">
           <div className="card p-4 text-sm space-y-3">
             <div className="flex items-center gap-3 mb-2">
-              <div className="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                <User size={24} className="text-primary-600" />
+              <div className="h-12 w-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                <User size={24} className="text-neutral-900 dark:text-white" />
               </div>
               <div>
-                <p className="font-bold text-gray-900 dark:text-white">{userData.contactName || '-'}</p>
-                <p className="text-gray-500 text-xs">{userData.role}</p>
+                <p className="font-bold text-neutral-900 dark:text-white">{userData.contactName || '-'}</p>
+                <p className="text-neutral-500 text-xs">{userData.role}</p>
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between"><span className="text-gray-500">Email</span><span>{userData.email}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Credits</span><span className="font-bold">{Number(userData.creditBalance).toFixed(0)}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Joined</span><span>{formatDate(userData.createdAt)}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Status</span>
-                <span className={userData.isActive ? 'text-green-600' : 'text-red-600'}>{userData.isActive ? 'Active' : 'Inactive'}</span>
+              <div className="flex justify-between"><span className="text-neutral-500">Email</span><span>{userData.email}</span></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Credits</span><span className="font-bold">{Number(userData.creditBalance).toFixed(0)}</span></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Joined</span><span>{formatDate(userData.createdAt)}</span></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Status</span>
+                <span className={userData.isActive ? 'text-neutral-500' : 'text-red-600'}>{userData.isActive ? 'Active' : 'Inactive'}</span>
               </div>
             </div>
           </div>
 
           {/* Credit adjustment */}
           <div className="card p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2"><CreditCard size={16} /> Adjust Credits</h3>
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-3 flex items-center gap-2"><CreditCard size={16} /> Adjust Credits</h3>
             <div className="space-y-3">
               <input className="input" type="number" placeholder="Amount (+/-)" value={creditAmount}
                 onChange={e => setCreditAmount(e.target.value)} />

@@ -14,7 +14,7 @@ interface FileUploadProps {
 export default function FileUpload({
   onFileSelected,
   accept,
-  maxSize = 50 * 1024 * 1024, // 50MB default
+  maxSize = 50 * 1024 * 1024,
   label = 'Upload a file',
   className,
 }: FileUploadProps) {
@@ -65,11 +65,11 @@ export default function FileUpload({
         <div
           {...getRootProps()}
           className={cn(
-            'flex flex-col items-center justify-center w-full px-6 py-10 border-2 border-dashed rounded-xl cursor-pointer transition-colors',
+            'flex flex-col items-center justify-center w-full px-6 py-10 border-2 border-dashed rounded-xl cursor-pointer transition-all',
             isDragActive
-              ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-              : 'border-gray-300 dark:border-gray-600 hover:border-primary-400 dark:hover:border-primary-500',
-            'bg-gray-50 dark:bg-gray-800/50'
+              ? 'border-neutral-400 bg-neutral-100 dark:bg-white/5 dark:border-neutral-600'
+              : 'border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600',
+            'bg-neutral-50 dark:bg-neutral-900/50'
           )}
         >
           <input {...getInputProps()} />
@@ -77,35 +77,35 @@ export default function FileUpload({
             className={cn(
               'h-10 w-10 mb-3',
               isDragActive
-                ? 'text-primary-500'
-                : 'text-gray-400 dark:text-gray-500'
+                ? 'text-neutral-500'
+                : 'text-neutral-300 dark:text-neutral-600'
             )}
           />
-          <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
             {isDragActive ? 'Drop your file here' : label}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-neutral-400 dark:text-neutral-600">
             Drag & drop or click to browse. Max {formatFileSize(maxSize)}.
           </p>
         </div>
       ) : (
-        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+        <div className="flex items-center justify-between px-4 py-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex-shrink-0">
-              <File className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-neutral-200 dark:bg-neutral-800 flex-shrink-0">
+              <File className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+              <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">
                 {selectedFile.name}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-neutral-400 dark:text-neutral-600">
                 {formatFileSize(selectedFile.size)}
               </p>
             </div>
           </div>
           <button
             onClick={clearSelection}
-            className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0 ml-3"
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors flex-shrink-0 ml-3"
             aria-label="Remove file"
           >
             <X className="h-4 w-4" />

@@ -98,9 +98,9 @@ export default function AdminAnnouncementsPage() {
   };
 
   const typeColors: Record<string, string> = {
-    INFO: 'bg-blue-100 text-blue-700',
-    WARNING: 'bg-yellow-100 text-yellow-700',
-    SUCCESS: 'bg-green-100 text-green-700',
+    INFO: 'bg-neutral-100 text-neutral-600',
+    WARNING: 'bg-neutral-100 text-neutral-600',
+    SUCCESS: 'bg-neutral-100 text-neutral-600',
   };
 
   if (loading) return <div className="flex justify-center py-12"><Spinner size="lg" /></div>;
@@ -121,24 +121,24 @@ export default function AdminAnnouncementsPage() {
             <div key={a.id} className="card p-4 flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{a.title}</h3>
+                  <h3 className="font-semibold text-neutral-900 dark:text-white">{a.title}</h3>
                   <span className={cn('text-xs px-2 py-0.5 rounded font-medium', typeColors[a.type] || typeColors.INFO)}>
                     {a.type}
                   </span>
-                  {!a.isActive && <span className="text-xs text-gray-400">(Inactive)</span>}
+                  {!a.isActive && <span className="text-xs text-neutral-400">(Inactive)</span>}
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{a.message}</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">{a.message}</p>
                 {a.imageUrl && (
                   <img src={a.imageUrl} alt="" className="mt-2 h-16 rounded object-cover" />
                 )}
-                <p className="text-xs text-gray-400 mt-1">{formatDate(a.createdAt)}</p>
+                <p className="text-xs text-neutral-400 mt-1">{formatDate(a.createdAt)}</p>
               </div>
               <div className="flex gap-2 ml-4">
-                <button onClick={() => toggleActive(a)} className="text-gray-400 hover:text-gray-600">
-                  {a.isActive ? <ToggleRight size={20} className="text-green-500" /> : <ToggleLeft size={20} />}
+                <button onClick={() => toggleActive(a)} className="text-neutral-400 hover:text-neutral-500">
+                  {a.isActive ? <ToggleRight size={20} className="text-neutral-500" /> : <ToggleLeft size={20} />}
                 </button>
-                <button onClick={() => openModal(a)} className="text-gray-400 hover:text-gray-600"><Edit2 size={16} /></button>
-                <button onClick={() => setDeleteId(a.id)} className="text-gray-400 hover:text-red-600"><Trash2 size={16} /></button>
+                <button onClick={() => openModal(a)} className="text-neutral-400 hover:text-neutral-500"><Edit2 size={16} /></button>
+                <button onClick={() => setDeleteId(a.id)} className="text-neutral-400 hover:text-red-600"><Trash2 size={16} /></button>
               </div>
             </div>
           ))}
@@ -166,7 +166,7 @@ export default function AdminAnnouncementsPage() {
                 <div className="relative inline-block">
                   <img src={imagePreview} alt="Preview" className="h-32 rounded-lg object-cover" />
                   <button onClick={clearImage}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700">
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-neutral-900 dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center hover:bg-neutral-800 dark:hover:bg-neutral-200">
                     <X size={14} />
                   </button>
                 </div>
@@ -176,14 +176,14 @@ export default function AdminAnnouncementsPage() {
                   className={cn(
                     'flex flex-col items-center justify-center px-6 py-8 border-2 border-dashed rounded-xl cursor-pointer transition-colors',
                     isDragActive
-                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-primary-400'
+                      ? 'border-neutral-400 bg-neutral-100 dark:bg-neutral-800'
+                      : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-400'
                   )}
                 >
                   <input {...getInputProps()} />
-                  <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-500">Click to upload image</p>
-                  <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</p>
+                  <ImagePlus className="w-8 h-8 text-neutral-400 mb-2" />
+                  <p className="text-sm text-neutral-500">Click to upload image</p>
+                  <p className="text-xs text-neutral-400 mt-1">PNG, JPG up to 5MB</p>
                 </div>
               )}
             </div>

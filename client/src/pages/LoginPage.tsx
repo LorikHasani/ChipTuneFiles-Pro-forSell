@@ -34,48 +34,48 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-black px-4 py-12">
+      <div className="w-full max-w-sm">
         {/* Brand Header */}
         <div className="text-center mb-8">
           {logoUrl ? (
             <img
               src={logoUrl}
               alt={brandName}
-              className="h-14 mx-auto mb-4"
+              className="h-12 mx-auto mb-4"
             />
           ) : (
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
-                <LogIn className="w-5 h-5 text-white" />
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <div className="w-9 h-9 bg-neutral-900 dark:bg-white rounded-lg flex items-center justify-center">
+                <LogIn className="w-4 h-4 text-white dark:text-black" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl font-semibold text-neutral-900 dark:text-white tracking-tight">
                 {brandName}
               </h1>
             </div>
           )}
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-neutral-500 dark:text-neutral-500">
             Sign in to your account
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="card p-8">
+        <div className="card p-7">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="mb-5 p-3.5 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg">
               <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="label">
-                Email Address
+                Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
                   id="email"
                   type="email"
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -110,7 +110,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
                 >
                   {showPassword ? (
                     <EyeOff className="w-4 h-4" />
@@ -129,7 +129,7 @@ export default function LoginPage() {
             >
               {isLoading ? (
                 <>
-                  <Spinner size="sm" className="border-white/30 border-t-white" />
+                  <Spinner size="sm" className="border-black/20 dark:border-white/20 border-t-black dark:border-t-white" />
                   Signing in...
                 </>
               ) : (
@@ -142,12 +142,12 @@ export default function LoginPage() {
           </form>
 
           {/* Register Link */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-5 text-center">
+            <p className="text-sm text-neutral-500">
               Don't have an account?{' '}
               <Link
                 to="/register"
-                className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400"
+                className="font-medium text-neutral-900 dark:text-white hover:underline"
               >
                 Create an account
               </Link>
@@ -159,13 +159,13 @@ export default function LoginPage() {
         <div className="mt-6 text-center space-x-4">
           <Link
             to="/terms"
-            className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
           >
             Terms of Service
           </Link>
           <Link
             to="/privacy"
-            className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
           >
             Privacy Policy
           </Link>

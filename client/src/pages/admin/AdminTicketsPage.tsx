@@ -23,8 +23,8 @@ export default function AdminTicketsPage() {
         {tabs.map(tab => (
           <button key={tab} onClick={() => setFilter(tab)}
             className={cn('px-4 py-2 rounded-lg text-sm font-medium',
-              filter === tab ? 'bg-primary-600 text-white' :
-              'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200')}>
+              filter === tab ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' :
+              'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100')}>
             {tab === 'ALL' ? 'All' : getStatusLabel(tab)}
           </button>
         ))}
@@ -35,27 +35,27 @@ export default function AdminTicketsPage() {
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-700/50">
+            <thead className="bg-neutral-50 dark:bg-neutral-800/50">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-gray-500">Subject</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500">Client</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500">Messages</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500">Updated</th>
+                <th className="text-left px-4 py-3 font-medium text-neutral-500">Subject</th>
+                <th className="text-left px-4 py-3 font-medium text-neutral-500">Client</th>
+                <th className="text-left px-4 py-3 font-medium text-neutral-500">Status</th>
+                <th className="text-left px-4 py-3 font-medium text-neutral-500">Messages</th>
+                <th className="text-left px-4 py-3 font-medium text-neutral-500">Updated</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
               {tickets.map((t: Ticket) => (
-                <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                <tr key={t.id} className="hover:bg-neutral-50 dark:hover:bg-white/[0.03]">
                   <td className="px-4 py-3">
-                    <Link to={`/admin/tickets/${t.id}`} className="text-primary-600 hover:underline font-medium">{t.subject}</Link>
+                    <Link to={`/admin/tickets/${t.id}`} className="text-neutral-900 dark:text-white hover:underline font-medium">{t.subject}</Link>
                   </td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{t.client?.contactName || t.client?.email || '-'}</td>
+                  <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400">{t.client?.contactName || t.client?.email || '-'}</td>
                   <td className="px-4 py-3"><Badge status={t.status} /></td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-neutral-500">
                     <span className="flex items-center gap-1"><MessageSquare size={14} /> {t._count?.messages || 0}</span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500">{formatRelativeTime(t.updatedAt)}</td>
+                  <td className="px-4 py-3 text-neutral-500">{formatRelativeTime(t.updatedAt)}</td>
                 </tr>
               ))}
             </tbody>

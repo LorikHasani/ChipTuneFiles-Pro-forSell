@@ -30,10 +30,8 @@ export default function DashboardPage() {
   const { announcements, loading: announcementsLoading } = useActiveAnnouncements();
   const [showNewsModal, setShowNewsModal] = useState(false);
 
-  // Show news modal automatically when announcements load (for clients only)
   useEffect(() => {
     if (!announcementsLoading && announcements && announcements.length > 0 && !isAdmin) {
-      // Check if user has dismissed these announcements in this session
       const dismissedKey = `news_dismissed_${announcements.map(a => a.id).join('_')}`;
       if (!sessionStorage.getItem(dismissedKey)) {
         setShowNewsModal(true);
@@ -57,22 +55,22 @@ export default function DashboardPage() {
   const announcementIcon = (type: string) => {
     switch (type) {
       case 'WARNING':
-        return <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0" />;
+        return <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />;
       case 'SUCCESS':
-        return <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />;
+        return <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />;
       default:
-        return <Info className="w-5 h-5 text-blue-500 shrink-0" />;
+        return <Info className="w-4 h-4 text-neutral-400 shrink-0" />;
     }
   };
 
   const announcementBg = (type: string) => {
     switch (type) {
       case 'WARNING':
-        return 'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800';
+        return 'bg-amber-50 border-amber-200/60 dark:bg-amber-500/5 dark:border-amber-500/20';
       case 'SUCCESS':
-        return 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800';
+        return 'bg-emerald-50 border-emerald-200/60 dark:bg-emerald-500/5 dark:border-emerald-500/20';
       default:
-        return 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800';
+        return 'bg-neutral-50 border-neutral-200 dark:bg-white/[0.02] dark:border-neutral-800';
     }
   };
 
@@ -81,25 +79,21 @@ export default function DashboardPage() {
       label: 'Credit Balance',
       value: user?.creditBalance != null ? Number(user.creditBalance).toFixed(0) : '0',
       icon: Wallet,
-      color: 'text-primary-600 bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400',
     },
     {
       label: 'Total Jobs',
       value: totalCount.toString(),
       icon: Briefcase,
-      color: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400',
     },
     {
       label: 'Pending Jobs',
       value: pendingCount.toString(),
       icon: Clock,
-      color: 'text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400',
     },
     {
       label: 'Completed Jobs',
       value: completedCount.toString(),
       icon: CheckCircle2,
-      color: 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400',
     },
   ];
 
@@ -107,31 +101,31 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Welcome */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-xl font-semibold text-neutral-900 dark:text-white tracking-tight">
           Welcome back, {user?.contactName || user?.email?.split('@')[0] || 'User'}
         </h1>
-        <p className="mt-1 text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-sm text-neutral-500">
           Here's what's happening with your tuning jobs today.
         </p>
       </div>
 
-      {/* Active Announcements (inline for admins, or if modal dismissed for clients) */}
+      {/* Active Announcements */}
       {!announcementsLoading && announcements && announcements.length > 0 && (isAdmin || !showNewsModal) && (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {announcements.map((a) => (
             <div
               key={a.id}
               className={cn(
-                'flex items-start gap-3 p-4 rounded-lg border',
+                'flex items-start gap-3 p-3.5 rounded-lg border',
                 announcementBg(a.type)
               )}
             >
               {announcementIcon(a.type)}
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-sm text-gray-900 dark:text-white">
+                <p className="font-medium text-sm text-neutral-900 dark:text-white">
                   {a.title}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">
+                <p className="text-sm text-neutral-500 mt-0.5">
                   {a.message}
                 </p>
               </div>
@@ -141,18 +135,18 @@ export default function DashboardPage() {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="card p-5">
+          <div key={stat.label} className="card p-4">
             <div className="flex items-center gap-3">
-              <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center', stat.color)}>
-                <stat.icon className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+                <stat.icon className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-xl font-semibold text-neutral-900 dark:text-white tabular-nums">
                   {jobsLoading ? '-' : stat.value}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-[11px] text-neutral-400 dark:text-neutral-600 uppercase tracking-wider font-medium">
                   {stat.label}
                 </p>
               </div>
@@ -162,59 +156,59 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Link
           to="/jobs/new"
-          className="card p-4 flex items-center gap-3 hover:border-primary-300 dark:hover:border-primary-600 transition-colors group"
+          className="card p-4 flex items-center gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all group"
         >
-          <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
-            <Plus className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+          <div className="w-9 h-9 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
+            <Plus className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-gray-900 dark:text-white text-sm">New Job</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Submit a tuning request</p>
+            <p className="font-medium text-neutral-900 dark:text-white text-sm">New Job</p>
+            <p className="text-xs text-neutral-400">Submit a tuning request</p>
           </div>
-          <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors" />
+          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
         </Link>
 
         <Link
           to="/credits"
-          className="card p-4 flex items-center gap-3 hover:border-green-300 dark:hover:border-green-600 transition-colors group"
+          className="card p-4 flex items-center gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all group"
         >
-          <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-            <CreditCard className="w-5 h-5 text-green-600 dark:text-green-400" />
+          <div className="w-9 h-9 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
+            <CreditCard className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-gray-900 dark:text-white text-sm">Buy Credits</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Top up your balance</p>
+            <p className="font-medium text-neutral-900 dark:text-white text-sm">Buy Credits</p>
+            <p className="text-xs text-neutral-400">Top up your balance</p>
           </div>
-          <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-green-500 transition-colors" />
+          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
         </Link>
 
         <Link
           to="/prices"
-          className="card p-4 flex items-center gap-3 hover:border-purple-300 dark:hover:border-purple-600 transition-colors group"
+          className="card p-4 flex items-center gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all group"
         >
-          <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-            <List className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+          <div className="w-9 h-9 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
+            <List className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-gray-900 dark:text-white text-sm">View Prices</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Browse service pricing</p>
+            <p className="font-medium text-neutral-900 dark:text-white text-sm">View Prices</p>
+            <p className="text-xs text-neutral-400">Browse service pricing</p>
           </div>
-          <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-purple-500 transition-colors" />
+          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
         </Link>
       </div>
 
       {/* Recent Jobs & Admin Panel */}
-      <div className={cn('grid gap-6', isAdmin ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1')}>
+      <div className={cn('grid gap-4', isAdmin ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1')}>
         {/* Recent Jobs */}
         <div className={cn('card', isAdmin ? 'lg:col-span-2' : '')}>
-          <div className="p-5 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900 dark:text-white">Recent Jobs</h2>
+          <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">Recent Jobs</h2>
             <Link
               to="/jobs"
-              className="text-sm text-primary-600 hover:text-primary-500 dark:text-primary-400 font-medium"
+              className="text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 font-medium"
             >
               View all
             </Link>
@@ -226,40 +220,40 @@ export default function DashboardPage() {
             </div>
           ) : recentJobs.length === 0 ? (
             <div className="py-12 text-center">
-              <Briefcase className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">No jobs yet</p>
+              <Briefcase className="w-8 h-8 text-neutral-300 dark:text-neutral-700 mx-auto mb-3" />
+              <p className="text-sm text-neutral-400">No jobs yet</p>
               <Link
                 to="/jobs/new"
-                className="mt-3 inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-500 dark:text-primary-400 font-medium"
+                className="mt-3 inline-flex items-center gap-1 text-sm text-neutral-900 dark:text-white hover:underline font-medium"
               >
                 <Plus className="w-4 h-4" />
                 Create your first job
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100 dark:divide-gray-700">
+            <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
               {recentJobs.map((job) => (
                 <Link
                   key={job.id}
                   to={`/jobs/${job.id}`}
-                  className="flex items-center gap-4 px-5 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+                  className="flex items-center gap-4 px-4 py-3 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors group"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">
                         {job.referenceNumber}
                       </p>
                       <Badge status={job.status} />
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
+                    <p className="text-xs text-neutral-400 mt-0.5 truncate">
                       {[job.brand, job.model, job.year].filter(Boolean).join(' ') || job.jobType + ' Job'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400 dark:text-gray-500">
+                    <span className="text-[11px] text-neutral-400">
                       {formatRelativeTime(job.createdAt)}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                    <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
                   </div>
                 </Link>
               ))}
@@ -270,51 +264,51 @@ export default function DashboardPage() {
         {/* Admin Quick Panel */}
         {isAdmin && (
           <div className="card">
-            <div className="p-5 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                <Shield className="w-4 h-4 text-primary-500" />
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-800">
+              <h2 className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+                <Shield className="w-4 h-4 text-neutral-400" />
                 Admin Panel
               </h2>
             </div>
-            <div className="p-4 space-y-2">
+            <div className="p-3 space-y-1">
               <Link
                 to="/admin"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-white/[0.03] transition-colors group"
               >
-                <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
-                  <Megaphone className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+                <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
+                  <Megaphone className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Dashboard</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">System overview</p>
+                  <p className="text-sm font-medium text-neutral-900 dark:text-white">Dashboard</p>
+                  <p className="text-xs text-neutral-400">System overview</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
               </Link>
               <Link
                 to="/admin/jobs"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-white/[0.03] transition-colors group"
               >
-                <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                  <Briefcase className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
+                  <Briefcase className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Manage Jobs</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Review & process</p>
+                  <p className="text-sm font-medium text-neutral-900 dark:text-white">Manage Jobs</p>
+                  <p className="text-xs text-neutral-400">Review & process</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
               </Link>
               <Link
                 to="/admin/users"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-white/[0.03] transition-colors group"
               >
-                <div className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                  <Wallet className="w-4 h-4 text-green-600 dark:text-green-400" />
+                <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
+                  <Wallet className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Users</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Manage accounts</p>
+                  <p className="text-sm font-medium text-neutral-900 dark:text-white">Users</p>
+                  <p className="text-xs text-neutral-400">Manage accounts</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
               </Link>
             </div>
           </div>
@@ -324,26 +318,26 @@ export default function DashboardPage() {
       {/* News Modal for Clients */}
       {showNewsModal && announcements && announcements.length > 0 && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={(e) => { if (e.target === e.currentTarget) dismissNewsModal(); }}
         >
-          <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 animate-in zoom-in-95 fade-in duration-200">
+          <div className="w-full max-w-lg bg-white dark:bg-neutral-900 rounded-xl shadow-2xl border border-neutral-200 dark:border-neutral-800 animate-in zoom-in-95 fade-in duration-200">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                <SendIcon className="w-5 h-5 text-red-500" />
+            <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800">
+              <h2 className="text-base font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+                <SendIcon className="w-4 h-4 text-neutral-400" />
                 News
               </h2>
               <button
                 onClick={dismissNewsModal}
-                className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-700 transition-colors"
+                className="flex items-center justify-center w-8 h-8 rounded-lg text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 dark:hover:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
             {/* Content */}
-            <div className="px-6 py-4 max-h-[60vh] overflow-y-auto space-y-4">
+            <div className="px-6 py-4 max-h-[60vh] overflow-y-auto space-y-3">
               {announcements.map((a) => (
                 <div
                   key={a.id}
@@ -355,10 +349,10 @@ export default function DashboardPage() {
                   <div className="flex items-start gap-3">
                     {announcementIcon(a.type)}
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 dark:text-white">
+                      <p className="font-medium text-neutral-900 dark:text-white text-sm">
                         {a.title}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 whitespace-pre-wrap">
+                      <p className="text-sm text-neutral-500 mt-1 whitespace-pre-wrap">
                         {a.message}
                       </p>
                     </div>
@@ -368,7 +362,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-t border-neutral-200 dark:border-neutral-800">
               <button
                 onClick={dismissNewsModal}
                 className="btn-primary w-full"

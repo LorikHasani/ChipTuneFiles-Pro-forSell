@@ -11,7 +11,6 @@ export default function DarkModeToggle({ className }: DarkModeToggleProps) {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('theme');
       if (stored) return stored === 'dark';
-      // Default to dark mode
       return true;
     }
     return true;
@@ -32,19 +31,18 @@ export default function DarkModeToggle({ className }: DarkModeToggleProps) {
     <button
       onClick={() => setIsDark(!isDark)}
       className={cn(
-        'relative inline-flex items-center justify-center w-9 h-9 rounded-lg',
-        'text-gray-500 hover:text-gray-700 hover:bg-gray-100',
-        'dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700',
-        'transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-        'dark:focus:ring-offset-gray-900',
+        'relative inline-flex items-center justify-center w-8 h-8 rounded-lg',
+        'text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100',
+        'dark:hover:text-neutral-300 dark:hover:bg-neutral-800',
+        'transition-colors focus:outline-none',
         className
       )}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDark ? (
-        <Sun className="h-5 w-5" />
+        <Sun className="h-[18px] w-[18px]" />
       ) : (
-        <Moon className="h-5 w-5" />
+        <Moon className="h-[18px] w-[18px]" />
       )}
     </button>
   );

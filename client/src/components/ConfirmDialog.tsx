@@ -33,8 +33,8 @@ export default function ConfirmDialog({
           className={cn(
             'flex items-center justify-center w-12 h-12 rounded-full mb-4',
             variant === 'danger'
-              ? 'bg-red-100 dark:bg-red-900/30'
-              : 'bg-primary-100 dark:bg-primary-900/30'
+              ? 'bg-red-50 dark:bg-red-950/30'
+              : 'bg-neutral-100 dark:bg-neutral-800'
           )}
         >
           <AlertTriangle
@@ -42,11 +42,11 @@ export default function ConfirmDialog({
               'h-6 w-6',
               variant === 'danger'
                 ? 'text-red-600 dark:text-red-400'
-                : 'text-primary-600 dark:text-primary-400'
+                : 'text-neutral-600 dark:text-neutral-400'
             )}
           />
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6">
           {message}
         </p>
         <div className="flex items-center gap-3 w-full">

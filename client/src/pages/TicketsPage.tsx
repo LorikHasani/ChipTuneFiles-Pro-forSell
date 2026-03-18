@@ -54,8 +54,8 @@ export default function TicketsPage() {
         {statusTabs.map(tab => (
           <button key={tab} onClick={() => setFilter(tab)}
             className={cn('px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-              filter === tab ? 'bg-primary-600 text-white' :
-              'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200')}>
+              filter === tab ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' :
+              'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200')}>
             {tab === 'ALL' ? 'All' : getStatusLabel(tab)}
           </button>
         ))}
@@ -72,13 +72,13 @@ export default function TicketsPage() {
               className="card p-4 flex items-center justify-between hover:shadow-md transition-shadow block">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-medium text-gray-900 dark:text-white truncate">{ticket.subject}</h3>
+                  <h3 className="font-medium text-neutral-900 dark:text-white truncate">{ticket.subject}</h3>
                   <Badge status={ticket.status} />
                 </div>
-                <p className="text-sm text-gray-500">{formatRelativeTime(ticket.updatedAt)}</p>
+                <p className="text-sm text-neutral-500">{formatRelativeTime(ticket.updatedAt)}</p>
               </div>
               {ticket._count && (
-                <div className="flex items-center gap-1 text-gray-400 ml-4">
+                <div className="flex items-center gap-1 text-neutral-400 ml-4">
                   <MessageSquare size={16} />
                   <span className="text-sm">{ticket._count.messages}</span>
                 </div>

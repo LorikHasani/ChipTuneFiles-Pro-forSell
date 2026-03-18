@@ -51,20 +51,20 @@ export default function AdminPackagesPage() {
           <div key={pkg.id} className="card p-5">
             <div className="flex justify-between items-start mb-3">
               <div>
-                <h3 className="font-bold text-gray-900 dark:text-white">{pkg.name}</h3>
-                <p className="text-sm text-gray-500">{pkg.isActive ? 'Active' : 'Inactive'}</p>
+                <h3 className="font-bold text-neutral-900 dark:text-white">{pkg.name}</h3>
+                <p className="text-sm text-neutral-500">{pkg.isActive ? 'Active' : 'Inactive'}</p>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => toggleActive(pkg)} className="text-gray-400 hover:text-gray-600">
-                  {pkg.isActive ? <ToggleRight size={20} className="text-green-500" /> : <ToggleLeft size={20} />}
+                <button onClick={() => toggleActive(pkg)} className="text-neutral-400 hover:text-neutral-500">
+                  {pkg.isActive ? <ToggleRight size={20} className="text-neutral-500" /> : <ToggleLeft size={20} />}
                 </button>
-                <button onClick={() => setModal(pkg)} className="text-gray-400 hover:text-gray-600"><Edit2 size={16} /></button>
+                <button onClick={() => setModal(pkg)} className="text-neutral-400 hover:text-neutral-500"><Edit2 size={16} /></button>
               </div>
             </div>
             <div className="space-y-1 text-sm">
-              <div className="flex justify-between"><span className="text-gray-500">Credits</span><span className="font-bold">{pkg.credits}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Bonus</span><span className="text-green-600">+{pkg.bonusCredits}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Price</span><span className="font-bold">{formatCurrency(pkg.price)}</span></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Credits</span><span className="font-bold">{pkg.credits}</span></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Bonus</span><span className="text-neutral-500">+{pkg.bonusCredits}</span></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Price</span><span className="font-bold">{formatCurrency(pkg.price)}</span></div>
             </div>
           </div>
         ))}

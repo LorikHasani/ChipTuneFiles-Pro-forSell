@@ -25,9 +25,9 @@ const TOOL_TYPES = ['Master', 'Slave'];
 const GEARBOX_TYPES = ['Manual', 'Automatic', 'DSG/DCT', 'CVT', 'AMT', 'Other'];
 
 function ServiceIcon({ icon }: { icon: string | null | undefined }) {
-  if (!icon) return <Wrench size={20} className="text-gray-600" />;
+  if (!icon) return <Wrench size={20} className="text-neutral-500" />;
   const LucideComp = getLucideIcon(icon);
-  if (LucideComp) return <LucideComp size={20} className="text-gray-600" />;
+  if (LucideComp) return <LucideComp size={20} className="text-neutral-500" />;
   return <span className="text-lg">{icon}</span>;
 }
 
@@ -149,15 +149,15 @@ export default function NewJobPage() {
           <div key={step.id} className="flex items-center">
             <div className={cn(
               'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors',
-              currentStep === step.id ? 'bg-red-600 text-white' :
-              currentStep > step.id ? 'bg-red-900/40 text-red-400' :
-              'bg-gray-800/60 text-gray-500'
+              currentStep === step.id ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' :
+              currentStep > step.id ? 'bg-white/5 text-neutral-400' :
+              'bg-neutral-800/60 text-neutral-500'
             )}>
               {currentStep > step.id ? <Check size={16} /> : <step.icon size={16} />}
               <span className="hidden sm:inline">{step.label}</span>
             </div>
             {i < steps.length - 1 && (
-              <div className={cn('w-12 h-0.5 mx-2', currentStep > step.id ? 'bg-red-600' : 'bg-gray-800')} />
+              <div className={cn('w-12 h-0.5 mx-2', currentStep > step.id ? 'bg-neutral-900 dark:bg-white' : 'bg-neutral-800')} />
             )}
           </div>
         ))}
@@ -171,15 +171,15 @@ export default function NewJobPage() {
             {(['ECU', 'TCU'] as JobType[]).map(type => (
               <button key={type} onClick={() => setJobType(type)}
                 className={cn('flex-1 py-3 rounded-lg font-medium text-sm border transition-colors',
-                  jobType === type ? 'border-red-600 bg-red-900/20 text-red-400' :
-                  'border-gray-800 text-gray-500 hover:border-gray-700')}>
+                  jobType === type ? 'border-neutral-500 bg-white/5 text-white' :
+                  'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
                 {type} Tuning
               </button>
             ))}
           </div>
           <FileUpload onFileSelected={setFile} label={`Upload your ${jobType} file`} />
-          {file && <p className="text-sm text-red-400">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>}
-          <div className="flex justify-end pt-6 border-t border-gray-800">
+          {file && <p className="text-sm text-neutral-400">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>}
+          <div className="flex justify-end pt-6 border-t border-neutral-800">
             <button onClick={() => setCurrentStep(2)} disabled={!canNext()} className="btn-primary">
               Next Step <ChevronRight size={16} />
             </button>
@@ -193,32 +193,32 @@ export default function NewJobPage() {
           {file && (
             <div className="card px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <FileText size={18} className="text-gray-500" />
-                <span className="text-sm text-gray-400">File: {file.name}</span>
+                <FileText size={18} className="text-neutral-500" />
+                <span className="text-sm text-neutral-400">File: {file.name}</span>
               </div>
-              <span className="px-3 py-1 rounded bg-red-600 text-white text-xs font-bold">{jobType}</span>
+              <span className="px-3 py-1 rounded bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-bold">{jobType}</span>
             </div>
           )}
 
           <div className="card p-4">
             <div className="flex items-center gap-2 mb-3">
-              <Info size={16} className="text-gray-500" />
-              <span className="text-sm text-gray-400">Is this an original file?</span>
+              <Info size={16} className="text-neutral-500" />
+              <span className="text-sm text-neutral-400">Is this an original file?</span>
             </div>
             <div className="flex gap-3">
               <button onClick={() => setVehicle(prev => ({ ...prev, isOriginal: true }))}
                 className={cn('px-4 py-2 rounded-lg text-sm font-medium border transition-colors',
-                  vehicle.isOriginal ? 'border-red-600 bg-red-900/20 text-red-400' : 'border-gray-800 text-gray-500 hover:border-gray-700')}>
+                  vehicle.isOriginal ? 'border-neutral-500 bg-white/5 text-white' : 'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
                 <span className="flex items-center gap-2">
-                  <span className={cn('w-2 h-2 rounded-full', vehicle.isOriginal ? 'bg-red-500' : 'bg-gray-700')} />
+                  <span className={cn('w-2 h-2 rounded-full', vehicle.isOriginal ? 'bg-white' : 'bg-neutral-700')} />
                   Yes, Original
                 </span>
               </button>
               <button onClick={() => setVehicle(prev => ({ ...prev, isOriginal: false }))}
                 className={cn('px-4 py-2 rounded-lg text-sm font-medium border transition-colors',
-                  !vehicle.isOriginal ? 'border-red-600 bg-red-900/20 text-red-400' : 'border-gray-800 text-gray-500 hover:border-gray-700')}>
+                  !vehicle.isOriginal ? 'border-neutral-500 bg-white/5 text-white' : 'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
                 <span className="flex items-center gap-2">
-                  <span className={cn('w-2 h-2 rounded-full', !vehicle.isOriginal ? 'bg-red-500' : 'bg-gray-700')} />
+                  <span className={cn('w-2 h-2 rounded-full', !vehicle.isOriginal ? 'bg-white' : 'bg-neutral-700')} />
                   No, Modified
                 </span>
               </button>
@@ -227,7 +227,7 @@ export default function NewJobPage() {
 
           <div className="card p-6 space-y-5">
             <div className="flex items-center gap-2">
-              <Car size={18} className="text-gray-500" />
+              <Car size={18} className="text-neutral-500" />
               <h3 className="text-base font-semibold text-white">Vehicle Details</h3>
             </div>
             <VehicleSelector vehicle={vehicle} onChange={updates => setVehicle(prev => ({ ...prev, ...updates }))} />
@@ -248,7 +248,7 @@ export default function NewJobPage() {
 
           <div className="card p-6 space-y-4">
             <div className="flex items-center gap-2">
-              <Wrench size={18} className="text-gray-500" />
+              <Wrench size={18} className="text-neutral-500" />
               <h3 className="text-base font-semibold text-white">Reading Tool</h3>
             </div>
             <div>
@@ -285,29 +285,29 @@ export default function NewJobPage() {
         <div className="space-y-6">
           <div className="card p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-red-900/30 flex items-center justify-center">
-                <Wrench size={18} className="text-red-400" />
+              <div className="w-9 h-9 rounded-full bg-neutral-800 flex items-center justify-center">
+                <Wrench size={18} className="text-neutral-400" />
               </div>
               <div>
                 <h2 className="text-base font-bold text-white">Select Services</h2>
-                {vehicleSummary && <p className="text-xs text-gray-500">{vehicleSummary}</p>}
+                {vehicleSummary && <p className="text-xs text-neutral-500">{vehicleSummary}</p>}
               </div>
             </div>
             <div className="flex gap-2">
-              <span className="px-3 py-1 rounded bg-red-600 text-white text-xs font-bold">{jobType} File</span>
-              {vehicle.toolType && <span className="px-3 py-1 rounded bg-gray-800 text-gray-400 text-xs font-bold">{vehicle.toolType} Tool</span>}
+              <span className="px-3 py-1 rounded bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-bold">{jobType} File</span>
+              {vehicle.toolType && <span className="px-3 py-1 rounded bg-neutral-800 text-neutral-400 text-xs font-bold">{vehicle.toolType} Tool</span>}
             </div>
           </div>
 
           {loadingServices ? <Spinner /> : filteredCategories.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No services available for {jobType}.</p>
+            <p className="text-neutral-500 text-center py-8">No services available for {jobType}.</p>
           ) : (
             filteredCategories.map((cat: ServiceCategory) => (
               <div key={cat.id}>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-red-500" />
-                  <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wide">{cat.name}</h3>
-                  <span className="text-xs text-gray-600">({(cat.services || []).length} available)</span>
+                  <span className="w-2 h-2 rounded-full bg-neutral-500" />
+                  <h3 className="text-sm font-bold text-neutral-300 uppercase tracking-wide">{cat.name}</h3>
+                  <span className="text-xs text-neutral-500">({(cat.services || []).length} available)</span>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
                   {(cat.services || []).map((svc: Service) => {
@@ -315,15 +315,15 @@ export default function NewJobPage() {
                     return (
                       <button key={svc.id} onClick={() => handleServiceToggle(cat.id, svc.id, cat.selectionType)}
                         className={cn('relative card p-4 flex flex-col items-center text-center transition-all',
-                          isSelected ? 'ring-1 ring-red-500 border-red-500/50' : 'hover:border-gray-700')}>
+                          isSelected ? 'ring-1 ring-neutral-400 border-neutral-500/50' : 'hover:border-neutral-700')}>
                         <div className={cn('absolute top-2 right-2 w-4 h-4 border flex items-center justify-center',
                           cat.selectionType === 'SINGLE' ? 'rounded-full' : 'rounded-sm',
-                          isSelected ? 'bg-red-600 border-red-600' : 'border-gray-700')}>
-                          {isSelected && <Check size={10} className="text-white" />}
+                          isSelected ? 'bg-neutral-900 dark:bg-white border-neutral-900 dark:border-white' : 'border-neutral-700')}>
+                          {isSelected && <Check size={10} className="text-white dark:text-black" />}
                         </div>
                         <div className="mb-2 mt-1"><ServiceIcon icon={svc.icon} /></div>
-                        <h4 className="text-xs font-medium text-gray-300 mb-1 leading-tight">{svc.name}</h4>
-                        <span className="text-xs font-bold text-red-400">+{formatCurrency(svc.basePrice)}</span>
+                        <h4 className="text-xs font-medium text-neutral-300 mb-1 leading-tight">{svc.name}</h4>
+                        <span className="text-xs font-bold text-neutral-400">+{formatCurrency(svc.basePrice)}</span>
                       </button>
                     );
                   })}
@@ -334,8 +334,8 @@ export default function NewJobPage() {
 
           <div className="card p-4">
             <div className="flex items-center gap-2 mb-3">
-              <MessageSquare size={16} className="text-gray-500" />
-              <span className="text-sm text-gray-400">Comments (optional)</span>
+              <MessageSquare size={16} className="text-neutral-500" />
+              <span className="text-sm text-neutral-400">Comments (optional)</span>
             </div>
             <textarea className="input" rows={3} placeholder="Add any notes or special requests for this job..."
               value={vehicle.clientNotes} onChange={e => setVehicle(prev => ({ ...prev, clientNotes: e.target.value }))} />
@@ -344,26 +344,26 @@ export default function NewJobPage() {
           <div className="card p-4">
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" checked={agreedDisclaimer} onChange={e => setAgreedDisclaimer(e.target.checked)}
-                className="mt-1 rounded border-gray-700 bg-transparent" />
-              <span className="text-xs text-gray-500 leading-relaxed">
-                <strong className="text-gray-400">I hereby declare that I'm a professional.</strong> I confirm that I have the necessary expertise and qualifications to request this service, and I take full responsibility for the use of the modified files.
+                className="mt-1 rounded border-neutral-700 bg-transparent" />
+              <span className="text-xs text-neutral-500 leading-relaxed">
+                <strong className="text-neutral-400">I hereby declare that I'm a professional.</strong> I confirm that I have the necessary expertise and qualifications to request this service, and I take full responsibility for the use of the modified files.
               </span>
             </label>
           </div>
 
           <div className="card p-4 flex items-center justify-between">
-            <span className="text-sm text-gray-500">Selected services</span>
+            <span className="text-sm text-neutral-500">Selected services</span>
             <span className="text-lg font-bold text-white">{allSelectedServiceIds.length}</span>
           </div>
 
           <div className="card p-4">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-500">Total Price:</span>
+              <span className="text-neutral-500">Total Price:</span>
               <span className="text-2xl font-bold text-white">{formatCurrency(totalPrice)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-500">Your Balance:</span>
-              <span className={cn('font-semibold', Number(user?.creditBalance || 0) >= totalPrice ? 'text-gray-300' : 'text-red-400')}>
+              <span className="text-neutral-500">Your Balance:</span>
+              <span className={cn('font-semibold', Number(user?.creditBalance || 0) >= totalPrice ? 'text-neutral-300' : 'text-red-400')}>
                 {formatCurrency(user?.creditBalance || 0)}
               </span>
             </div>
