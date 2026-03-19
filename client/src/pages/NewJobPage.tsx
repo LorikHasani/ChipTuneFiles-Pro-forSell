@@ -24,10 +24,10 @@ const READING_TOOLS = [
 const TOOL_TYPES = ['Master', 'Slave'];
 const GEARBOX_TYPES = ['Manual', 'Automatic', 'DSG/DCT', 'CVT', 'AMT', 'Other'];
 
-function ServiceIcon({ icon }: { icon: string | null | undefined }) {
-  if (!icon) return <Wrench size={20} className="text-purple-400" />;
+function ServiceIcon({ icon, colorClass = 'text-purple-400' }: { icon: string | null | undefined; colorClass?: string }) {
+  if (!icon) return <Wrench size={20} className={colorClass} />;
   const LucideComp = getLucideIcon(icon);
-  if (LucideComp) return <LucideComp size={20} className="text-purple-400" />;
+  if (LucideComp) return <LucideComp size={20} className={colorClass} />;
   return <span className="text-lg">{icon}</span>;
 }
 
@@ -302,34 +302,68 @@ export default function NewJobPage() {
           {loadingServices ? <Spinner /> : filteredCategories.length === 0 ? (
             <p className="text-neutral-500 text-center py-8">No services available for {jobType}.</p>
           ) : (
-            filteredCategories.map((cat: ServiceCategory) => (
-              <div key={cat.id}>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                  <h3 className="text-sm font-bold text-neutral-300 uppercase tracking-wide">{cat.name}</h3>
-                  <span className="text-xs text-neutral-500">({(cat.services || []).length} available)</span>
+            filteredCategories.map((cat: ServiceCategory) => {
+              const isStage = cat.selectionType === 'SINGLE';
+              let cardType: 'ecu' | 'tcu' | 'option' = 'option';
+              if (isStage && cat.jobType === 'ECU') cardType = 'ecu';
+              else if (isStage && cat.jobType === 'TCU') cardType = 'tcu';
+
+              const baseStyles = {
+                ecu: 'relative flex flex-col items-center gap-1.5 p-4 rounded-xl border-2 text-center border-blue-200 dark:border-blue-700/50 bg-blue-50 dark:bg-blue-900/10',
+                tcu: 'relative flex flex-col items-center gap-1.5 p-4 rounded-xl border-2 text-center border-purple-200 dark:border-purple-700/50 bg-purple-50 dark:bg-purple-900/10',
+                option: 'relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 text-center transition-all hover:border-zinc-300 dark:hover:border-zinc-500',
+              };
+              const selectedStyles = {
+                ecu: 'ring-2 ring-blue-500 border-blue-500 dark:border-blue-500',
+                tcu: 'ring-2 ring-purple-500 border-purple-500 dark:border-purple-500',
+                option: 'ring-2 ring-green-500 border-green-500 dark:border-green-500',
+              };
+              const iconColor = {
+                ecu: 'text-blue-500 dark:text-blue-400',
+                tcu: 'text-purple-500 dark:text-purple-400',
+                option: 'text-zinc-400 dark:text-zinc-500',
+              };
+              const priceColor = {
+                ecu: 'text-lg font-bold text-blue-500 dark:text-blue-400',
+                tcu: 'text-lg font-bold text-purple-500 dark:text-purple-400',
+                option: 'text-sm font-bold text-green-600 dark:text-green-400',
+              };
+
+              return (
+                <div key={cat.id}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                    <h3 className="text-sm font-bold text-neutral-300 uppercase tracking-wide">{cat.name}</h3>
+                    <span className="text-xs text-neutral-500">({(cat.services || []).length} available)</span>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+                    {(cat.services || []).map((svc: Service) => {
+                      const isSelected = (selectedServices[cat.id] || []).includes(svc.id);
+                      return (
+                        <button key={svc.id} onClick={() => handleServiceToggle(cat.id, svc.id, cat.selectionType)}
+                          className={cn(baseStyles[cardType], 'cursor-pointer transition-all',
+                            isSelected && selectedStyles[cardType])}>
+                          <div className={cn('absolute top-2 right-2 w-4 h-4 border flex items-center justify-center',
+                            cat.selectionType === 'SINGLE' ? 'rounded-full' : 'rounded-sm',
+                            isSelected ? 'bg-red-600 border-red-600' : 'border-neutral-700 dark:border-neutral-600')}>
+                            {isSelected && <Check size={10} className="text-white" />}
+                          </div>
+                          <ServiceIcon icon={svc.icon} colorClass={iconColor[cardType]} />
+                          <h4 className={cardType === 'option'
+                            ? 'text-xs font-medium leading-tight text-zinc-700 dark:text-zinc-300'
+                            : 'font-semibold text-sm text-zinc-900 dark:text-white'}>
+                            {svc.name}
+                          </h4>
+                          <span className={priceColor[cardType]}>
+                            {cardType === 'option' ? '+' : ''}{formatCurrency(svc.basePrice)}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
-                  {(cat.services || []).map((svc: Service) => {
-                    const isSelected = (selectedServices[cat.id] || []).includes(svc.id);
-                    return (
-                      <button key={svc.id} onClick={() => handleServiceToggle(cat.id, svc.id, cat.selectionType)}
-                        className={cn('relative p-4 flex flex-col items-center text-center rounded-xl border transition-all bg-neutral-900/80',
-                          isSelected ? 'border-red-500 ring-1 ring-red-500/30' : 'border-purple-500/40 hover:border-purple-500/60')}>
-                        <div className={cn('absolute top-2 right-2 w-4 h-4 border flex items-center justify-center',
-                          cat.selectionType === 'SINGLE' ? 'rounded-full' : 'rounded-sm',
-                          isSelected ? 'bg-red-600 border-red-600' : 'border-neutral-700')}>
-                          {isSelected && <Check size={10} className="text-white" />}
-                        </div>
-                        <div className="mb-2 mt-1"><ServiceIcon icon={svc.icon} /></div>
-                        <h4 className="text-xs font-medium text-neutral-300 mb-1 leading-tight">{svc.name}</h4>
-                        <span className="text-xs font-bold text-emerald-400">+{formatCurrency(svc.basePrice)}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
 
           <div className="card p-4">
