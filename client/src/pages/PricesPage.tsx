@@ -49,11 +49,11 @@ export default function PricesPage() {
                         {cat.jobType === 'ECU' ? 'ECU' : 'GEARBOX / TCU'}
                       </h3>
                     </div>
-                    <ServiceGrid services={cat.services || []} isMultiple={cat.selectionType === 'MULTIPLE'} />
+                    <ServiceGrid services={cat.services || []} isAddon={false} />
                   </div>
                 ))
               ) : (
-                <ServiceGrid services={cats[0].services || []} isMultiple={isMultiple} />
+                <ServiceGrid services={cats[0].services || []} isAddon={!hasSubGroups} />
               )}
             </div>
           );
@@ -75,7 +75,7 @@ function ServiceIcon({ icon }: { icon: string | null | undefined }) {
   return <span className="text-xl">{icon}</span>;
 }
 
-function ServiceGrid({ services, isMultiple }: { services: Service[]; isMultiple: boolean }) {
+function ServiceGrid({ services, isAddon }: { services: Service[]; isAddon: boolean }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {services.map(svc => (
@@ -92,8 +92,8 @@ function ServiceGrid({ services, isMultiple }: { services: Service[]; isMultiple
             <ServiceIcon icon={svc.icon} />
           </div>
           <h4 className="text-sm font-medium text-neutral-300 mb-1">{svc.name}</h4>
-          <span className={cn('text-sm font-bold', isMultiple ? 'text-emerald-400' : 'text-blue-400')}>
-            {isMultiple ? '+' : ''}{formatCurrency(svc.basePrice)}
+          <span className={cn('text-sm font-bold', isAddon ? 'text-emerald-400' : 'text-blue-400')}>
+            {isAddon ? '+' : ''}{formatCurrency(svc.basePrice)}
           </span>
         </div>
       ))}
