@@ -166,7 +166,7 @@ export default function AdminAnnouncementsPage() {
                 <div className="relative inline-block">
                   <img src={imagePreview} alt="Preview" className="h-32 rounded-lg object-cover" />
                   <button onClick={clearImage}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-neutral-900 dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center hover:bg-neutral-800 dark:hover:bg-neutral-200">
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700">
                     <X size={14} />
                   </button>
                 </div>

@@ -12,9 +12,9 @@ export default function AdminStatsPage() {
   if (!stats) return <p className="text-center text-neutral-500 py-12">Failed to load stats</p>;
 
   const statusBreakdown = [
-    { status: 'PENDING', count: stats.pendingJobs, color: 'bg-neutral-700' },
-    { status: 'IN_PROGRESS', count: stats.inProgressJobs, color: 'bg-neutral-500' },
-    { status: 'COMPLETED', count: stats.completedJobs, color: 'bg-neutral-300' },
+    { status: 'PENDING', count: stats.pendingJobs, color: 'bg-red-800' },
+    { status: 'IN_PROGRESS', count: stats.inProgressJobs, color: 'bg-red-600' },
+    { status: 'COMPLETED', count: stats.completedJobs, color: 'bg-red-400' },
   ];
 
   const totalJobsForBar = Math.max(1, stats.pendingJobs + stats.inProgressJobs + stats.completedJobs);
@@ -26,10 +26,10 @@ export default function AdminStatsPage() {
       {/* Stats cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Total Revenue', value: formatCurrency(stats.totalRevenue), icon: DollarSign, color: 'text-neutral-500 bg-neutral-100 dark:bg-neutral-800' },
-          { label: 'Total Jobs', value: stats.totalJobs, icon: FileText, color: 'text-neutral-500 bg-neutral-100 dark:bg-neutral-800' },
-          { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-neutral-500 bg-neutral-100 dark:bg-neutral-800' },
-          { label: 'Completed Today', value: stats.completedToday, icon: TrendingUp, color: 'text-neutral-500 bg-neutral-100 dark:bg-neutral-800' },
+          { label: 'Total Revenue', value: formatCurrency(stats.totalRevenue), icon: DollarSign, color: 'text-red-600 dark:text-red-500 bg-red-600/10' },
+          { label: 'Total Jobs', value: stats.totalJobs, icon: FileText, color: 'text-red-600 dark:text-red-500 bg-red-600/10' },
+          { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-red-600 dark:text-red-500 bg-red-600/10' },
+          { label: 'Completed Today', value: stats.completedToday, icon: TrendingUp, color: 'text-red-600 dark:text-red-500 bg-red-600/10' },
         ].map(stat => (
           <div key={stat.label} className="card p-5">
             <div className="flex items-center gap-3">

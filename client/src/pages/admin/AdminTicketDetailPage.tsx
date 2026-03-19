@@ -64,7 +64,7 @@ export default function AdminTicketDetailPage() {
             {statuses.map(s => (
               <button key={s} onClick={() => handleStatusChange(s)} disabled={s === ticket.status}
                 className={cn('px-3 py-1.5 rounded-lg text-xs font-medium border',
-                  s === ticket.status ? 'bg-neutral-900 dark:bg-white border-neutral-900 dark:border-white text-white dark:text-black' :
+                  s === ticket.status ? 'bg-red-600 border-red-600 text-white' :
                   'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400')}>
                 {getStatusLabel(s)}
               </button>
@@ -79,7 +79,7 @@ export default function AdminTicketDetailPage() {
                 return (
                   <div key={msg.id} className={cn('flex', isMe ? 'justify-end' : 'justify-start')}>
                     <div className={cn('max-w-[80%] rounded-xl px-4 py-3',
-                      isMe ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' : 'bg-neutral-100 dark:bg-neutral-800')}>
+                      isMe ? 'bg-red-600 text-white' : 'bg-neutral-100 dark:bg-neutral-800')}>
                       <p className={cn('text-xs font-medium mb-1', isMe ? 'text-neutral-300 dark:text-neutral-500' : 'text-neutral-500')}>
                         {msg.sender?.contactName || msg.sender?.email}
                         {msg.sender?.role !== 'CLIENT' && <span className="ml-1 text-xs">(Admin)</span>}

@@ -54,7 +54,7 @@ export default function TicketsPage() {
         {statusTabs.map(tab => (
           <button key={tab} onClick={() => setFilter(tab)}
             className={cn('px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-              filter === tab ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' :
+              filter === tab ? 'bg-red-600 text-white' :
               'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200')}>
             {tab === 'ALL' ? 'All' : getStatusLabel(tab)}
           </button>

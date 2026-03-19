@@ -61,7 +61,7 @@ export default function AdminSettingsPage() {
             <p className="text-sm text-neutral-500 mb-2">Preview:</p>
             <div className="flex items-center gap-3">
               {form.logo_url ? <img src={form.logo_url} alt="Logo" className="h-8 w-8 object-contain" /> :
-                <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-neutral-900 dark:bg-white dark:text-black">
+                <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-red-600">
                   {(form.brand_name || 'C')[0]}
                 </div>}
               <span className="text-lg font-bold">{form.brand_name || 'ChipTuneFiles'}</span>

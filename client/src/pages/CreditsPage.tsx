@@ -111,9 +111,9 @@ export default function CreditsPage() {
 
               return (
                 <div key={pkg.id}
-                  className={cn('card p-5 flex flex-col relative', isPopular && 'ring-1 ring-neutral-400')}>
+                  className={cn('card p-5 flex flex-col relative', isPopular && 'ring-1 ring-red-600')}>
                   {isPopular && (
-                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-neutral-900 dark:bg-white text-white dark:text-black text-[10px] font-bold rounded-full uppercase tracking-wide">
+                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full uppercase tracking-wide">
                       Most Popular
                     </div>
                   )}
@@ -138,7 +138,7 @@ export default function CreditsPage() {
 
                   <button onClick={() => handleBuyPackage(pkg)} disabled={purchasing === pkg.id}
                     className={cn('w-full py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2',
-                      isPopular ? 'bg-neutral-900 dark:bg-white text-white dark:text-black hover:bg-neutral-800' : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300')}>
+                      isPopular ? 'bg-red-600 text-white hover:bg-neutral-800' : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300')}>
                     {purchasing === pkg.id ? <Spinner size="sm" /> : null}
                     Buy for {formatCurrency(pkg.price)}
                   </button>

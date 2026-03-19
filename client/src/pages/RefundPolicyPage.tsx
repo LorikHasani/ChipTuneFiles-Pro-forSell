@@ -6,7 +6,7 @@ export default function RefundPolicyPage() {
   const brand = useBrandingStore((s) => s.branding.brand_name);
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
-      <Link to="/" className="inline-flex items-center gap-1 text-neutral-900 dark:text-white hover:underline mb-6 text-sm">
+      <Link to="/" className="inline-flex items-center gap-1 text-red-600 dark:text-red-500 hover:underline mb-6 text-sm">
         <ArrowLeft size={16} /> Back to Dashboard
       </Link>
       <h1 className="text-3xl font-bold text-neutral-900 dark:text-white mb-6">Refund Policy</h1>

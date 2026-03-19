@@ -134,7 +134,7 @@ export default function Layout() {
                 className="h-7 w-7 object-contain rounded-md flex-shrink-0"
               />
             ) : (
-              <div className="flex items-center justify-center h-7 w-7 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-black font-bold text-xs flex-shrink-0">
+              <div className="flex items-center justify-center h-7 w-7 rounded-md bg-red-600 text-white font-bold text-xs flex-shrink-0">
                 {branding.brand_name.charAt(0)}
               </div>
             )}
@@ -164,7 +164,7 @@ export default function Layout() {
                   cn(
                     'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
                     isActive
-                      ? 'bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-white'
+                      ? 'bg-red-600/10 dark:bg-red-600/10 text-red-600 dark:text-red-500'
                       : 'text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/5'
                   )
                 }
@@ -190,7 +190,7 @@ export default function Layout() {
                     cn(
                       'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
                       isActive
-                        ? 'bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-white'
+                        ? 'bg-red-600/10 dark:bg-red-600/10 text-red-600 dark:text-red-500'
                         : 'text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/5'
                     )
                   }
@@ -210,8 +210,8 @@ export default function Layout() {
             <span className="text-[11px] font-medium text-neutral-400 dark:text-neutral-600 uppercase tracking-widest">Working Hours</span>
           </div>
           <div className="flex items-center gap-2 mb-2">
-            <span className={cn('w-1.5 h-1.5 rounded-full', isPortalOpen() ? 'bg-emerald-500' : 'bg-neutral-400')} />
-            <span className={cn('text-xs font-medium', isPortalOpen() ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-400')}>
+            <span className={cn('w-1.5 h-1.5 rounded-full', isPortalOpen() ? 'bg-red-500' : 'bg-neutral-400')} />
+            <span className={cn('text-xs font-medium', isPortalOpen() ? 'text-red-600 dark:text-red-400' : 'text-neutral-400')}>
               {isPortalOpen() ? 'Portal Open' : 'Portal Closed'}
             </span>
           </div>
@@ -220,7 +220,7 @@ export default function Layout() {
               <div key={wh.day} className={cn(
                 'flex justify-between text-[11px] px-1 py-0.5 rounded',
                 i === getCurrentDayIndex()
-                  ? 'bg-neutral-100 dark:bg-white/5 text-neutral-900 dark:text-neutral-200 font-semibold'
+                  ? 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 font-semibold'
                   : 'text-neutral-400 dark:text-neutral-600'
               )}>
                 <span>{wh.day}</span>
@@ -233,7 +233,7 @@ export default function Layout() {
         {/* User section */}
         <div className="flex-shrink-0 border-t border-neutral-200 dark:border-neutral-800 p-3 space-y-1">
           <div className="flex items-center gap-3 px-3 py-2">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-xs font-semibold flex-shrink-0">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-red-600/10 text-red-600 dark:text-red-500 text-xs font-semibold flex-shrink-0">
               {(user?.contactName || user?.email || '?').charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0">
@@ -244,7 +244,7 @@ export default function Layout() {
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium w-full text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/5 transition-all"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium w-full text-neutral-400 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all"
           >
             <LogOut className="h-[18px] w-[18px] flex-shrink-0" />
             Sign Out
@@ -271,7 +271,7 @@ export default function Layout() {
             {!isAdmin && (
               <NavLink
                 to="/credits"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-semibold transition-all hover:opacity-80"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-semibold transition-all hover:bg-red-700"
               >
                 <Wallet className="h-3.5 w-3.5" />
                 &euro;{Number(user?.creditBalance ?? 0).toFixed(2)}
@@ -291,7 +291,7 @@ export default function Layout() {
             >
               <Bell className="h-[18px] w-[18px]" />
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[9px] font-bold text-white bg-neutral-900 dark:bg-white dark:text-black rounded-full">
+                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-[16px] px-1 text-[9px] font-bold text-white bg-red-600 rounded-full">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}

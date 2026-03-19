@@ -23,7 +23,7 @@ export default function AdminJobsPage() {
         {tabs.map(tab => (
           <button key={tab} onClick={() => setFilter(tab)}
             className={cn('px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              filter === tab ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' :
+              filter === tab ? 'bg-red-600 text-white' :
               'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100')}>
             {tab === 'ALL' ? 'All' : getStatusLabel(tab)}
           </button>

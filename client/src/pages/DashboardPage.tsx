@@ -139,8 +139,8 @@ export default function DashboardPage() {
         {stats.map((stat) => (
           <div key={stat.label} className="card p-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
-                <stat.icon className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-red-600/10 dark:bg-red-600/10">
+                <stat.icon className="w-[18px] h-[18px] text-red-600 dark:text-red-500" />
               </div>
               <div>
                 <p className="text-xl font-semibold text-neutral-900 dark:text-white tabular-nums">
@@ -159,44 +159,44 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Link
           to="/jobs/new"
-          className="card p-4 flex items-center gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all group"
+          className="card p-4 flex items-center gap-3 hover:border-red-300 dark:hover:border-red-900/50 transition-all group"
         >
-          <div className="w-9 h-9 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
-            <Plus className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
+          <div className="w-9 h-9 bg-red-600/10 rounded-lg flex items-center justify-center">
+            <Plus className="w-[18px] h-[18px] text-red-600 dark:text-red-500" />
           </div>
           <div className="flex-1">
             <p className="font-medium text-neutral-900 dark:text-white text-sm">New Job</p>
             <p className="text-xs text-neutral-400">Submit a tuning request</p>
           </div>
-          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
+          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-red-500 transition-colors" />
         </Link>
 
         <Link
           to="/credits"
-          className="card p-4 flex items-center gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all group"
+          className="card p-4 flex items-center gap-3 hover:border-red-300 dark:hover:border-red-900/50 transition-all group"
         >
-          <div className="w-9 h-9 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
-            <CreditCard className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
+          <div className="w-9 h-9 bg-red-600/10 rounded-lg flex items-center justify-center">
+            <CreditCard className="w-[18px] h-[18px] text-red-600 dark:text-red-500" />
           </div>
           <div className="flex-1">
             <p className="font-medium text-neutral-900 dark:text-white text-sm">Buy Credits</p>
             <p className="text-xs text-neutral-400">Top up your balance</p>
           </div>
-          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
+          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-red-500 transition-colors" />
         </Link>
 
         <Link
           to="/prices"
-          className="card p-4 flex items-center gap-3 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all group"
+          className="card p-4 flex items-center gap-3 hover:border-red-300 dark:hover:border-red-900/50 transition-all group"
         >
-          <div className="w-9 h-9 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
-            <List className="w-[18px] h-[18px] text-neutral-500 dark:text-neutral-400" />
+          <div className="w-9 h-9 bg-red-600/10 rounded-lg flex items-center justify-center">
+            <List className="w-[18px] h-[18px] text-red-600 dark:text-red-500" />
           </div>
           <div className="flex-1">
             <p className="font-medium text-neutral-900 dark:text-white text-sm">View Prices</p>
             <p className="text-xs text-neutral-400">Browse service pricing</p>
           </div>
-          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
+          <ArrowRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-red-500 transition-colors" />
         </Link>
       </div>
 
@@ -208,7 +208,7 @@ export default function DashboardPage() {
             <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">Recent Jobs</h2>
             <Link
               to="/jobs"
-              className="text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 font-medium"
+              className="text-xs text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 font-medium"
             >
               View all
             </Link>
@@ -224,7 +224,7 @@ export default function DashboardPage() {
               <p className="text-sm text-neutral-400">No jobs yet</p>
               <Link
                 to="/jobs/new"
-                className="mt-3 inline-flex items-center gap-1 text-sm text-neutral-900 dark:text-white hover:underline font-medium"
+                className="mt-3 inline-flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:underline font-medium"
               >
                 <Plus className="w-4 h-4" />
                 Create your first job
@@ -253,7 +253,7 @@ export default function DashboardPage() {
                     <span className="text-[11px] text-neutral-400">
                       {formatRelativeTime(job.createdAt)}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
+                    <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-red-500 transition-colors" />
                   </div>
                 </Link>
               ))}
@@ -266,7 +266,7 @@ export default function DashboardPage() {
           <div className="card">
             <div className="p-4 border-b border-neutral-200 dark:border-neutral-800">
               <h2 className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-                <Shield className="w-4 h-4 text-neutral-400" />
+                <Shield className="w-4 h-4 text-red-500" />
                 Admin Panel
               </h2>
             </div>
@@ -275,40 +275,40 @@ export default function DashboardPage() {
                 to="/admin"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-white/[0.03] transition-colors group"
               >
-                <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
-                  <Megaphone className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                <div className="w-8 h-8 bg-red-600/10 rounded-lg flex items-center justify-center">
+                  <Megaphone className="w-4 h-4 text-red-600 dark:text-red-500" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-neutral-900 dark:text-white">Dashboard</p>
                   <p className="text-xs text-neutral-400">System overview</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-red-500 transition-colors" />
               </Link>
               <Link
                 to="/admin/jobs"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-white/[0.03] transition-colors group"
               >
-                <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
-                  <Briefcase className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                <div className="w-8 h-8 bg-red-600/10 rounded-lg flex items-center justify-center">
+                  <Briefcase className="w-4 h-4 text-red-600 dark:text-red-500" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-neutral-900 dark:text-white">Manage Jobs</p>
                   <p className="text-xs text-neutral-400">Review & process</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-red-500 transition-colors" />
               </Link>
               <Link
                 to="/admin/users"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-white/[0.03] transition-colors group"
               >
-                <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center">
-                  <Wallet className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                <div className="w-8 h-8 bg-red-600/10 rounded-lg flex items-center justify-center">
+                  <Wallet className="w-4 h-4 text-red-600 dark:text-red-500" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-neutral-900 dark:text-white">Users</p>
                   <p className="text-xs text-neutral-400">Manage accounts</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-500 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-neutral-300 dark:text-neutral-700 group-hover:text-red-500 transition-colors" />
               </Link>
             </div>
           </div>
@@ -325,7 +325,7 @@ export default function DashboardPage() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800">
               <h2 className="text-base font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-                <SendIcon className="w-4 h-4 text-neutral-400" />
+                <SendIcon className="w-4 h-4 text-red-500" />
                 News
               </h2>
               <button

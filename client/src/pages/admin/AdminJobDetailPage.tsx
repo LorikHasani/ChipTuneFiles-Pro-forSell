@@ -328,7 +328,7 @@ export default function AdminJobDetailPage() {
                 <textarea className="input" rows={3} value={adminNotes}
                   onChange={e => setAdminNotes(e.target.value)} placeholder="Add notes about this job..." />
               </div>
-              <button onClick={handleSaveNotes} disabled={updatingStatus} className="btn-primary w-full bg-neutral-900 dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200">
+              <button onClick={handleSaveNotes} disabled={updatingStatus} className="btn-primary w-full">
                 Save Notes
               </button>
             </div>
@@ -353,7 +353,7 @@ export default function AdminJobDetailPage() {
                         <p className="text-xs text-neutral-500">{formatFileSize(f.fileSize)}</p>
                       </div>
                       <button onClick={() => downloadFile(f.id, f.originalName)}
-                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black flex-shrink-0 ml-2 transition-colors">
+                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-600 hover:bg-red-700 text-white flex-shrink-0 ml-2 transition-colors">
                         <Plus size={16} />
                       </button>
                     </div>
@@ -372,7 +372,7 @@ export default function AdminJobDetailPage() {
                         <p className="text-xs text-neutral-500">{formatFileSize(f.fileSize)}</p>
                       </div>
                       <button onClick={() => downloadFile(f.id, f.originalName)}
-                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black flex-shrink-0 ml-2 transition-colors">
+                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-600 hover:bg-red-700 text-white flex-shrink-0 ml-2 transition-colors">
                         <Download size={16} />
                       </button>
                     </div>
@@ -381,7 +381,7 @@ export default function AdminJobDetailPage() {
                 <div className="border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
                   <FileUpload onFileSelected={setModFile} label={modFiles.length > 0 ? 'Replace modified file' : 'Upload modified file'} />
                   {modFile && (
-                    <button onClick={handleUploadMod} disabled={uploading} className="btn-primary w-full mt-2 bg-neutral-900 dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200">
+                    <button onClick={handleUploadMod} disabled={uploading} className="btn-primary w-full mt-2">
                       {uploading ? <Spinner size="sm" /> : <Upload size={16} />} {modFiles.length > 0 ? 'Replace' : 'Upload'}
                     </button>
                   )}
@@ -402,7 +402,7 @@ export default function AdminJobDetailPage() {
               )}
               {(job.status === 'IN_PROGRESS' || job.status === 'REVISION_REQUESTED') && modFiles.length > 0 && (
                 <button onClick={() => handleStatusUpdate('COMPLETED')} disabled={updatingStatus}
-                  className="w-full py-2.5 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black transition-colors flex items-center justify-center gap-2">
+                  className="w-full py-2.5 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-700 text-white transition-colors flex items-center justify-center gap-2">
                   <CheckCircle2 size={16} /> Mark Complete
                 </button>
               )}

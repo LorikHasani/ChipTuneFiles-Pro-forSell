@@ -149,7 +149,7 @@ export default function NewJobPage() {
           <div key={step.id} className="flex items-center">
             <div className={cn(
               'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors',
-              currentStep === step.id ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' :
+              currentStep === step.id ? 'bg-red-600 text-white' :
               currentStep > step.id ? 'bg-white/5 text-neutral-400' :
               'bg-neutral-800/60 text-neutral-500'
             )}>
@@ -157,7 +157,7 @@ export default function NewJobPage() {
               <span className="hidden sm:inline">{step.label}</span>
             </div>
             {i < steps.length - 1 && (
-              <div className={cn('w-12 h-0.5 mx-2', currentStep > step.id ? 'bg-neutral-900 dark:bg-white' : 'bg-neutral-800')} />
+              <div className={cn('w-12 h-0.5 mx-2', currentStep > step.id ? 'bg-red-600' : 'bg-neutral-700')} />
             )}
           </div>
         ))}
@@ -196,7 +196,7 @@ export default function NewJobPage() {
                 <FileText size={18} className="text-neutral-500" />
                 <span className="text-sm text-neutral-400">File: {file.name}</span>
               </div>
-              <span className="px-3 py-1 rounded bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-bold">{jobType}</span>
+              <span className="px-3 py-1 rounded bg-red-600 text-white text-xs font-bold">{jobType}</span>
             </div>
           )}
 
@@ -294,7 +294,7 @@ export default function NewJobPage() {
               </div>
             </div>
             <div className="flex gap-2">
-              <span className="px-3 py-1 rounded bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-bold">{jobType} File</span>
+              <span className="px-3 py-1 rounded bg-red-600 text-white text-xs font-bold">{jobType} File</span>
               {vehicle.toolType && <span className="px-3 py-1 rounded bg-neutral-800 text-neutral-400 text-xs font-bold">{vehicle.toolType} Tool</span>}
             </div>
           </div>
@@ -318,8 +318,8 @@ export default function NewJobPage() {
                           isSelected ? 'ring-1 ring-neutral-400 border-neutral-500/50' : 'hover:border-neutral-700')}>
                         <div className={cn('absolute top-2 right-2 w-4 h-4 border flex items-center justify-center',
                           cat.selectionType === 'SINGLE' ? 'rounded-full' : 'rounded-sm',
-                          isSelected ? 'bg-neutral-900 dark:bg-white border-neutral-900 dark:border-white' : 'border-neutral-700')}>
-                          {isSelected && <Check size={10} className="text-white dark:text-black" />}
+                          isSelected ? 'bg-red-600 border-neutral-900 dark:border-white' : 'border-neutral-700')}>
+                          {isSelected && <Check size={10} className="text-white" />}
                         </div>
                         <div className="mb-2 mt-1"><ServiceIcon icon={svc.icon} /></div>
                         <h4 className="text-xs font-medium text-neutral-300 mb-1 leading-tight">{svc.name}</h4>

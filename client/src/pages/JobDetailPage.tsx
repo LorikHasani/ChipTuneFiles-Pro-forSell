@@ -219,7 +219,7 @@ export default function JobDetailPage() {
                 <div key={msg.id} className={cn('flex', msg.senderId === user?.id ? 'justify-end' : 'justify-start')}>
                   <div className={cn('max-w-[80%] rounded-2xl px-4 py-2.5',
                     msg.senderId === user?.id
-                      ? 'bg-neutral-900 dark:bg-white text-white dark:text-black rounded-br-md'
+                      ? 'bg-red-600 text-white rounded-br-md'
                       : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-bl-md'
                   )}>
                     {msg.senderId !== user?.id && (
@@ -285,7 +285,7 @@ export default function JobDetailPage() {
                         <p className="text-xs text-neutral-500">{formatFileSize(f.fileSize)}</p>
                       </div>
                       <button onClick={() => handleDownload(f)}
-                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-800 text-white dark:text-black flex-shrink-0 ml-2 transition-colors">
+                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-600 hover:bg-red-700 text-white flex-shrink-0 ml-2 transition-colors">
                         <Download size={16} />
                       </button>
                     </div>
@@ -304,7 +304,7 @@ export default function JobDetailPage() {
             </h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0" />
+                <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm font-medium text-neutral-900 dark:text-white">Job Created</p>
                   <p className="text-xs text-neutral-500">{formatDateTime(job.createdAt)}</p>

@@ -5,8 +5,8 @@ import type { BrandingSettings } from '../types';
 const defaultBranding: BrandingSettings = {
   brand_name: 'ChipTuneFiles',
   logo_url: '',
-  primary_color: '#171717',
-  accent_color: '#404040',
+  primary_color: '#dc2626',
+  accent_color: '#b91c1c',
   contact_email: '',
   currency_symbol: '€',
   support_url: '',
@@ -29,8 +29,8 @@ export const useBrandingStore = create<BrandingState>((set) => ({
       const branding = {
         ...defaultBranding,
         ...data.settings,
-        primary_color: '#171717',
-        accent_color: '#404040',
+        primary_color: '#dc2626',
+        accent_color: '#b91c1c',
       };
       set({ branding, isLoaded: true });
     } catch {

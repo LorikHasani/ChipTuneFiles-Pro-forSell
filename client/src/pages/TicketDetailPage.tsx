@@ -65,7 +65,7 @@ export default function TicketDetailPage() {
             return (
               <div key={msg.id} className={cn('flex', isMe ? 'justify-end' : 'justify-start')}>
                 <div className={cn('max-w-[80%] rounded-xl px-4 py-3',
-                  isMe ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' : 'bg-neutral-100 dark:bg-neutral-800')}>
+                  isMe ? 'bg-red-600 text-white' : 'bg-neutral-100 dark:bg-neutral-800')}>
                   <p className={cn('text-xs font-medium mb-1', isMe ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-500')}>
                     {msg.sender?.contactName || msg.sender?.email || 'User'}
                   </p>

@@ -28,14 +28,14 @@ function StatCard({ title, value, subtitle, icon: Icon, iconBg, iconColor }: Sta
     <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm p-5">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">{title}</p>
+          <p className="text-sm font-medium text-red-600 dark:text-red-500">{title}</p>
           <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-1">{value}</p>
         </div>
         <div className={cn('flex items-center justify-center w-10 h-10 rounded-xl', iconBg)}>
           <Icon className={cn('h-5 w-5', iconColor)} />
         </div>
       </div>
-      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">{subtitle}</p>
+      <p className="text-xs text-red-600 dark:text-red-500 mt-2">{subtitle}</p>
     </div>
   );
 }
@@ -79,32 +79,32 @@ export default function AdminDashboardPage() {
           value={stats.totalJobs}
           subtitle={`${stats.completedToday} completed today`}
           icon={FileText}
-          iconBg="bg-neutral-100 dark:bg-neutral-800"
-          iconColor="text-neutral-500 dark:text-neutral-400"
+          iconBg="bg-red-600/10"
+          iconColor="text-red-600 dark:text-red-500"
         />
         <StatCard
           title="Pending"
           value={stats.pendingJobs}
           subtitle={`${stats.inProgressJobs} in progress`}
           icon={Clock}
-          iconBg="bg-neutral-100 dark:bg-neutral-800"
-          iconColor="text-neutral-500 dark:text-neutral-400"
+          iconBg="bg-red-600/10"
+          iconColor="text-red-600 dark:text-red-500"
         />
         <StatCard
           title="Total Revenue"
           value={formatCurrency(stats.totalRevenue)}
           subtitle="Revenue earned"
           icon={DollarSign}
-          iconBg="bg-neutral-100 dark:bg-neutral-800"
-          iconColor="text-neutral-500 dark:text-neutral-400"
+          iconBg="bg-red-600/10"
+          iconColor="text-red-600 dark:text-red-500"
         />
         <StatCard
           title="Total Users"
           value={stats.totalUsers}
           subtitle="Registered clients"
           icon={Users}
-          iconBg="bg-neutral-100 dark:bg-neutral-800"
-          iconColor="text-neutral-500 dark:text-neutral-400"
+          iconBg="bg-red-600/10"
+          iconColor="text-red-600 dark:text-red-500"
         />
       </div>
 
@@ -116,7 +116,7 @@ export default function AdminDashboardPage() {
             <h2 className="text-base font-semibold text-neutral-900 dark:text-white">Pending Jobs</h2>
             <Link
               to="/admin/jobs?status=PENDING"
-              className="text-sm font-medium text-neutral-900 dark:text-white hover:text-neutral-500"
+              className="text-sm font-medium text-red-600 dark:text-red-500 hover:text-red-700"
             >
               View all
             </Link>
@@ -134,7 +134,7 @@ export default function AdminDashboardPage() {
                       <p className="text-sm font-semibold text-neutral-900 dark:text-white font-mono">
                         {job.referenceNumber}
                       </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                      <p className="text-xs text-red-600 dark:text-red-500 mt-0.5">
                         {[job.brand, job.model].filter(Boolean).join(' ') || 'No vehicle info'}
                         {' · '}
                         {job.client?.contactName || job.client?.email || 'Unknown'}
@@ -158,7 +158,7 @@ export default function AdminDashboardPage() {
             <h2 className="text-base font-semibold text-neutral-900 dark:text-white">Recent Activity</h2>
             <Link
               to="/admin/jobs"
-              className="text-sm font-medium text-neutral-900 dark:text-white hover:text-neutral-500"
+              className="text-sm font-medium text-red-600 dark:text-red-500 hover:text-red-700"
             >
               View all
             </Link>
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
                       <p className="text-sm font-semibold text-neutral-900 dark:text-white font-mono">
                         {job.referenceNumber}
                       </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                      <p className="text-xs text-red-600 dark:text-red-500 mt-0.5">
                         {job.client?.contactName || job.client?.email || 'Unknown'}
                         {' · '}
                         {formatDate(job.createdAt)}

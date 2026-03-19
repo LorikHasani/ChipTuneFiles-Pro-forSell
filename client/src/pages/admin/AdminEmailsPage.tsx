@@ -168,7 +168,7 @@ export default function AdminEmailsPage() {
                     ) : (
                       <Square className="h-4 w-4 text-neutral-400 flex-shrink-0" />
                     )}
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-semibold flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-red-600 text-white text-xs font-semibold flex-shrink-0">
                       {getInitials(user)}
                     </div>
                     <div className="min-w-0 flex-1">

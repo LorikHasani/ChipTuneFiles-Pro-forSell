@@ -105,8 +105,8 @@ export default function RegisterPage() {
             />
           ) : (
             <div className="flex items-center justify-center gap-2.5 mb-4">
-              <div className="w-9 h-9 bg-neutral-900 dark:bg-white rounded-lg flex items-center justify-center">
-                <UserPlus className="w-4 h-4 text-white dark:text-black" />
+              <div className="w-9 h-9 bg-red-600 rounded-lg flex items-center justify-center">
+                <UserPlus className="w-4 h-4 text-white" />
               </div>
               <h1 className="text-xl font-semibold text-neutral-900 dark:text-white tracking-tight">
                 {brandName}
@@ -298,7 +298,7 @@ export default function RegisterPage() {
             >
               {isLoading ? (
                 <>
-                  <Spinner size="sm" className="border-black/20 dark:border-white/20 border-t-black dark:border-t-white" />
+                  <Spinner size="sm" className="border-white/20 border-t-white" />
                   Creating account...
                 </>
               ) : (
@@ -316,7 +316,7 @@ export default function RegisterPage() {
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="font-medium text-neutral-900 dark:text-white hover:underline"
+                className="font-medium text-red-600 dark:text-red-500 hover:underline"
               >
                 Sign in
               </Link>

@@ -72,7 +72,7 @@ export default function AdminServicesPage() {
         {(['ECU', 'TCU'] as JobType[]).map(t => (
           <button key={t} onClick={() => setActiveTab(t)}
             className={cn('px-6 py-2 rounded-lg text-sm font-medium',
-              activeTab === t ? 'bg-neutral-900 dark:bg-white text-white dark:text-black' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400')}>
+              activeTab === t ? 'bg-red-600 text-white' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400')}>
             {t}
           </button>
         ))}

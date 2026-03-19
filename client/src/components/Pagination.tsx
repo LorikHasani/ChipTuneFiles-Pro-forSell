@@ -69,7 +69,7 @@ export default function Pagination({ page, totalPages, onPageChange, className }
             className={cn(
               'flex items-center justify-center w-8 h-8 rounded-lg text-sm font-medium transition-colors',
               page === item
-                ? 'bg-neutral-900 dark:bg-white text-white dark:text-black'
+                ? 'bg-red-600 text-white'
                 : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:text-white dark:hover:bg-neutral-800'
             )}
           >

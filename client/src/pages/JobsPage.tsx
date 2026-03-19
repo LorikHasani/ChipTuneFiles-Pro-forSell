@@ -53,7 +53,7 @@ export default function JobsPage() {
               className={cn(
                 'px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap',
                 activeStatus === tab.value
-                  ? 'bg-neutral-900 dark:bg-white text-white dark:text-black shadow-sm'
+                  ? 'bg-red-600 text-white shadow-sm'
                   : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
               )}
             >

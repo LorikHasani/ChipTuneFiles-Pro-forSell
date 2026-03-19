@@ -63,8 +63,8 @@ export default function ProfilePage() {
       {/* Profile info */}
       <div className="card p-6 space-y-4">
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-12 w-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-            <User size={24} className="text-neutral-900 dark:text-white" />
+          <div className="h-12 w-12 rounded-full bg-red-600/10 flex items-center justify-center">
+            <User size={24} className="text-red-600 dark:text-red-500" />
           </div>
           <div>
             <p className="font-medium text-neutral-900 dark:text-white">{user?.email}</p>
