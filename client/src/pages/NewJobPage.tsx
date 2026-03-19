@@ -305,7 +305,7 @@ export default function NewJobPage() {
             filteredCategories.map((cat: ServiceCategory) => (
               <div key={cat.id}>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-neutral-500" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   <h3 className="text-sm font-bold text-neutral-300 uppercase tracking-wide">{cat.name}</h3>
                   <span className="text-xs text-neutral-500">({(cat.services || []).length} available)</span>
                 </div>
@@ -314,16 +314,16 @@ export default function NewJobPage() {
                     const isSelected = (selectedServices[cat.id] || []).includes(svc.id);
                     return (
                       <button key={svc.id} onClick={() => handleServiceToggle(cat.id, svc.id, cat.selectionType)}
-                        className={cn('relative card p-4 flex flex-col items-center text-center transition-all',
-                          isSelected ? 'ring-1 ring-neutral-400 border-neutral-500/50' : 'hover:border-neutral-700')}>
+                        className={cn('relative p-4 flex flex-col items-center text-center rounded-xl border transition-all bg-neutral-900/80',
+                          isSelected ? 'border-red-500 ring-1 ring-red-500/30' : 'border-purple-500/40 hover:border-purple-500/60')}>
                         <div className={cn('absolute top-2 right-2 w-4 h-4 border flex items-center justify-center',
                           cat.selectionType === 'SINGLE' ? 'rounded-full' : 'rounded-sm',
-                          isSelected ? 'bg-red-600 border-neutral-900 dark:border-white' : 'border-neutral-700')}>
+                          isSelected ? 'bg-red-600 border-red-600' : 'border-neutral-700')}>
                           {isSelected && <Check size={10} className="text-white" />}
                         </div>
                         <div className="mb-2 mt-1"><ServiceIcon icon={svc.icon} /></div>
                         <h4 className="text-xs font-medium text-neutral-300 mb-1 leading-tight">{svc.name}</h4>
-                        <span className="text-xs font-bold text-neutral-400">+{formatCurrency(svc.basePrice)}</span>
+                        <span className="text-xs font-bold text-emerald-400">+{formatCurrency(svc.basePrice)}</span>
                       </button>
                     );
                   })}

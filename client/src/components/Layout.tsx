@@ -164,7 +164,7 @@ export default function Layout() {
                   cn(
                     'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
                     isActive
-                      ? 'bg-red-600/10 dark:bg-red-600/10 text-red-600 dark:text-red-500'
+                      ? 'bg-red-600 text-white'
                       : 'text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/5'
                   )
                 }
@@ -190,7 +190,7 @@ export default function Layout() {
                     cn(
                       'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
                       isActive
-                        ? 'bg-red-600/10 dark:bg-red-600/10 text-red-600 dark:text-red-500'
+                        ? 'bg-red-600 text-white'
                         : 'text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/5'
                     )
                   }

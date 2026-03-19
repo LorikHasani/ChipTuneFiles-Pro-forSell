@@ -35,8 +35,8 @@ export default function PricesPage() {
           return (
             <div key={groupName}>
               <div className="flex items-center gap-2 mb-4">
-                <span className="w-2 h-2 rounded-full bg-neutral-500" />
-                <h2 className="text-base font-semibold text-white">{groupName}</h2>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                <h2 className="text-lg font-bold text-white">{groupName}</h2>
                 <span className="text-xs text-neutral-500">({totalServices} available)</span>
               </div>
 
@@ -79,7 +79,7 @@ function ServiceGrid({ services, isMultiple }: { services: Service[]; isMultiple
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {services.map(svc => (
-        <div key={svc.id} className="relative card p-4 flex flex-col items-center text-center">
+        <div key={svc.id} className="relative p-4 flex flex-col items-center text-center rounded-xl border border-purple-500/40 bg-neutral-900/80 hover:border-purple-500/60 transition-colors">
           {svc.description && (
             <div className="absolute top-2 right-2 group">
               <Info size={14} className="text-neutral-500 cursor-help" />
@@ -92,7 +92,7 @@ function ServiceGrid({ services, isMultiple }: { services: Service[]; isMultiple
             <ServiceIcon icon={svc.icon} />
           </div>
           <h4 className="text-sm font-medium text-neutral-300 mb-1">{svc.name}</h4>
-          <span className={cn('text-sm font-bold', isMultiple ? 'text-neutral-400' : 'text-white')}>
+          <span className={cn('text-sm font-bold', isMultiple ? 'text-emerald-400' : 'text-red-500')}>
             {isMultiple ? '+' : ''}{formatCurrency(svc.basePrice)}
           </span>
         </div>
