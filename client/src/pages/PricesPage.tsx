@@ -39,7 +39,7 @@ export default function PricesPage() {
             <div key={groupName}>
               <div className="flex items-center gap-2 mb-4">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <h2 className="text-lg font-bold text-white">{groupName}</h2>
+                <h2 className="text-lg font-bold text-neutral-900 dark:text-white">{groupName}</h2>
                 <span className="text-xs text-neutral-500">({totalServices} available)</span>
               </div>
 

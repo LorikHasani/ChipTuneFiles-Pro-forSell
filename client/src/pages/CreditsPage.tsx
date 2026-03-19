@@ -96,7 +96,7 @@ export default function CreditsPage() {
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Zap size={16} className="text-neutral-400" />
-          <h2 className="text-base font-bold text-white">Top Up Balance</h2>
+          <h2 className="text-base font-bold text-neutral-900 dark:text-white">Top Up Balance</h2>
         </div>
         <p className="text-xs text-neutral-500 mb-4">Choose a package to add funds to your balance.</p>
 
@@ -118,8 +118,8 @@ export default function CreditsPage() {
                     </div>
                   )}
 
-                  <h3 className="font-semibold text-neutral-400 text-sm">{pkg.name}</h3>
-                  <p className="text-3xl font-bold text-white mt-2">{formatCurrency(pkg.price)}</p>
+                  <h3 className="font-semibold text-neutral-600 dark:text-neutral-400 text-sm">{pkg.name}</h3>
+                  <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">{formatCurrency(pkg.price)}</p>
                   <p className="text-xs text-neutral-500 mb-3">{formatCurrency(perUnit)}/unit</p>
 
                   <div className="space-y-1.5 mb-4 flex-1">
@@ -153,7 +153,7 @@ export default function CreditsPage() {
       <div className="card p-6">
         <div className="flex items-center gap-2 mb-1">
           <Edit3 size={16} className="text-neutral-500" />
-          <h2 className="text-base font-bold text-white">Custom Amount</h2>
+          <h2 className="text-base font-bold text-neutral-900 dark:text-white">Custom Amount</h2>
         </div>
         <p className="text-xs text-neutral-500 mb-4">Need a specific amount? Enter how much you'd like to add.</p>
         <div className="flex gap-3 items-center">
@@ -170,7 +170,7 @@ export default function CreditsPage() {
       {/* Transaction History */}
       <div className="card">
         <div className="p-4 border-b border-neutral-800">
-          <h2 className="text-base font-bold text-white">Transaction History</h2>
+          <h2 className="text-base font-bold text-neutral-900 dark:text-white">Transaction History</h2>
         </div>
         {loadingTx ? <div className="p-4"><Spinner /></div> : !transactions?.length ? (
           <p className="p-4 text-neutral-500 text-sm">No transactions yet.</p>
@@ -181,7 +181,7 @@ export default function CreditsPage() {
                 <div className="flex items-center gap-3">
                   {getTransactionIcon(tx.type)}
                   <div>
-                    <p className="text-sm font-medium text-neutral-300">{tx.description || tx.type.replace(/_/g, ' ')}</p>
+                    <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{tx.description || tx.type.replace(/_/g, ' ')}</p>
                     <p className="text-xs text-neutral-500">{formatDateTime(tx.createdAt)}</p>
                   </div>
                 </div>

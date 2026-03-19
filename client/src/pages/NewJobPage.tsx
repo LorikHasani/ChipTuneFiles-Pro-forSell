@@ -166,7 +166,7 @@ export default function NewJobPage() {
       {/* Step 1: File Upload */}
       {currentStep === 1 && (
         <div className="card p-6 space-y-6">
-          <h2 className="text-xl font-bold text-white">Upload ECU/TCU File</h2>
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Upload ECU/TCU File</h2>
           <div className="flex gap-4">
             {(['ECU', 'TCU'] as JobType[]).map(type => (
               <button key={type} onClick={() => setJobType(type)}
@@ -228,7 +228,7 @@ export default function NewJobPage() {
           <div className="card p-6 space-y-5">
             <div className="flex items-center gap-2">
               <Car size={18} className="text-neutral-500" />
-              <h3 className="text-base font-semibold text-white">Vehicle Details</h3>
+              <h3 className="text-base font-semibold text-neutral-900 dark:text-white">Vehicle Details</h3>
             </div>
             <VehicleSelector vehicle={vehicle} onChange={updates => setVehicle(prev => ({ ...prev, ...updates }))} />
             <div>
@@ -249,7 +249,7 @@ export default function NewJobPage() {
           <div className="card p-6 space-y-4">
             <div className="flex items-center gap-2">
               <Wrench size={18} className="text-neutral-500" />
-              <h3 className="text-base font-semibold text-white">Reading Tool</h3>
+              <h3 className="text-base font-semibold text-neutral-900 dark:text-white">Reading Tool</h3>
             </div>
             <div>
               <label className="label">Select Tool <span className="text-red-500">*</span></label>
@@ -289,7 +289,7 @@ export default function NewJobPage() {
                 <Wrench size={18} className="text-neutral-400" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white">Select Services</h2>
+                <h2 className="text-base font-bold text-neutral-900 dark:text-white">Select Services</h2>
                 {vehicleSummary && <p className="text-xs text-neutral-500">{vehicleSummary}</p>}
               </div>
             </div>
@@ -333,7 +333,7 @@ export default function NewJobPage() {
                 <div key={cat.id}>
                   <div className="flex items-center gap-2 mb-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    <h3 className="text-sm font-bold text-neutral-300 uppercase tracking-wide">{cat.name}</h3>
+                    <h3 className="text-sm font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">{cat.name}</h3>
                     <span className="text-xs text-neutral-500">({(cat.services || []).length} available)</span>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
@@ -387,17 +387,17 @@ export default function NewJobPage() {
 
           <div className="card p-4 flex items-center justify-between">
             <span className="text-sm text-neutral-500">Selected services</span>
-            <span className="text-lg font-bold text-white">{allSelectedServiceIds.length}</span>
+            <span className="text-lg font-bold text-neutral-900 dark:text-white">{allSelectedServiceIds.length}</span>
           </div>
 
           <div className="card p-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-neutral-500">Total Price:</span>
-              <span className="text-2xl font-bold text-white">{formatCurrency(totalPrice)}</span>
+              <span className="text-2xl font-bold text-neutral-900 dark:text-white">{formatCurrency(totalPrice)}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-neutral-500">Your Balance:</span>
-              <span className={cn('font-semibold', Number(user?.creditBalance || 0) >= totalPrice ? 'text-neutral-300' : 'text-red-400')}>
+              <span className={cn('font-semibold', Number(user?.creditBalance || 0) >= totalPrice ? 'text-neutral-700 dark:text-neutral-300' : 'text-red-400')}>
                 {formatCurrency(user?.creditBalance || 0)}
               </span>
             </div>
