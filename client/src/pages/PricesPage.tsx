@@ -68,10 +68,10 @@ export default function PricesPage() {
   );
 }
 
-function ServiceIcon({ icon, colorClass = 'text-purple-400' }: { icon: string | null | undefined; colorClass?: string }) {
-  if (!icon) return <Settings2 size={22} className={colorClass} />;
+function ServiceIcon({ icon, colorClass = 'text-purple-400', size = 20 }: { icon: string | null | undefined; colorClass?: string; size?: number }) {
+  if (!icon) return <Settings2 size={size} className={colorClass} />;
   const LucideComp = getLucideIcon(icon);
-  if (LucideComp) return <LucideComp size={22} className={colorClass} />;
+  if (LucideComp) return <LucideComp size={size} className={colorClass} />;
   return <span className="text-xl">{icon}</span>;
 }
 
@@ -84,13 +84,13 @@ const cardStyles = {
 const iconStyles = {
   ecu: 'text-blue-500 dark:text-blue-400',
   tcu: 'text-purple-500 dark:text-purple-400',
-  option: 'text-zinc-500 dark:text-zinc-400',
+  option: 'text-zinc-400 dark:text-zinc-500',
 };
 
 const priceStyles = {
-  ecu: 'text-blue-600 dark:text-blue-400',
-  tcu: 'text-purple-600 dark:text-purple-400',
-  option: 'text-emerald-600 dark:text-emerald-400',
+  ecu: 'text-lg font-bold text-blue-500 dark:text-blue-400',
+  tcu: 'text-lg font-bold text-purple-500 dark:text-purple-400',
+  option: 'text-sm font-bold text-green-600 dark:text-green-400',
 };
 
 function ServiceGrid({ services, cardType }: { services: Service[]; cardType: 'ecu' | 'tcu' | 'option' }) {
@@ -98,17 +98,23 @@ function ServiceGrid({ services, cardType }: { services: Service[]; cardType: 'e
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {services.map(svc => (
         <div key={svc.id} className={cardStyles[cardType]}>
-          {svc.description && (
-            <div className="absolute top-2 right-2 group">
-              <Info size={14} className="text-neutral-400 cursor-help" />
-              <div className="hidden group-hover:block absolute right-0 top-5 z-10 w-48 p-2 text-xs text-left bg-black text-neutral-300 rounded-lg shadow-lg border border-neutral-800">
-                {svc.description}
-              </div>
+          {cardType !== 'option' && svc.description && (
+            <div className="absolute top-2 right-2 z-10">
+              <button className="p-1 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-600/50 transition-colors group">
+                <Info size={14} className="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300" />
+                <div className="hidden group-hover:block absolute right-0 top-7 z-10 w-48 p-2 text-xs text-left bg-black text-neutral-300 rounded-lg shadow-lg border border-neutral-800">
+                  {svc.description}
+                </div>
+              </button>
             </div>
           )}
-          <ServiceIcon icon={svc.icon} colorClass={iconStyles[cardType]} />
-          <h4 className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{svc.name}</h4>
-          <span className={cn('text-sm font-bold', priceStyles[cardType])}>
+          <ServiceIcon icon={svc.icon} colorClass={iconStyles[cardType]} size={cardType === 'option' ? 22 : 20} />
+          <h4 className={cardType === 'option'
+            ? 'text-xs font-medium leading-tight text-zinc-700 dark:text-zinc-300'
+            : 'font-semibold text-sm text-zinc-900 dark:text-white'}>
+            {svc.name}
+          </h4>
+          <span className={priceStyles[cardType]}>
             {cardType === 'option' ? '+' : ''}{formatCurrency(svc.basePrice)}
           </span>
         </div>
