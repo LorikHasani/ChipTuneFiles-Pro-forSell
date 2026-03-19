@@ -69,9 +69,9 @@ export default function PricesPage() {
 }
 
 function ServiceIcon({ icon }: { icon: string | null | undefined }) {
-  if (!icon) return <Settings2 size={22} className="text-neutral-500" />;
+  if (!icon) return <Settings2 size={22} className="text-purple-400" />;
   const LucideComp = getLucideIcon(icon);
-  if (LucideComp) return <LucideComp size={22} className="text-neutral-500" />;
+  if (LucideComp) return <LucideComp size={22} className="text-purple-400" />;
   return <span className="text-xl">{icon}</span>;
 }
 
@@ -92,7 +92,7 @@ function ServiceGrid({ services, isMultiple }: { services: Service[]; isMultiple
             <ServiceIcon icon={svc.icon} />
           </div>
           <h4 className="text-sm font-medium text-neutral-300 mb-1">{svc.name}</h4>
-          <span className={cn('text-sm font-bold', isMultiple ? 'text-emerald-400' : 'text-red-500')}>
+          <span className={cn('text-sm font-bold', isMultiple ? 'text-emerald-400' : 'text-blue-400')}>
             {isMultiple ? '+' : ''}{formatCurrency(svc.basePrice)}
           </span>
         </div>

@@ -25,9 +25,9 @@ const TOOL_TYPES = ['Master', 'Slave'];
 const GEARBOX_TYPES = ['Manual', 'Automatic', 'DSG/DCT', 'CVT', 'AMT', 'Other'];
 
 function ServiceIcon({ icon }: { icon: string | null | undefined }) {
-  if (!icon) return <Wrench size={20} className="text-neutral-500" />;
+  if (!icon) return <Wrench size={20} className="text-purple-400" />;
   const LucideComp = getLucideIcon(icon);
-  if (LucideComp) return <LucideComp size={20} className="text-neutral-500" />;
+  if (LucideComp) return <LucideComp size={20} className="text-purple-400" />;
   return <span className="text-lg">{icon}</span>;
 }
 

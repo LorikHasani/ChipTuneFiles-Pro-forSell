@@ -79,7 +79,7 @@ export default function CreditsPage() {
       <PageHeader title="Balance" subtitle="Manage your credits and top up your balance" />
 
       {/* Balance card */}
-      <div className="rounded-xl p-6 bg-gradient-to-br from-neutral-950 to-black border border-neutral-800">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 bg-gradient-to-r from-zinc-900 to-zinc-800 dark:from-zinc-800 dark:to-zinc-700 text-white">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-neutral-500 mb-1">Your Balance</p>
@@ -124,13 +124,13 @@ export default function CreditsPage() {
 
                   <div className="space-y-1.5 mb-4 flex-1">
                     <div className="flex items-center gap-2 text-sm">
-                      <CreditCard size={14} className="text-neutral-500" />
+                      <CreditCard size={14} className="text-emerald-500" />
                       <span className="text-neutral-400">{formatCurrency(pkg.credits)}</span>
                     </div>
                     {pkg.bonusCredits > 0 && (
                       <div className="flex items-center gap-2 text-sm">
-                        <Zap size={14} className="text-neutral-400" />
-                        <span className="text-neutral-400">+{formatCurrency(pkg.bonusCredits)} bonus</span>
+                        <Zap size={14} className="text-red-500" />
+                        <span className="text-red-500">+{formatCurrency(pkg.bonusCredits)} bonus</span>
                       </div>
                     )}
                     <p className="text-xs text-neutral-500">Total: {formatCurrency(totalWithBonus)}</p>
