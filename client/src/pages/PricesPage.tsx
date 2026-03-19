@@ -28,9 +28,12 @@ export default function PricesPage() {
         <p className="text-neutral-500 text-center py-12">No services available.</p>
       ) : (
         Object.entries(grouped).map(([groupName, cats]) => {
-          const hasSubGroups = cats.length > 1;
           const totalServices = cats.reduce((sum, c) => sum + (c.services?.length || 0), 0);
-          const isMultiple = cats[0].selectionType === 'MULTIPLE';
+          const cat = cats[0];
+          const isStage = cat.selectionType === 'SINGLE';
+          let cardType: 'ecu' | 'tcu' | 'option' = 'option';
+          if (isStage && cat.jobType === 'ECU') cardType = 'ecu';
+          else if (isStage && cat.jobType === 'TCU') cardType = 'tcu';
 
           return (
             <div key={groupName}>
@@ -40,21 +43,7 @@ export default function PricesPage() {
                 <span className="text-xs text-neutral-500">({totalServices} available)</span>
               </div>
 
-              {hasSubGroups ? (
-                cats.map(cat => (
-                  <div key={cat.id} className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Settings2 size={14} className="text-neutral-500" />
-                      <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">
-                        {cat.jobType === 'ECU' ? 'ECU' : 'GEARBOX / TCU'}
-                      </h3>
-                    </div>
-                    <ServiceGrid services={cat.services || []} cardType={cat.jobType === 'ECU' ? 'ecu' : 'tcu'} />
-                  </div>
-                ))
-              ) : (
-                <ServiceGrid services={cats[0].services || []} cardType="option" />
-              )}
+              <ServiceGrid services={cat.services || []} cardType={cardType} />
             </div>
           );
         })
