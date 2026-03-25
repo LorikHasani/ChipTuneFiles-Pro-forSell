@@ -106,6 +106,7 @@ export default function AdminEmailsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Select Recipients */}
         <div className="card p-0 flex flex-col" style={{ maxHeight: '70vh' }}>
+<<<<<<< HEAD
           <div className="p-4 border-b border-neutral-200 dark:border-neutral-800">
             <div className="flex items-center gap-2 mb-3">
               <Users className="h-5 w-5 text-neutral-500" />
@@ -113,13 +114,26 @@ export default function AdminEmailsPage() {
                 Select Recipients
               </h3>
               <span className="ml-auto text-xs text-neutral-500">
+=======
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <Users className="h-5 w-5 text-gray-500" />
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                Select Recipients
+              </h3>
+              <span className="ml-auto text-xs text-gray-500">
+>>>>>>> claude/thirsty-dirac
                 {selectedIds.size} selected
               </span>
             </div>
 
             {/* Search */}
             <div className="relative">
+<<<<<<< HEAD
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+=======
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+>>>>>>> claude/thirsty-dirac
               <input
                 type="text"
                 placeholder="Search clients..."
@@ -132,6 +146,7 @@ export default function AdminEmailsPage() {
 
           {/* Select All */}
           <div
+<<<<<<< HEAD
             className="flex items-center gap-3 px-4 py-2 border-b border-neutral-200 dark:border-neutral-800 cursor-pointer hover:bg-neutral-50 dark:hover:bg-white/[0.03]"
             onClick={toggleAll}
           >
@@ -141,6 +156,17 @@ export default function AdminEmailsPage() {
               <Square className="h-4 w-4 text-neutral-400 flex-shrink-0" />
             )}
             <span className="text-sm font-medium text-neutral-600 dark:text-neutral-300">
+=======
+            className="flex items-center gap-3 px-4 py-2 border-b border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50"
+            onClick={toggleAll}
+          >
+            {allSelected ? (
+              <CheckSquare className="h-4 w-4 text-primary-500 flex-shrink-0" />
+            ) : (
+              <Square className="h-4 w-4 text-gray-400 flex-shrink-0" />
+            )}
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+>>>>>>> claude/thirsty-dirac
               Select All ({filtered.length})
             </span>
           </div>
@@ -148,7 +174,11 @@ export default function AdminEmailsPage() {
           {/* User List */}
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 ? (
+<<<<<<< HEAD
               <p className="text-sm text-neutral-500 text-center py-8">No clients found.</p>
+=======
+              <p className="text-sm text-gray-500 text-center py-8">No clients found.</p>
+>>>>>>> claude/thirsty-dirac
             ) : (
               filtered.map((user) => {
                 const selected = selectedIds.has(user.id);
@@ -156,14 +186,22 @@ export default function AdminEmailsPage() {
                   <div
                     key={user.id}
                     className={cn(
+<<<<<<< HEAD
                       'flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-neutral-100 dark:border-neutral-800/50 transition-colors',
                       selected
                         ? 'bg-neutral-100 dark:bg-neutral-800'
                         : 'hover:bg-neutral-50 dark:hover:bg-white/[0.03]'
+=======
+                      'flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-gray-100 dark:border-gray-700/50 transition-colors',
+                      selected
+                        ? 'bg-primary-50 dark:bg-primary-900/20'
+                        : 'hover:bg-gray-50 dark:hover:bg-gray-700/30'
+>>>>>>> claude/thirsty-dirac
                     )}
                     onClick={() => toggleUser(user.id)}
                   >
                     {selected ? (
+<<<<<<< HEAD
                       <CheckSquare className="h-4 w-4 text-neutral-700 dark:text-neutral-300 flex-shrink-0" />
                     ) : (
                       <Square className="h-4 w-4 text-neutral-400 flex-shrink-0" />
@@ -178,6 +216,22 @@ export default function AdminEmailsPage() {
                       <p className="text-xs text-neutral-500 truncate">{user.email}</p>
                       {user.companyName && (
                         <p className="text-xs text-neutral-400 truncate">{user.companyName}</p>
+=======
+                      <CheckSquare className="h-4 w-4 text-primary-500 flex-shrink-0" />
+                    ) : (
+                      <Square className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    )}
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-xs font-semibold flex-shrink-0">
+                      {getInitials(user)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        {user.contactName || user.email}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                      {user.companyName && (
+                        <p className="text-xs text-gray-400 truncate">{user.companyName}</p>
+>>>>>>> claude/thirsty-dirac
                       )}
                     </div>
                   </div>
@@ -190,14 +244,23 @@ export default function AdminEmailsPage() {
         {/* Right Panel - Compose Email */}
         <div className="card p-6 space-y-5">
           <div className="flex items-center gap-2">
+<<<<<<< HEAD
             <Mail className="h-5 w-5 text-neutral-500" />
             <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">Compose Email</h3>
+=======
+            <Mail className="h-5 w-5 text-gray-500" />
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Compose Email</h3>
+>>>>>>> claude/thirsty-dirac
           </div>
 
           {/* To field */}
           <div>
             <label className="label">To</label>
+<<<<<<< HEAD
             <div className="input bg-neutral-50 dark:bg-neutral-800/50 text-sm text-neutral-500 dark:text-neutral-400">
+=======
+            <div className="input bg-gray-50 dark:bg-gray-700/50 text-sm text-gray-600 dark:text-gray-400">
+>>>>>>> claude/thirsty-dirac
               {selectedIds.size === 0
                 ? 'No recipients selected'
                 : `${selectedIds.size} client${selectedIds.size !== 1 ? 's' : ''} selected`}
@@ -238,11 +301,19 @@ export default function AdminEmailsPage() {
                 className={cn(
                   'flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors',
                   colorTheme === 'blue'
+<<<<<<< HEAD
                     ? 'border-neutral-400 bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700'
                     : 'border-neutral-200 text-neutral-500 dark:border-neutral-700 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800'
                 )}
               >
                 <span className="w-3 h-3 rounded-full bg-neutral-500" />
+=======
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-600'
+                    : 'border-gray-300 text-gray-600 dark:border-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                )}
+              >
+                <span className="w-3 h-3 rounded-full bg-blue-500" />
+>>>>>>> claude/thirsty-dirac
                 Blue
               </button>
               <button
@@ -251,11 +322,19 @@ export default function AdminEmailsPage() {
                 className={cn(
                   'flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors',
                   colorTheme === 'red'
+<<<<<<< HEAD
                     ? 'border-neutral-400 bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700'
                     : 'border-neutral-200 text-neutral-500 dark:border-neutral-700 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800'
                 )}
               >
                 <span className="w-3 h-3 rounded-full bg-neutral-400" />
+=======
+                    ? 'border-red-500 bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400 dark:border-red-600'
+                    : 'border-gray-300 text-gray-600 dark:border-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                )}
+              >
+                <span className="w-3 h-3 rounded-full bg-red-500" />
+>>>>>>> claude/thirsty-dirac
                 Red
               </button>
             </div>
@@ -267,8 +346,13 @@ export default function AdminEmailsPage() {
               className={cn(
                 'p-3 rounded-lg text-sm',
                 result.failed === 0
+<<<<<<< HEAD
                   ? 'bg-neutral-50 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'
                   : 'bg-neutral-50 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'
+=======
+                  ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                  : 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+>>>>>>> claude/thirsty-dirac
               )}
             >
               {result.failed === 0

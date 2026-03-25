@@ -25,6 +25,58 @@ export default function DashboardPage() {
   const totalCount = jobs?.length ?? 0;
   const recentJobs = jobs?.slice(0, 5) ?? [];
 
+<<<<<<< HEAD
+=======
+  const announcementIcon = (type: string) => {
+    switch (type) {
+      case 'WARNING':
+        return <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0" />;
+      case 'SUCCESS':
+        return <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />;
+      default:
+        return <Info className="w-5 h-5 text-blue-500 shrink-0" />;
+    }
+  };
+
+  const announcementBg = (type: string) => {
+    switch (type) {
+      case 'WARNING':
+        return 'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800';
+      case 'SUCCESS':
+        return 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800';
+      default:
+        return 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800';
+    }
+  };
+
+  const stats = [
+    {
+      label: 'Credit Balance',
+      value: user?.creditBalance != null ? Number(user.creditBalance).toFixed(0) : '0',
+      icon: Wallet,
+      color: 'text-primary-600 bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400',
+    },
+    {
+      label: 'Total Jobs',
+      value: totalCount.toString(),
+      icon: Briefcase,
+      color: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400',
+    },
+    {
+      label: 'Pending Jobs',
+      value: pendingCount.toString(),
+      icon: Clock,
+      color: 'text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400',
+    },
+    {
+      label: 'Completed Jobs',
+      value: completedCount.toString(),
+      icon: CheckCircle2,
+      color: 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400',
+    },
+  ];
+
+>>>>>>> claude/thirsty-dirac
   return (
     <div className="space-y-6">
       {/* Welcome */}

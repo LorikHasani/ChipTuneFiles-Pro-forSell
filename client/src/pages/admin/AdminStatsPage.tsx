@@ -77,8 +77,13 @@ export default function AdminStatsPage() {
               <span className="text-neutral-500">Total Revenue</span>
               <span className="font-bold text-neutral-500">{formatCurrency(stats.totalRevenue)}</span>
             </div>
+<<<<<<< HEAD
             <div className="flex justify-between py-2 border-b border-neutral-100 dark:border-neutral-800">
               <span className="text-neutral-500">Total Credits in System</span>
+=======
+            <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+              <span className="text-gray-500">Total Credits in System</span>
+>>>>>>> claude/thirsty-dirac
               <span className="font-bold">{stats.totalCreditsIssued != null ? Number(stats.totalCreditsIssued).toFixed(0) : '0'}</span>
             </div>
             <div className="flex justify-between py-2">

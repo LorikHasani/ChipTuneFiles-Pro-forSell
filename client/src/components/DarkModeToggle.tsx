@@ -11,6 +11,10 @@ export default function DarkModeToggle({ className }: DarkModeToggleProps) {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('theme');
       if (stored) return stored === 'dark';
+<<<<<<< HEAD
+=======
+      // Default to dark mode
+>>>>>>> claude/thirsty-dirac
       return true;
     }
     return true;

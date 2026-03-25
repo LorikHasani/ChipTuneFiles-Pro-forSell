@@ -86,6 +86,10 @@ export default function CreditsPage() {
             <span className="text-xs text-neutral-600 dark:text-neutral-300">Secure payments via Stripe</span>
           </div>
         </div>
+<<<<<<< HEAD
+=======
+        <p className="text-4xl font-bold">{user?.creditBalance != null ? Number(user.creditBalance).toFixed(0) : '0'} <span className="text-lg font-normal text-primary-200">credits</span></p>
+>>>>>>> claude/thirsty-dirac
       </div>
 
       {/* Packages */}
@@ -179,6 +183,7 @@ export default function CreditsPage() {
         {loadingTx ? <div className="p-4"><Spinner /></div> : !transactions?.length ? (
           <p className="p-4 text-neutral-500 text-sm">No transactions yet.</p>
         ) : (
+<<<<<<< HEAD
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -251,6 +256,27 @@ export default function CreditsPage() {
                 })}
               </tbody>
             </table>
+=======
+          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            {transactions.map((tx: Transaction) => (
+              <div key={tx.id} className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {getTransactionIcon(tx.type)}
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{tx.description || tx.type.replace(/_/g, ' ')}</p>
+                    <p className="text-xs text-gray-500">{formatDateTime(tx.createdAt)}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={cn('font-semibold text-sm',
+                    tx.type === 'JOB_PAYMENT' ? 'text-red-600' : 'text-green-600')}>
+                    {tx.type === 'JOB_PAYMENT' ? '-' : '+'}{Math.abs(Number(tx.amount)).toFixed(0)}
+                  </p>
+                  <p className="text-xs text-gray-500">Balance: {tx.balanceAfter != null ? Number(tx.balanceAfter).toFixed(0) : '0'}</p>
+                </div>
+              </div>
+            ))}
+>>>>>>> claude/thirsty-dirac
           </div>
         )}
       </div>
