@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Briefcase,
@@ -13,6 +13,7 @@ import {
   Send,
   BarChart3,
   Bell,
+  CreditCard,
   Menu,
   X,
   LogOut,
@@ -25,6 +26,7 @@ import { useBrandingStore } from '../stores/brandingStore';
 import DarkModeToggle from './DarkModeToggle';
 import { cn } from '../lib/utils';
 import api from '../lib/api';
+import toast from 'react-hot-toast';
 
 interface NavItem {
   label: string;
@@ -80,24 +82,73 @@ const adminNavItems: NavItem[] = [
   { label: 'Settings', path: '/admin/settings', icon: Settings },
 ];
 
+const pageTitles: Record<string, string> = {
+  '/': 'Dashboard',
+  '/admin': 'Admin Dashboard',
+  '/admin/jobs': 'All Jobs',
+  '/admin/services': 'Services',
+  '/admin/packages': 'Credit Packages',
+  '/admin/users': 'Users',
+  '/admin/tickets': 'Tickets',
+  '/admin/emails': 'Emails',
+  '/admin/announcements': 'News',
+  '/admin/stats': 'Statistics',
+  '/admin/settings': 'Settings',
+  '/jobs': 'My Jobs',
+  '/jobs/new': 'Upload File',
+  '/credits': 'Balance',
+  '/prices': 'Prices',
+  '/tickets': 'Tickets',
+  '/profile': 'Profile',
+  '/calculator': 'Calculator',
+  '/notifications': 'Notifications',
+};
+
+function getPageTitle(pathname: string): string {
+  if (pageTitles[pathname]) return pageTitles[pathname];
+  if (pathname.startsWith('/admin/jobs/')) return 'Job Details';
+  if (pathname.startsWith('/admin/users/')) return 'User Details';
+  if (pathname.startsWith('/admin/tickets/')) return 'Ticket Details';
+  if (pathname.startsWith('/jobs/')) return 'Job Details';
+  if (pathname.startsWith('/tickets/')) return 'Ticket Details';
+  return '';
+}
+
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const { user, isAdmin, logout } = useAuthStore();
   const { branding } = useBrandingStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const pageTitle = useMemo(() => getPageTitle(location.pathname), [location.pathname]);
+
+  const prevUnreadRef = useRef<number | null>(null);
 
   useEffect(() => {
     const fetchUnread = async () => {
       try {
         const { data } = await api.get<{ count: number }>('/notifications/unread-count');
-        setUnreadCount(data.count);
+        const newCount = data.count;
+
+        // Show toast if count increased (skip first fetch)
+        if (prevUnreadRef.current !== null && newCount > prevUnreadRef.current) {
+          const diff = newCount - prevUnreadRef.current;
+          toast(`${diff} new notification${diff > 1 ? 's' : ''}`, {
+            icon: '🔔',
+            duration: 4000,
+            style: { cursor: 'pointer' },
+          });
+        }
+
+        prevUnreadRef.current = newCount;
+        setUnreadCount(newCount);
       } catch {
         // Silently fail
       }
     };
     fetchUnread();
-    const interval = setInterval(fetchUnread, 30000);
+    const interval = setInterval(fetchUnread, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -205,28 +256,33 @@ export default function Layout() {
 
         {/* Working Hours - clients only */}
         {!isAdmin && <div className="flex-shrink-0 border-t border-neutral-200 dark:border-neutral-800 px-4 py-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className="h-3.5 w-3.5 text-neutral-400 dark:text-neutral-600" />
-            <span className="text-[11px] font-medium text-neutral-400 dark:text-neutral-600 uppercase tracking-widest">Working Hours</span>
+          <div className="flex items-center gap-2 mb-3">
+            <Clock className="h-3.5 w-3.5 text-neutral-400 dark:text-neutral-500" />
+            <span className="text-[11px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Working Hours</span>
           </div>
           <div className="flex items-center gap-2 mb-2">
-            <span className={cn('w-1.5 h-1.5 rounded-full', isPortalOpen() ? 'bg-red-500' : 'bg-neutral-400')} />
-            <span className={cn('text-xs font-medium', isPortalOpen() ? 'text-red-600 dark:text-red-400' : 'text-neutral-400')}>
+            <span className={cn('w-1.5 h-1.5 rounded-full', isPortalOpen() ? 'bg-green-500' : 'bg-red-500')} />
+            <span className={cn('text-xs font-semibold', isPortalOpen() ? 'text-green-500' : 'text-red-500')}>
               {isPortalOpen() ? 'Portal Open' : 'Portal Closed'}
             </span>
           </div>
-          <div className="space-y-0.5">
-            {WORKING_HOURS.map((wh, i) => (
-              <div key={wh.day} className={cn(
-                'flex justify-between text-[11px] px-1 py-0.5 rounded',
-                i === getCurrentDayIndex()
-                  ? 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 font-semibold'
-                  : 'text-neutral-400 dark:text-neutral-600'
-              )}>
-                <span>{wh.day}</span>
-                <span className={wh.hours === 'Closed' ? 'text-neutral-400' : ''}>{wh.hours}</span>
-              </div>
-            ))}
+          <div className="space-y-px">
+            {WORKING_HOURS.map((wh, i) => {
+              const isCurrent = i === getCurrentDayIndex();
+              return (
+                <div key={wh.day} className={cn(
+                  'flex justify-between text-[11px] px-2 py-0.5 rounded',
+                  isCurrent
+                    ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-bold'
+                    : 'text-neutral-400 dark:text-neutral-500'
+                )}>
+                  <span>{wh.day}</span>
+                  <span className={cn(
+                    wh.hours === 'Closed' && !isCurrent ? 'text-red-500' : ''
+                  )}>{wh.hours}</span>
+                </div>
+              );
+            })}
           </div>
         </div>}
 
@@ -264,16 +320,21 @@ export default function Layout() {
             >
               <Menu className="h-5 w-5" />
             </button>
+            {pageTitle && (
+              <h1 className="text-sm font-semibold text-neutral-900 dark:text-white">{pageTitle}</h1>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5">
-            {/* Credit balance pill */}
+            {/* Credit balance */}
             {!isAdmin && (
               <NavLink
                 to="/credits"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-semibold transition-all hover:bg-red-700"
+                className="flex items-center gap-2 px-2.5 py-1 rounded-lg text-sm font-semibold text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-700"
               >
-                <Wallet className="h-3.5 w-3.5" />
+                <div className="flex items-center justify-center w-5 h-4 rounded-[3px] bg-red-600">
+                  <CreditCard className="h-3 w-3 text-white" />
+                </div>
                 &euro;{Number(user?.creditBalance ?? 0).toFixed(2)}
               </NavLink>
             )}

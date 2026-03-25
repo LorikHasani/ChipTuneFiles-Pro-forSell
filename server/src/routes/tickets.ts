@@ -159,6 +159,8 @@ router.get(
             email: true,
             contactName: true,
             companyName: true,
+            creditBalance: true,
+            createdAt: true,
           },
         },
         messages: {

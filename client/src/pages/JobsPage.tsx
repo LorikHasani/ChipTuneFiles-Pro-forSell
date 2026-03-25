@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Plus,
@@ -8,6 +8,8 @@ import {
   ChevronRight,
   Layers,
   AlertCircle,
+  Search,
+  X,
 } from 'lucide-react';
 import { useJobs } from '../hooks/useApi';
 import { useBrandingStore } from '../stores/brandingStore';
@@ -32,7 +34,29 @@ export default function JobsPage() {
   const navigate = useNavigate();
   const currencySymbol = useBrandingStore((s) => s.branding.currency_symbol);
   const [activeStatus, setActiveStatus] = useState<JobStatus | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState('');
   const { jobs, loading, error } = useJobs(activeStatus);
+
+  const filteredJobs = useMemo(() => {
+    if (!jobs) return [];
+    if (!searchQuery.trim()) return jobs;
+    const q = searchQuery.toLowerCase();
+    return jobs.filter(job =>
+      job.referenceNumber?.toLowerCase().includes(q) ||
+      job.brand?.toLowerCase().includes(q) ||
+      job.model?.toLowerCase().includes(q) ||
+      job.engineType?.toLowerCase().includes(q) ||
+      job.ecuType?.toLowerCase().includes(q) ||
+      job.jobType?.toLowerCase().includes(q)
+    );
+  }, [jobs, searchQuery]);
+
+  const statusCounts = useMemo(() => {
+    if (!jobs) return {};
+    const counts: Record<string, number> = { ALL: jobs.length };
+    jobs.forEach(j => { counts[j.status] = (counts[j.status] || 0) + 1; });
+    return counts;
+  }, [jobs]);
 
   return (
     <div>
@@ -43,23 +67,51 @@ export default function JobsPage() {
         </Link>
       </PageHeader>
 
+      {/* Search Bar */}
+      <div className="relative mb-4">
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+        <input
+          type="text"
+          className="input pl-9 pr-9 w-full"
+          placeholder="Search by reference, brand, model, engine..."
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+        />
+        {searchQuery && (
+          <button onClick={() => setSearchQuery('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       {/* Status Tabs */}
       <div className="mb-6 -mx-1 overflow-x-auto">
         <div className="flex gap-1 min-w-max px-1">
-          {STATUS_TABS.map((tab) => (
-            <button
-              key={tab.label}
-              onClick={() => setActiveStatus(tab.value)}
-              className={cn(
-                'px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap',
-                activeStatus === tab.value
-                  ? 'bg-red-600 text-white shadow-sm'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {STATUS_TABS.map((tab) => {
+            const count = tab.value ? statusCounts[tab.value] : statusCounts.ALL;
+            return (
+              <button
+                key={tab.label}
+                onClick={() => setActiveStatus(tab.value)}
+                className={cn(
+                  'px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap flex items-center gap-1.5',
+                  activeStatus === tab.value
+                    ? 'bg-red-600 text-white shadow-sm'
+                    : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                )}
+              >
+                {tab.label}
+                {count !== undefined && count > 0 && (
+                  <span className={cn('text-xs px-1.5 py-0.5 rounded-full',
+                    activeStatus === tab.value ? 'bg-white/20' : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400'
+                  )}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -79,17 +131,23 @@ export default function JobsPage() {
       )}
 
       {/* Empty State */}
-      {!loading && !error && jobs && jobs.length === 0 && (
+      {!loading && !error && filteredJobs.length === 0 && (
         <EmptyState
           icon={Briefcase}
-          title="No jobs found"
+          title={searchQuery ? 'No matching jobs' : 'No jobs found'}
           description={
-            activeStatus
+            searchQuery
+              ? `No jobs match "${searchQuery}". Try a different search term.`
+              : activeStatus
               ? `You don't have any jobs with status "${getStatusLabel(activeStatus)}".`
               : "You haven't created any jobs yet. Start by uploading your ECU/TCU file."
           }
           action={
-            !activeStatus ? (
+            searchQuery ? (
+              <button onClick={() => setSearchQuery('')} className="btn-secondary">
+                <X className="w-4 h-4" /> Clear Search
+              </button>
+            ) : !activeStatus ? (
               <Link to="/jobs/new" className="btn-primary">
                 <Plus className="w-4 h-4" />
                 Create Your First Job
@@ -100,9 +158,9 @@ export default function JobsPage() {
       )}
 
       {/* Jobs List */}
-      {!loading && !error && jobs && jobs.length > 0 && (
+      {!loading && !error && filteredJobs.length > 0 && (
         <div className="space-y-3">
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
             <button
               key={job.id}
               onClick={() => navigate(`/jobs/${job.id}`)}

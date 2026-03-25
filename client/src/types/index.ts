@@ -291,6 +291,8 @@ export interface DashboardStats {
   completedJobs: number;
   completedToday: number;
   totalUsers: number;
+  totalClients: number;
+  totalAdmins: number;
   totalRevenue: number;
   totalCreditsIssued: number;
   recentJobs: Job[];

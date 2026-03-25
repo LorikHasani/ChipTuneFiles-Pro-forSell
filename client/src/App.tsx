@@ -19,6 +19,7 @@ const TicketsPage = lazy(() => import('./pages/TicketsPage'));
 const TicketDetailPage = lazy(() => import('./pages/TicketDetailPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const CalculatorPage = lazy(() => import('./pages/CalculatorPage'));
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const RefundPolicyPage = lazy(() => import('./pages/RefundPolicyPage'));
@@ -92,6 +93,7 @@ export default function App() {
           <Route path="tickets/:id" element={<TicketDetailPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="calculator" element={<CalculatorPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
 
           {/* Admin routes */}
           <Route path="admin" element={<ProtectedRoute requireAdmin><AdminDashboardPage /></ProtectedRoute>} />

@@ -208,16 +208,14 @@ export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorPr
         {[
           { key: 'brand', label: 'Brand', placeholder: 'e.g. BMW' },
           { key: 'model', label: 'Model', placeholder: 'e.g. 320d' },
-          { key: 'year', label: 'Year', placeholder: 'e.g. 2020', type: 'number' },
           { key: 'engineType', label: 'Engine Type', placeholder: 'e.g. N47D20' },
-          { key: 'powerHp', label: 'Power (HP)', placeholder: 'e.g. 190', type: 'number' },
           { key: 'ecuType', label: 'ECU Type', placeholder: 'e.g. Bosch EDC17' },
         ].map(field => (
           <div key={field.key}>
             <label className="label">{field.label}</label>
             <input
               className="input"
-              type={field.type || 'text'}
+              type="text"
               placeholder={field.placeholder}
               value={(vehicle as any)[field.key]}
               onChange={e => onChange({ [field.key]: e.target.value })}
@@ -254,7 +252,7 @@ export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorPr
       />
 
       <div>
-        <label className="label">Generation</label>
+        <label className="label">Version/Generation</label>
         <select
           className="input"
           value={selectedGeneration}
@@ -264,43 +262,21 @@ export default function VehicleSelector({ vehicle, onChange }: VehicleSelectorPr
             onChange({ engineType: '', powerHp: '', ecuType: '' });
           }}
         >
-          <option value="">{generations.length === 0 ? 'Select model first' : 'Select generation...'}</option>
+          <option value="">{generations.length === 0 ? 'Select Model first' : 'Select Version...'}</option>
           {generations.map(gen => (
             <option key={gen} value={gen}>{gen}</option>
           ))}
         </select>
       </div>
 
-      <div>
-        <label className="label">Year</label>
-        <input
-          className="input"
-          type="number"
-          placeholder="e.g. 2020"
-          value={vehicle.year}
-          onChange={e => onChange({ year: e.target.value })}
-        />
-      </div>
-
       <ComboBox
         label="Engine"
         value={vehicle.engineType}
         options={engines}
-        placeholder={selectedGeneration ? 'Select engine...' : 'Select generation first'}
+        placeholder={selectedGeneration ? 'Select engine...' : 'Select Version first'}
         disabled={!selectedGeneration}
         onChange={handleEngineSelect}
       />
-
-      <div>
-        <label className="label">Power (HP)</label>
-        <input
-          className="input"
-          type="number"
-          placeholder="e.g. 190"
-          value={vehicle.powerHp}
-          onChange={e => onChange({ powerHp: e.target.value })}
-        />
-      </div>
 
       {ecuOptions.length > 1 ? (
         <ComboBox

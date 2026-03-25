@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Car, Wrench, ChevronRight, ChevronLeft, Check, AlertCircle, FileText, Info, MessageSquare } from 'lucide-react';
+import { Upload, Car, Wrench, ChevronRight, ChevronLeft, Check, AlertCircle, FileText, Info, MessageSquare, Cpu, Settings, Zap, Gauge } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../stores/authStore';
 import { useServices, createJob, uploadFile } from '../hooks/useApi';
@@ -12,9 +12,9 @@ import VehicleSelector from '../components/VehicleSelector';
 import type { ServiceCategory, Service, JobType } from '../types';
 
 const steps = [
-  { id: 1, label: 'Upload File', icon: Upload },
-  { id: 2, label: 'Vehicle Info', icon: Car },
-  { id: 3, label: 'Select Services', icon: Wrench },
+  { id: 1, label: 'Upload File' },
+  { id: 2, label: 'Car Info' },
+  { id: 3, label: 'Services' },
 ];
 
 const READING_TOOLS = [
@@ -29,6 +29,35 @@ function ServiceIcon({ icon, colorClass = 'text-purple-400' }: { icon: string | 
   const LucideComp = getLucideIcon(icon);
   if (LucideComp) return <LucideComp size={20} className={colorClass} />;
   return <span className="text-lg">{icon}</span>;
+}
+
+function StepIndicator({ currentStep }: { currentStep: number }) {
+  return (
+    <div className="flex items-center justify-center mb-8">
+      {steps.map((step, i) => (
+        <div key={step.id} className="flex items-center">
+          <div className="flex items-center gap-2">
+            <div className={cn(
+              'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold',
+              currentStep > step.id ? 'bg-green-500 text-white' :
+              currentStep === step.id ? 'bg-blue-600 text-white' :
+              'bg-neutral-300 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400'
+            )}>
+              {currentStep > step.id ? <Check size={16} /> : step.id}
+            </div>
+            <span className={cn('text-sm font-medium hidden sm:inline',
+              currentStep === step.id ? 'text-neutral-900 dark:text-white' : 'text-neutral-500'
+            )}>
+              {step.label}
+            </span>
+          </div>
+          {i < steps.length - 1 && (
+            <div className={cn('w-16 h-0.5 mx-3', currentStep > step.id ? 'bg-green-500' : 'bg-neutral-300 dark:bg-neutral-700')} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default function NewJobPage() {
@@ -143,44 +172,66 @@ export default function NewJobPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      {/* Step indicator */}
-      <div className="flex items-center justify-center mb-8">
-        {steps.map((step, i) => (
-          <div key={step.id} className="flex items-center">
-            <div className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors',
-              currentStep === step.id ? 'bg-red-600 text-white' :
-              currentStep > step.id ? 'bg-white/5 text-neutral-400' :
-              'bg-neutral-800/60 text-neutral-500'
-            )}>
-              {currentStep > step.id ? <Check size={16} /> : <step.icon size={16} />}
-              <span className="hidden sm:inline">{step.label}</span>
-            </div>
-            {i < steps.length - 1 && (
-              <div className={cn('w-12 h-0.5 mx-2', currentStep > step.id ? 'bg-red-600' : 'bg-neutral-700')} />
-            )}
-          </div>
-        ))}
-      </div>
+      <StepIndicator currentStep={currentStep} />
 
       {/* Step 1: File Upload */}
       {currentStep === 1 && (
-        <div className="card p-6 space-y-6">
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Upload ECU/TCU File</h2>
-          <div className="flex gap-4">
-            {(['ECU', 'TCU'] as JobType[]).map(type => (
-              <button key={type} onClick={() => setJobType(type)}
-                className={cn('flex-1 py-3 rounded-lg font-medium text-sm border transition-colors',
-                  jobType === type ? 'border-neutral-500 bg-white/5 text-white' :
-                  'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
-                {type} Tuning
-              </button>
-            ))}
+        <div className="space-y-6">
+          {/* Step Header */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center">
+              <Upload size={20} className="text-blue-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Step 1: Upload Your File</h2>
+              <p className="text-sm text-neutral-500">Select your ECU or Gearbox file</p>
+            </div>
           </div>
-          <FileUpload onFileSelected={setFile} label={`Upload your ${jobType} file`} />
-          {file && <p className="text-sm text-neutral-400">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>}
-          <div className="flex justify-end pt-6 border-t border-neutral-800">
-            <button onClick={() => setCurrentStep(2)} disabled={!canNext()} className="btn-primary">
+
+          {/* Select File Type */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Settings size={16} className="text-neutral-500" />
+              <span className="text-sm font-medium text-neutral-900 dark:text-white">Select File Type</span>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <button onClick={() => setJobType('ECU')}
+                className={cn('flex flex-col items-center gap-3 p-6 rounded-xl border-2 transition-all',
+                  jobType === 'ECU'
+                    ? 'border-blue-500 bg-blue-500/5'
+                    : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600')}>
+                <Cpu size={32} className={jobType === 'ECU' ? 'text-red-500' : 'text-neutral-500'} />
+                <span className={cn('text-sm font-medium', jobType === 'ECU' ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400')}>ECU File</span>
+              </button>
+              <button onClick={() => setJobType('TCU')}
+                className={cn('flex flex-col items-center gap-3 p-6 rounded-xl border-2 transition-all',
+                  jobType === 'TCU'
+                    ? 'border-blue-500 bg-blue-500/5'
+                    : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600')}>
+                <Settings size={32} className={jobType === 'TCU' ? 'text-neutral-600 dark:text-neutral-300' : 'text-neutral-500'} />
+                <span className={cn('text-sm font-medium', jobType === 'TCU' ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400')}>Gearbox File</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Upload File */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Upload size={16} className="text-neutral-500" />
+              <span className="text-sm font-medium text-neutral-900 dark:text-white">Upload File</span>
+            </div>
+            <FileUpload onFileSelected={setFile} label={`Upload your ${jobType} file`} />
+            {file && <p className="text-sm text-neutral-400 mt-2">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</p>}
+          </div>
+
+          {/* Bottom bar */}
+          <div className="border-t border-neutral-800 pt-4 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm">
+              <Info size={14} className="text-neutral-500" />
+              <span className="text-neutral-500">Balance:</span>
+              <span className="text-green-500 font-semibold">€{Number(user?.creditBalance ?? 0).toFixed(0)}</span>
+            </div>
+            <button onClick={() => setCurrentStep(2)} disabled={!canNext()} className="btn-primary flex items-center gap-1">
               Next Step <ChevronRight size={16} />
             </button>
           </div>
@@ -189,18 +240,31 @@ export default function NewJobPage() {
 
       {/* Step 2: Vehicle Info */}
       {currentStep === 2 && (
-        <div className="space-y-4">
+        <div className="space-y-5">
+          {/* Step Header */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center">
+              <Car size={20} className="text-blue-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Step 2: Vehicle Information</h2>
+              <p className="text-sm text-neutral-500">Tell us about your vehicle</p>
+            </div>
+          </div>
+
+          {/* File badge */}
           {file && (
-            <div className="card px-4 py-3 flex items-center justify-between">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <FileText size={18} className="text-neutral-500" />
                 <span className="text-sm text-neutral-400">File: {file.name}</span>
               </div>
-              <span className="px-3 py-1 rounded bg-red-600 text-white text-xs font-bold">{jobType}</span>
+              <span className="px-3 py-1 rounded bg-blue-600 text-white text-xs font-bold">{jobType}</span>
             </div>
           )}
 
-          <div className="card p-4">
+          {/* Is original */}
+          <div>
             <div className="flex items-center gap-2 mb-3">
               <Info size={16} className="text-neutral-500" />
               <span className="text-sm text-neutral-400">Is this an original file?</span>
@@ -208,72 +272,107 @@ export default function NewJobPage() {
             <div className="flex gap-3">
               <button onClick={() => setVehicle(prev => ({ ...prev, isOriginal: true }))}
                 className={cn('px-4 py-2 rounded-lg text-sm font-medium border transition-colors',
-                  vehicle.isOriginal ? 'border-neutral-500 bg-white/5 text-white' : 'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
+                  vehicle.isOriginal ? 'border-neutral-500 bg-white/5 text-green-400' : 'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
                 <span className="flex items-center gap-2">
-                  <span className={cn('w-2 h-2 rounded-full', vehicle.isOriginal ? 'bg-white' : 'bg-neutral-700')} />
+                  <span className={cn('w-2 h-2 rounded-full', vehicle.isOriginal ? 'bg-green-400' : 'bg-neutral-700')} />
                   Yes, Original
                 </span>
               </button>
               <button onClick={() => setVehicle(prev => ({ ...prev, isOriginal: false }))}
                 className={cn('px-4 py-2 rounded-lg text-sm font-medium border transition-colors',
-                  !vehicle.isOriginal ? 'border-neutral-500 bg-white/5 text-white' : 'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
+                  !vehicle.isOriginal ? 'border-neutral-500 bg-white/5 text-red-400' : 'border-neutral-800 text-neutral-500 hover:border-neutral-700')}>
                 <span className="flex items-center gap-2">
-                  <span className={cn('w-2 h-2 rounded-full', !vehicle.isOriginal ? 'bg-white' : 'bg-neutral-700')} />
+                  <span className={cn('w-2 h-2 rounded-full', !vehicle.isOriginal ? 'bg-red-400' : 'bg-neutral-700')} />
                   No, Modified
                 </span>
               </button>
             </div>
           </div>
 
-          <div className="card p-6 space-y-5">
-            <div className="flex items-center gap-2">
-              <Car size={18} className="text-neutral-500" />
-              <h3 className="text-base font-semibold text-neutral-900 dark:text-white">Vehicle Details</h3>
+          {/* Vehicle Details */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Car size={16} className="text-neutral-500" />
+              <span className="text-sm font-medium text-neutral-900 dark:text-white">Vehicle Details</span>
             </div>
-            <VehicleSelector vehicle={vehicle} onChange={updates => setVehicle(prev => ({ ...prev, ...updates }))} />
-            <div>
-              <label className="label">VIN Number</label>
-              <input className="input" placeholder="17 character VIN" value={vehicle.vin} maxLength={17}
-                onChange={e => setVehicle(prev => ({ ...prev, vin: e.target.value }))} />
-            </div>
-            <div>
-              <label className="label">Gearbox</label>
-              <select className="input" value={vehicle.gearboxType}
-                onChange={e => setVehicle(prev => ({ ...prev, gearboxType: e.target.value }))}>
-                <option value="">Select Gearbox</option>
-                {GEARBOX_TYPES.map(g => <option key={g} value={g}>{g}</option>)}
-              </select>
+            <div className="space-y-4">
+              <VehicleSelector vehicle={vehicle} onChange={updates => setVehicle(prev => ({ ...prev, ...updates }))} />
+              <div>
+                <label className="label">VIN Number</label>
+                <input className="input" placeholder="17 character VIN" value={vehicle.vin} maxLength={17}
+                  onChange={e => setVehicle(prev => ({ ...prev, vin: e.target.value }))} />
+              </div>
+              <div>
+                <label className="label">Gearbox</label>
+                <select className="input" value={vehicle.gearboxType}
+                  onChange={e => setVehicle(prev => ({ ...prev, gearboxType: e.target.value }))}>
+                  <option value="">Select Gearbox</option>
+                  {GEARBOX_TYPES.map(g => <option key={g} value={g}>{g}</option>)}
+                </select>
+              </div>
             </div>
           </div>
 
-          <div className="card p-6 space-y-4">
-            <div className="flex items-center gap-2">
-              <Wrench size={18} className="text-neutral-500" />
-              <h3 className="text-base font-semibold text-neutral-900 dark:text-white">Reading Tool</h3>
+          {/* Reading Tool */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Wrench size={16} className="text-neutral-500" />
+              <span className="text-sm font-medium text-neutral-900 dark:text-white">Reading Tool</span>
             </div>
-            <div>
-              <label className="label">Select Tool <span className="text-red-500">*</span></label>
-              <select className="input" value={vehicle.readingTool}
-                onChange={e => setVehicle(prev => ({ ...prev, readingTool: e.target.value }))}>
-                <option value="">Select Your Tool</option>
-                {READING_TOOLS.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="label">Tool Type <span className="text-red-500">*</span></label>
-              <select className="input" value={vehicle.toolType}
-                onChange={e => setVehicle(prev => ({ ...prev, toolType: e.target.value }))}>
-                <option value="">Select Type</option>
-                {TOOL_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
+            <div className="space-y-4">
+              <div>
+                <label className="label">Select Tool <span className="text-red-500">*</span></label>
+                <select className="input" value={vehicle.readingTool}
+                  onChange={e => setVehicle(prev => ({ ...prev, readingTool: e.target.value }))}>
+                  <option value="">Select Your Tool</option>
+                  {READING_TOOLS.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="label">Tool Type <span className="text-red-500">*</span></label>
+                <select className="input" value={vehicle.toolType}
+                  onChange={e => setVehicle(prev => ({ ...prev, toolType: e.target.value }))}>
+                  <option value="">Select Type</option>
+                  {TOOL_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
             </div>
           </div>
+
+          {/* Performance Estimate */}
+          {vehicle.powerHp && parseInt(vehicle.powerHp) > 0 && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800/50 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Zap size={16} className="text-blue-500" />
+                <span className="text-sm font-semibold text-neutral-900 dark:text-white">Estimated Performance Gains</span>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: 'Stage 1', hpRange: [20, 30], tqRange: [25, 35] },
+                  { label: 'Stage 2', hpRange: [30, 50], tqRange: [35, 55] },
+                  { label: 'Stage 3', hpRange: [50, 80], tqRange: [55, 85] },
+                ].map(stage => {
+                  const hp = parseInt(vehicle.powerHp);
+                  const hpLow = Math.round(hp * stage.hpRange[0] / 100);
+                  const hpHigh = Math.round(hp * stage.hpRange[1] / 100);
+                  return (
+                    <div key={stage.label} className="bg-white dark:bg-neutral-900 rounded-lg p-3 text-center">
+                      <p className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-1">{stage.label}</p>
+                      <p className="text-lg font-bold text-neutral-900 dark:text-white">+{hpLow}-{hpHigh}</p>
+                      <p className="text-[10px] text-neutral-500">HP gain</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-[10px] text-neutral-400 mt-2 text-center">* Estimates only. Actual results may vary.</p>
+            </div>
+          )}
 
           <div className="flex justify-between">
-            <button onClick={() => setCurrentStep(1)} className="btn-secondary">
+            <button onClick={() => setCurrentStep(1)} className="btn-secondary flex items-center gap-1">
               <ChevronLeft size={16} /> Back
             </button>
-            <button onClick={() => setCurrentStep(3)} disabled={!canNext()} className="btn-primary">
+            <button onClick={() => setCurrentStep(3)} disabled={!canNext()} className="btn-primary flex items-center gap-1">
               Next Step <ChevronRight size={16} />
             </button>
           </div>
@@ -410,11 +509,11 @@ export default function NewJobPage() {
           </div>
 
           <div className="flex justify-between">
-            <button onClick={() => setCurrentStep(2)} className="btn-secondary">
+            <button onClick={() => setCurrentStep(2)} className="btn-secondary flex items-center gap-1">
               <ChevronLeft size={16} /> Back
             </button>
             <button onClick={handleSubmit} disabled={submitting || !canNext() || totalPrice > Number(user?.creditBalance || 0)}
-              className="btn-primary">
+              className="btn-primary flex items-center gap-1">
               {submitting ? <Spinner size="sm" /> : null}
               {submitting ? 'Creating...' : 'Submit Job'}
             </button>

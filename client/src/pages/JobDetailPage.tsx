@@ -297,37 +297,84 @@ export default function JobDetailPage() {
             </div>
           </div>
 
-          {/* Timeline */}
+          {/* Status Timeline */}
           <div className="card p-5">
             <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
-              <Clock size={18} /> Timeline
+              <Clock size={18} /> Status Timeline
             </h3>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-neutral-900 dark:text-white">Job Created</p>
-                  <p className="text-xs text-neutral-500">{formatDateTime(job.createdAt)}</p>
+            {(() => {
+              const statusFlow: { key: string; label: string; icon: string; color: string; dotColor: string }[] = [
+                { key: 'PENDING', label: 'Job Submitted', icon: '📋', color: 'text-amber-500', dotColor: 'bg-amber-500' },
+                { key: 'IN_PROGRESS', label: 'In Progress', icon: '⚙️', color: 'text-blue-500', dotColor: 'bg-blue-500' },
+                { key: 'COMPLETED', label: 'Completed', icon: '✅', color: 'text-emerald-500', dotColor: 'bg-emerald-500' },
+              ];
+
+              const statusOrder: Record<string, number> = {
+                PENDING: 0, IN_PROGRESS: 1, WAITING_FOR_INFO: 1, COMPLETED: 2,
+                REVISION_REQUESTED: 1, REJECTED: 2,
+              };
+              const currentIdx = statusOrder[job.status] ?? 0;
+
+              return (
+                <div className="relative">
+                  {statusFlow.map((step, i) => {
+                    const isCompleted = i < currentIdx;
+                    const isCurrent = i === currentIdx;
+                    const isLast = i === statusFlow.length - 1;
+
+                    return (
+                      <div key={step.key} className="flex gap-3 relative">
+                        {/* Vertical line */}
+                        {!isLast && (
+                          <div className={cn(
+                            'absolute left-[11px] top-6 w-0.5 h-full',
+                            isCompleted ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-neutral-700'
+                          )} />
+                        )}
+                        {/* Dot */}
+                        <div className={cn(
+                          'relative z-10 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs',
+                          isCompleted ? 'bg-emerald-500 text-white' :
+                          isCurrent ? step.dotColor + ' text-white ring-4 ring-opacity-20 ' + step.dotColor.replace('bg-', 'ring-') :
+                          'bg-neutral-200 dark:bg-neutral-700 text-neutral-400'
+                        )}>
+                          {isCompleted ? '✓' : (i + 1)}
+                        </div>
+                        {/* Content */}
+                        <div className={cn('pb-6', isLast && 'pb-0')}>
+                          <p className={cn('text-sm font-medium',
+                            isCompleted || isCurrent ? 'text-neutral-900 dark:text-white' : 'text-neutral-400 dark:text-neutral-500'
+                          )}>
+                            {step.label}
+                            {isCurrent && job.status === 'WAITING_FOR_INFO' && (
+                              <span className="ml-2 text-xs font-normal text-orange-500">(Waiting for info)</span>
+                            )}
+                            {isCurrent && job.status === 'REVISION_REQUESTED' && (
+                              <span className="ml-2 text-xs font-normal text-violet-500">(Revision requested)</span>
+                            )}
+                            {isCurrent && job.status === 'REJECTED' && (
+                              <span className="ml-2 text-xs font-normal text-red-500">(Rejected)</span>
+                            )}
+                          </p>
+                          {(isCompleted || isCurrent) && i === 0 && (
+                            <p className="text-xs text-neutral-500 mt-0.5">{formatDateTime(job.createdAt)}</p>
+                          )}
+                          {(isCompleted || isCurrent) && i > 0 && (
+                            <p className="text-xs text-neutral-500 mt-0.5">{formatDateTime(job.updatedAt)}</p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
+              );
+            })()}
+            {job.revisionCount > 0 && (
+              <div className="mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center gap-2">
+                <RotateCcw size={14} className="text-orange-500" />
+                <span className="text-xs font-medium text-orange-500">{job.revisionCount} revision(s) requested</span>
               </div>
-              {job.updatedAt !== job.createdAt && (
-                <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-neutral-500 mt-1.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium text-neutral-900 dark:text-white">Last Updated</p>
-                    <p className="text-xs text-neutral-500">{formatDateTime(job.updatedAt)}</p>
-                  </div>
-                </div>
-              )}
-              {job.revisionCount > 0 && (
-                <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-orange-500 mt-1.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium text-neutral-900 dark:text-white">{job.revisionCount} Revision(s)</p>
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </div>

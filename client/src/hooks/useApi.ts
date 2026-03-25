@@ -193,6 +193,20 @@ export function useCreditPackages() {
   };
 }
 
+export function useAdminCreditPackages() {
+  const result = useFetch<CreditPackage[]>(async () => {
+    const response = await api.get('/admin/packages');
+    return unwrap(response.data);
+  }, []);
+
+  return {
+    packages: result.data,
+    loading: result.loading,
+    error: result.error,
+    refetch: result.refetch,
+  };
+}
+
 export function useTransactions(userId?: string) {
   const result = useFetch<Transaction[]>(async () => {
     const params: Record<string, string> = {};
@@ -665,6 +679,10 @@ export async function updateCreditPackage(
 ): Promise<CreditPackage> {
   const response = await api.put(`/admin/packages/${id}`, data);
   return unwrap(response.data);
+}
+
+export async function deleteCreditPackage(id: string): Promise<void> {
+  await api.delete(`/admin/packages/${id}`);
 }
 
 // ============================================

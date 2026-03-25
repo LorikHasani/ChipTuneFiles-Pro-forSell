@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LifeBuoy, MessageSquare } from 'lucide-react';
 import { useTickets } from '../../hooks/useApi';
 import { formatRelativeTime, getStatusLabel, cn } from '../../lib/utils';
@@ -12,13 +12,12 @@ import type { Ticket, TicketStatus } from '../../types';
 const tabs: (TicketStatus | 'ALL')[] = ['ALL', 'OPEN', 'IN_PROGRESS', 'CLOSED'];
 
 export default function AdminTicketsPage() {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<TicketStatus | 'ALL'>('ALL');
   const { tickets, loading } = useTickets(filter === 'ALL' ? undefined : filter);
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Support Tickets" subtitle="Manage all customer support tickets" />
-
       <div className="flex gap-2">
         {tabs.map(tab => (
           <button key={tab} onClick={() => setFilter(tab)}
@@ -46,10 +45,9 @@ export default function AdminTicketsPage() {
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
               {tickets.map((t: Ticket) => (
-                <tr key={t.id} className="hover:bg-neutral-50 dark:hover:bg-white/[0.03]">
-                  <td className="px-4 py-3">
-                    <Link to={`/admin/tickets/${t.id}`} className="text-neutral-900 dark:text-white hover:underline font-medium">{t.subject}</Link>
-                  </td>
+                <tr key={t.id} onClick={() => navigate(`/admin/tickets/${t.id}`)}
+                  className="hover:bg-neutral-50 dark:hover:bg-white/[0.03] cursor-pointer">
+                  <td className="px-4 py-3 font-medium text-neutral-900 dark:text-white">{t.subject}</td>
                   <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400">{t.client?.contactName || t.client?.email || '-'}</td>
                   <td className="px-4 py-3"><Badge status={t.status} /></td>
                   <td className="px-4 py-3 text-neutral-500">
