@@ -681,13 +681,10 @@ export async function updateCreditPackage(
   return unwrap(response.data);
 }
 
-<<<<<<< HEAD
 export async function deleteCreditPackage(id: string): Promise<void> {
   await api.delete(`/admin/packages/${id}`);
 }
 
-=======
->>>>>>> claude/thirsty-dirac
 // ============================================
 // Email Mutation Functions (Admin)
 // ============================================
