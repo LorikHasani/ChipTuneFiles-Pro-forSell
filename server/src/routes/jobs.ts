@@ -318,6 +318,22 @@ router.post(
       return;
     }
 
+    // Notify all admins about the new job
+    const admins = await prisma.user.findMany({
+      where: { role: { in: ['ADMIN', 'SUPERADMIN'] } },
+      select: { id: true },
+    });
+    const clientName = user.contactName || user.companyName || user.email;
+    for (const admin of admins) {
+      notify(
+        admin.id,
+        `New job submitted — ${referenceNumber}`,
+        `${clientName} submitted a new job.`,
+        'JOB',
+        job.id,
+      );
+    }
+
     res.status(201).json({ job: serializeJob(job) });
   }),
 );

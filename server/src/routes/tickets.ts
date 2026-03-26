@@ -3,6 +3,7 @@ import { prisma } from '../lib/prisma';
 import { authenticate, AuthRequest } from '../middleware/auth';
 import { requireAdmin } from '../middleware/admin';
 import { asyncHandler, parsePagination, paginatedResponse } from '../utils/helpers';
+import { notify } from '../lib/notify';
 
 const router = Router();
 
@@ -134,6 +135,22 @@ router.post(
         },
       },
     });
+
+    // Notify all admins about the new ticket
+    const admins = await prisma.user.findMany({
+      where: { role: { in: ['ADMIN', 'SUPERADMIN'] } },
+      select: { id: true },
+    });
+    const clientName = user.contactName || user.companyName || user.email;
+    for (const admin of admins) {
+      notify(
+        admin.id,
+        `New support ticket`,
+        `${clientName}: ${subject.trim().substring(0, 100)}`,
+        'TICKET',
+        ticket.id,
+      );
+    }
 
     res.status(201).json({ data: ticket });
   })
