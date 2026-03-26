@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { authenticate, AuthRequest } from '../middleware/auth';
 import { asyncHandler } from '../utils/helpers';
+import { notify } from '../lib/notify';
 
 const router = Router();
 
@@ -111,6 +112,35 @@ router.post(
         },
       },
     });
+
+    // Notify the other party about the new message (skip internal notes)
+    if (!internalFlag) {
+      if (isAdmin) {
+        // Admin sent a message → notify the client
+        notify(
+          job.clientId,
+          'New message on your job',
+          message.trim().slice(0, 200),
+          'JOB',
+          jobId,
+        );
+      } else {
+        // Client sent a message → notify assigned admin (if any)
+        const fullJob = await prisma.job.findUnique({
+          where: { id: jobId },
+          select: { assignedAdminId: true, referenceNumber: true },
+        });
+        if (fullJob?.assignedAdminId) {
+          notify(
+            fullJob.assignedAdminId,
+            `New message — ${fullJob.referenceNumber}`,
+            message.trim().slice(0, 200),
+            'JOB',
+            jobId,
+          );
+        }
+      }
+    }
 
     res.status(201).json({ data: created });
   })
@@ -260,6 +290,19 @@ router.post(
       where: { id: ticketId },
       data: { updatedAt: new Date() },
     });
+
+    // Notify the other party
+    if (isAdmin) {
+      // Admin replied → notify client
+      notify(
+        ticket.clientId,
+        'New reply on your ticket',
+        message.trim().slice(0, 200),
+        'TICKET',
+        ticketId,
+      );
+    }
+    // Note: when client sends a ticket message, admins see it in their ticket queue
 
     res.status(201).json({ data: created });
   })

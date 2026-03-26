@@ -8,6 +8,7 @@ import {
   getCheckoutSession,
 } from '../services/stripe';
 import { sendCreditConfirmation } from '../services/email';
+import { notify } from '../lib/notify';
 import { asyncHandler, parsePagination, paginatedResponse } from '../utils/helpers';
 
 const router = Router();
@@ -206,6 +207,16 @@ router.post(
           },
         });
 
+        // Notify user about the purchase
+        notify(
+          userId,
+          `Credits purchased: +${totalCredits}`,
+          bonusCredits > 0
+            ? `You received ${credits} credits + ${bonusCredits} bonus credits. New balance: ${balanceAfter}.`
+            : `You received ${credits} credits. New balance: ${balanceAfter}.`,
+          'CREDIT',
+        );
+
         // Send confirmation email (non-blocking)
         const pricePaid = (session.amount_total || 0) / 100;
         sendCreditConfirmation(
@@ -396,6 +407,15 @@ router.post(
 
     // If error was handled above, result is null
     if (!result) return;
+
+    // Notify the user
+    const sign = adjustmentAmount > 0 ? '+' : '';
+    notify(
+      userId,
+      `Credits ${adjustmentAmount > 0 ? 'added' : 'deducted'}: ${sign}${adjustmentAmount}`,
+      `${description.trim()}. New balance: ${Number(result.updatedUser.creditBalance)}.`,
+      'CREDIT',
+    );
 
     res.json({
       message: 'Credit adjustment applied successfully.',

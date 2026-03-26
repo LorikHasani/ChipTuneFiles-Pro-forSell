@@ -10,6 +10,7 @@ import {
   paginatedResponse,
   toNumber,
 } from '../utils/helpers';
+import { notify } from '../lib/notify';
 
 const router = Router();
 
@@ -421,6 +422,23 @@ router.put(
       include: jobListIncludes,
     });
 
+    // Notify the client about the status change
+    const statusLabels: Record<string, string> = {
+      PENDING: 'Pending',
+      IN_PROGRESS: 'In Progress',
+      WAITING_FOR_INFO: 'Waiting for Info',
+      COMPLETED: 'Completed',
+      REVISION_REQUESTED: 'Revision Requested',
+      REJECTED: 'Rejected',
+    };
+    notify(
+      existingJob.clientId,
+      `Job ${existingJob.referenceNumber} — ${statusLabels[status] || status}`,
+      `Your job has been updated to "${statusLabels[status] || status}".`,
+      'JOB',
+      jobId,
+    );
+
     res.json({ job: serializeJob(updatedJob) });
   }),
 );
@@ -556,6 +574,17 @@ router.post(
 
       return job;
     });
+
+    // Notify assigned admin about the revision request
+    if (existingJob.assignedAdminId) {
+      notify(
+        existingJob.assignedAdminId,
+        `Revision requested — ${existingJob.referenceNumber}`,
+        `Client requested a revision: ${reason}`,
+        'JOB',
+        jobId,
+      );
+    }
 
     res.json({ job: serializeJob(updatedJob) });
   }),

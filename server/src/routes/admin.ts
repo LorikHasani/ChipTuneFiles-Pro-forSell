@@ -5,6 +5,7 @@ import { requireAdmin, requireSuperAdmin } from '../middleware/admin';
 import { asyncHandler, parsePagination, paginatedResponse, toNumber } from '../utils/helpers';
 import { Prisma } from '@prisma/client';
 import { sendEmail } from '../services/email';
+import { notify } from '../lib/notify';
 
 const router = Router();
 
@@ -392,6 +393,15 @@ router.post(
         },
       }),
     ]);
+
+    // Notify the user about the credit adjustment
+    const sign = amount > 0 ? '+' : '';
+    notify(
+      id,
+      `Credits ${amount > 0 ? 'added' : 'deducted'}: ${sign}${amount}`,
+      description || `Your credit balance has been adjusted by ${sign}${amount}. New balance: ${newBalance}.`,
+      'CREDIT',
+    );
 
     res.status(201).json({
       data: {

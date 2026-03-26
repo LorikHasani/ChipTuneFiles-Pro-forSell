@@ -134,4 +134,34 @@ router.delete(
   })
 );
 
+// ---------------------------------------------------------------------------
+// POST / - Create a notification (admin only, or internal use)
+// ---------------------------------------------------------------------------
+router.post(
+  '/',
+  authenticate,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const user = req.user!;
+    const isAdmin = user.role === 'ADMIN' || user.role === 'SUPERADMIN';
+
+    if (!isAdmin) {
+      res.status(403).json({ error: 'Access denied.' });
+      return;
+    }
+
+    const { userId, title, message, linkType, linkId } = req.body;
+
+    if (!userId || !title || !message) {
+      res.status(400).json({ error: 'userId, title and message are required.' });
+      return;
+    }
+
+    const notification = await prisma.notification.create({
+      data: { userId, title, message, linkType, linkId },
+    });
+
+    res.status(201).json({ data: notification });
+  })
+);
+
 export default router;
